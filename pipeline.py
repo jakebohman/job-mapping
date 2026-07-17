@@ -133,4 +133,4 @@ def run(cbsa_code="18140"):
 
 
 if __name__ == "__main__":
-    run()
+    run(sys.argv[1] if len(sys.argv) > 1 else "18140")

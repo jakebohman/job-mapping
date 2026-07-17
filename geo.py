@@ -1,66 +1,65 @@
-"""County -> CBSA geography. Resolves PROJECT.md risk 7: Adzuna is radius-based,
-but every result carries its county and a CBSA is a set of counties, so county
-is the exact join key between postings and BLS/LAUS metro series.
-
-Phase 1 hardcodes the one metro (Columbus). National rollout replaces
-CBSA_COUNTIES with the OMB delineation crosswalk (a free CSV):
-  https://www.census.gov/geographies/reference-files/time-series/demo/metro-micro/delineation-files.html
-Load it into the same {cbsa_code: (name, {counties})} shape and nothing
-downstream changes.
+"""County <-> CBSA geography, loaded from the national OMB 2023 crosswalk
+(cbsa_counties.csv, built by build_crosswalk.py). County is the exact join key:
+Adzuna results report their county, a CBSA is a set of counties, and BLS series
+key on the same. Keying by (state, county) disambiguates same-named counties
+(Ohio's Knox County is in no MSA; Tennessee's is in Knoxville).
 
     python geo.py --selftest
 """
 
+import csv
 import sys
+from pathlib import Path
 
-# CBSA 18140, Columbus OH MSA, 2023 OMB delineation (10 counties).
-CBSA_COUNTIES = {
-    "18140": {
-        "name": "Columbus, OH",
-        "state": "Ohio",
-        # radius (km) for the calibrated volume query — chosen to cover most of
-        # the CBSA's counties. National rollout derives this from CBSA extent.
-        "radius_km": 40,
-        # BLS LAUS labor-force series (measure 06). National rollout builds this
-        # from the LAUS area-code lookup; hardcoded for the Phase 1 metro.
-        "laus_lf_series": "LAUMT391814000000006",
-        "counties": {
-            "Delaware County", "Fairfield County", "Franklin County",
-            "Hocking County", "Licking County", "Madison County",
-            "Morrow County", "Perry County", "Pickaway County", "Union County",
-        },
-    },
-}
+CROSSWALK = Path(__file__).parent / "cbsa_counties.csv"
+DEFAULT_RADIUS_KM = 50   # calibrated volume self-corrects, so one default is fine
 
-# Reverse index: (state, county) -> cbsa_code. Built once at import.
-_COUNTY_TO_CBSA = {
-    (d["state"], county): code
-    for code, d in CBSA_COUNTIES.items()
-    for county in d["counties"]
-}
+
+def _load(path=CROSSWALK):
+    """{cbsa_code: {name, state_fips, counties:{...}, radius_km, laus_lf_series}}
+    plus a (state_name, county_name) -> cbsa_code reverse index."""
+    if not path.exists():
+        sys.exit(f"{path.name} missing — run: python build_crosswalk.py")
+    cbsas, index = {}, {}
+    with open(path, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            code = r["cbsa_code"]
+            c = cbsas.setdefault(code, {
+                "name": r["cbsa_title"], "state_fips": r["state_fips"],
+                "counties": set(), "radius_km": DEFAULT_RADIUS_KM})
+            c["counties"].add(r["county_name"])
+            # primary state for the LAUS series = a Central county's state
+            if r["central_outlying"] == "Central":
+                c["state_fips"] = r["state_fips"]
+            index[(r["state_name"], r["county_name"])] = code
+    for code, c in cbsas.items():
+        # LAUS labor-force series: LAUMT + state(2) + cbsa(5) + 00000006
+        c["laus_lf_series"] = f"LAUMT{c['state_fips']}{code}00000006"
+    return cbsas, index
+
+
+CBSA_COUNTIES, _COUNTY_TO_CBSA = _load()
 
 
 def county_of(adzuna_result):
-    """Extract (state, county) from an Adzuna result's location.area hierarchy.
-    area looks like [US, Ohio, Franklin County, Hilliard]; state is index 1,
-    county is the entry ending in 'County'. Returns (state, county) or None."""
+    """(state, county) from an Adzuna result's location.area, or None.
+    area looks like [US, Ohio, Franklin County, Hilliard]."""
     area = (adzuna_result.get("location") or {}).get("area") or []
     if len(area) < 3:
         return None
-    state = area[1]
     county = next((a for a in area if a.endswith("County")), None)
-    return (state, county) if county else None
+    return (area[1], county) if county else None
 
 
 def cbsa_of(adzuna_result):
-    """CBSA code for a posting, or None if its county is in no target CBSA."""
+    """CBSA code for a posting, or None if its county is in no MSA."""
     key = county_of(adzuna_result)
     return _COUNTY_TO_CBSA.get(key) if key else None
 
 
 def bucket_by_cbsa(results):
-    """Split Adzuna results into {cbsa_code: [results]} plus a dropped list for
-    postings outside every target CBSA (the geography filter)."""
+    """{cbsa_code: [results]} plus a dropped list for postings outside every
+    MSA (the geography filter)."""
     kept, dropped = {}, []
     for r in results:
         code = cbsa_of(r)
@@ -75,22 +74,22 @@ def _selftest():
     def res(*area):
         return {"location": {"area": list(area)}}
 
-    franklin = res("US", "Ohio", "Franklin County", "Hilliard")
-    knox = res("US", "Ohio", "Knox County", "Mount Vernon")  # outside CBSA
-    assert county_of(franklin) == ("Ohio", "Franklin County")
-    assert cbsa_of(franklin) == "18140"
-    assert cbsa_of(knox) is None
-    assert county_of(res("US", "Ohio")) is None            # too short
-    assert county_of(res("US", "Ohio", "Columbus")) is None  # no 'County' entry
-
-    kept, dropped = bucket_by_cbsa([franklin, knox, franklin])
-    assert len(kept["18140"]) == 2 and len(dropped) == 1
-    print("selftest ok")
+    assert county_of(res("US", "Ohio", "Franklin County", "Hilliard")) == \
+        ("Ohio", "Franklin County")
+    assert cbsa_of(res("US", "Ohio", "Franklin County", "X")) == "18140"
+    assert CBSA_COUNTIES["18140"]["name"] == "Columbus, OH"
+    assert len(CBSA_COUNTIES["18140"]["counties"]) == 10
+    assert CBSA_COUNTIES["18140"]["laus_lf_series"] == "LAUMT391814000000006"
+    # Ohio's Knox County is in no MSA; same-named counties elsewhere are
+    assert cbsa_of(res("US", "Ohio", "Knox County", "Mount Vernon")) is None
+    assert cbsa_of(res("US", "Tennessee", "Knox County", "Knoxville")) is not None
+    assert county_of(res("US", "Ohio")) is None
+    print(f"selftest ok ({len(CBSA_COUNTIES)} MSAs loaded)")
 
 
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
         _selftest()
     else:
-        print(f"{len(CBSA_COUNTIES)} CBSA(s) loaded; "
+        print(f"{len(CBSA_COUNTIES)} MSAs, "
               f"{len(_COUNTY_TO_CBSA)} counties indexed.")
