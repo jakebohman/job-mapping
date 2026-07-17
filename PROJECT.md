@@ -32,7 +32,7 @@ deviation, and there is deliberately no path from the map to a job posting.
 
 | Source | Used for | Known limits |
 |---|---|---|
-| Adzuna API (free tier) | Posting **counts** per metro/filter (views 1, 4-approx, 5); sampled posting details | ~250 calls/day / 2,500/month (verify at signup — limits are per-account and change). Descriptions truncated (~500 chars). Aggregator coverage bias (scrapes boards; direct-employer postings underrepresented). Location strings need geocoding to CBSA. ToS: do not store/republish posting content. |
+| Adzuna API (free tier) | Posting **counts** per metro/filter (views 1, 4-approx, 5); sampled posting details | ~250 calls/day / 2,500/month (verify at signup — limits are per-account and change). Descriptions **hard-truncated at exactly 500 chars, 100% of postings** (Phase 0 measured). `where` is a **radius match around a place name, not a CBSA boundary** — counts for adjacent metros overlap (Phase 0 finding; see risk 7). Aggregator coverage bias (scrapes boards; direct-employer postings underrepresented). ToS: do not store/republish posting content. |
 | CareerOneStop API (DOL, free w/ registration) | Fuller posting text for the classification sample; second-source sanity check on counts | Backed by NLx (state job banks + direct employers) — different coverage bias than Adzuna. Rate limits generous but undocumented; verify in Phase 0. |
 | BLS LAUS | Labor force per CBSA (view 1 denominator) | Monthly, ~2-month lag, model-based for small areas. Use not-seasonally-adjusted metro series; pin one vintage per release. |
 | BLS OEWS | Metro occupation employment shares (validation baseline; view 2 context) | Annual (May reference), 6-digit SOC by MSA. Employment mix ≠ posting mix — postings overweight high-churn occupations. It's a sanity check, not ground truth. |
@@ -178,12 +178,31 @@ The disclosed error rate is a release gate, not documentation.
 
 ## Flagged risks and changed calls
 
-1. **Adzuna truncates descriptions (~500 chars).** This is the biggest
-   threat to skill extraction and the reason the design is counts-first:
-   Adzuna is excellent as a *counting* instrument and mediocre as a *text*
+1. **Adzuna truncates descriptions — measured: a hard 500-char cap on 100%
+   of postings.** Worse than the "~500" the design assumed: every description
+   is cut to exactly 500 chars with an ellipsis, no exceptions (Phase 0, 50/50
+   postings). Title + 500 chars is likely enough for occupation coding but is
+   the wrong instrument for *skill* extraction. This is why the design is
+   counts-first: Adzuna is an excellent *counting* instrument and a poor *text*
    source. Mitigation: CareerOneStop/NLx supplies fuller text for the
-   classification sample (Phase 0 verifies). Upgrade path if this project
-   gets serious: apply to the NLx Research Hub for bulk posting data.
+   classification sample (still to verify — keys pending). Upgrade path if this
+   project gets serious: apply to the NLx Research Hub for bulk posting data.
+
+   *Good news from the same run:* the `count` field is rock-stable — five
+   identical queries returned 31,188 every time (relative spread 0.0), so
+   counts are safe to trust week-over-week for views 1 and 5.
+
+7. **Adzuna `where` is radius-based, not CBSA-bounded (Phase 0 finding).**
+   A `where=Columbus, Ohio` query counts postings within a default radius of
+   the place, not within CBSA 18140. Consequences: (a) adjacent-metro radii
+   overlap and double-count; (b) the view-1 numerator (radius count) and
+   denominator (CBSA LAUS labor force) describe different geographies, so the
+   rate is biased upward for metros with dense neighbors. Options to resolve in
+   Phase 1, cheapest first: pass Adzuna's `distance` param tuned per metro; or
+   switch to Adzuna's lat/long + small radius centered on the CBSA; or treat
+   the number as "labor-market-area demand near metro X" and rename the view
+   accordingly. Decision required before national rollout — do not scale the
+   counts pipeline until the geography is pinned down.
 2. **Changed call: don't commit the `.duckdb` file.** A binary that churns
    100% every weekly run bloats git history and merge-conflicts by design.
    Committed source of truth = append-only weekly Parquet partitions;

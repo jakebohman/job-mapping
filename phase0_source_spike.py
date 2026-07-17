@@ -104,8 +104,9 @@ def adzuna_details(app_id, app_key, where, want):
     url_tmpl = "https://api.adzuna.com/v1/api/jobs/us/search/{page}"
     out, page = [], 1
     while len(out) < want and page <= 10:
+        # page number is the URL path segment, not a query param
         params = {"app_id": app_id, "app_key": app_key, "where": where,
-                  "results_per_page": 50, "page": page}
+                  "results_per_page": 50}
         status, _, r = _get(url_tmpl.format(page=page), params)
         if status != 200:
             raise RuntimeError(f"Adzuna details {status}: {r.text[:200]}")
