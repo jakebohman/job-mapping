@@ -1,0 +1,20 @@
+# The DuckDB file is rebuilt in CI, never committed (see PROJECT.md flagged risks).
+*.duckdb
+*.duckdb.wal
+
+# Secrets / API keys
+.env
+.env.*
+
+# Phase 0 spike output (throwaway measurements)
+spike_results/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+dist/
