@@ -33,7 +33,8 @@ deviation, and there is deliberately no path from the map to a job posting.
 | Source | Used for | Known limits |
 |---|---|---|
 | Adzuna API (free tier) | Posting **counts** per metro/filter (views 1, 4-approx, 5); sampled posting details | ~250 calls/day / 2,500/month (verify at signup — limits are per-account and change). Descriptions **hard-truncated at exactly 500 chars, 100% of postings** (Phase 0 measured). `where` is a **radius match around a place name, not a CBSA boundary** — counts for adjacent metros overlap (Phase 0 finding; see risk 7). Aggregator coverage bias (scrapes boards; direct-employer postings underrepresented). ToS: do not store/republish posting content. |
-| CareerOneStop API (DOL, free w/ registration) | Fuller posting text for the classification sample; second-source sanity check on counts | Backed by NLx (state job banks + direct employers) — different coverage bias than Adzuna. Rate limits generous but undocumented; verify in Phase 0. |
+| ~~CareerOneStop Jobs API~~ (NOT accessible) | — | **Phase 0: self-serve token is 401 on `jobsearch`.** The token is valid (reference endpoints like `occupation` return 200), but the Jobs service is separately gated — their signup message points job-data users to NLx instead. The fuller-text plan is blocked at the free tier. |
+| NLx Research Hub (gated) | Intended fuller posting text for the sample; the real skill-view source | FTP + API optimized for research, but requires a data-request application with lead time. Not available day one. Until then, view 3 (skills) runs on Adzuna's 500-char text at reduced confidence. |
 | BLS LAUS | Labor force per CBSA (view 1 denominator) | Monthly, ~2-month lag, model-based for small areas. Use not-seasonally-adjusted metro series; pin one vintage per release. |
 | BLS OEWS | Metro occupation employment shares (validation baseline; view 2 context) | Annual (May reference), 6-digit SOC by MSA. Employment mix ≠ posting mix — postings overweight high-churn occupations. It's a sanity check, not ground truth. |
 | O*NET database | O*NET-SOC 2019 taxonomy; technology-skills list seeds the skill vocabulary | Taxonomy vintage must match the SOC vintage used in OEWS joins. |
@@ -184,9 +185,13 @@ The disclosed error rate is a release gate, not documentation.
    postings). Title + 500 chars is likely enough for occupation coding but is
    the wrong instrument for *skill* extraction. This is why the design is
    counts-first: Adzuna is an excellent *counting* instrument and a poor *text*
-   source. Mitigation: CareerOneStop/NLx supplies fuller text for the
-   classification sample (still to verify — keys pending). Upgrade path if this
-   project gets serious: apply to the NLx Research Hub for bulk posting data.
+   source. **The intended mitigation fell through in Phase 0:** the free
+   CareerOneStop Jobs API is gated (401), so there is no self-serve fuller-text
+   source. Consequences: occupation coding (title + 500 chars) proceeds as
+   planned; **skill extraction (view 3) is capped at reduced confidence until
+   NLx Research Hub access is granted** (data-request application, lead time).
+   Treat view 3 as provisional — ship it labeled "limited by source text" or
+   defer it until NLx lands. Views 1, 2, 4, 5 are unaffected.
 
    *Good news from the same run:* the `count` field is rock-stable — five
    identical queries returned 31,188 every time (relative spread 0.0), so
@@ -198,20 +203,29 @@ The disclosed error rate is a release gate, not documentation.
    18140. Measured leakage for Columbus: default radius caught only Franklin +
    Delaware counties (undercovers the 10-county MSA); a 25 km radius reached
    the outer counties but leaked 4.6% into Knox County (not in the CBSA).
-   **Resolution: county is the geographic unit.** Every Adzuna result carries
-   its county in `location.area` (e.g. `[US, Ohio, Franklin County, Hilliard]`),
-   and a CBSA is defined as a set of counties (OMB delineation). So:
-   - **Counts:** sum per-county `count` queries for the counties in each CBSA
-     (`where="<County>, <ST>"`, small distance). Numerator geography now matches
-     the CBSA LAUS denominator. Cost: ~1,167 metro-affiliated counties/week,
-     which fits the free tier spread across ~5 days (≤250/day).
-   - **Sample:** bucket pulled postings by their returned county → CBSA, drop
-     any posting whose county is in no target CBSA.
-   - Residual caveat: a county `where` is still radius-centered, so minor
-     boundary bleed between adjacent counties remains; bleed *within* a CBSA is
-     harmless (same total), only cross-CBSA edges matter. Phase 1 uses the
-     hardcoded Columbus county set; national rollout loads the OMB county↔CBSA
-     crosswalk (`geo.py`).
+   **Resolution: county is the geographic unit — but only for postings that
+   report it, not for count queries.** Every Adzuna *result* carries its county
+   in `location.area` (e.g. `[US, Ohio, Franklin County, Hilliard]`) and a CBSA
+   is a set of counties (OMB delineation), so enumerated postings bucket
+   exactly. A county *`count` query* does NOT — `where=<county>` is still a
+   radius around the county's geocoded point, so it bleeds across county lines.
+   Measured: summing the 10 Columbus counties' `count` queries gave 66k with
+   Delaware County (16.7k) outranking Franklin/Columbus (12.7k), which is
+   impossible for true counts — pure radius bleed.
+   - **Volume (view 1):** *calibrated single radius.* Take one `count` at a
+     per-CBSA radius that covers most of it, and multiply by `f_m`, the
+     fraction of the sample's accurately-reported counties that fall in the
+     CBSA. The estimate converges (~44k for Columbus across radii 25/40/60,
+     vs 31k undercovered at the default ~10 km and 66k for the per-county sum),
+     which is the evidence the method is sound. Cost: **one** count call per
+     metro, and `f_m` is free — it comes from the classification sample we pull
+     anyway. Phase 1 Columbus: count 52,875 × f_m 0.85 = **44,944**.
+   - **Sample:** pull over the same CBSA radius, bucket by reported county,
+     drop out-of-CBSA postings. Drawing at the CBSA radius (not the ~10 km
+     core) keeps the classification sample representative of the whole metro.
+   - Phase 1 hardcodes Columbus's county set + `radius_km` in `geo.py`;
+     national rollout loads the OMB county↔CBSA crosswalk and derives each
+     radius from CBSA extent.
 2. **Changed call: don't commit the `.duckdb` file.** A binary that churns
    100% every weekly run bloats git history and merge-conflicts by design.
    Committed source of truth = append-only weekly Parquet partitions;

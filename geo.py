@@ -18,6 +18,9 @@ CBSA_COUNTIES = {
     "18140": {
         "name": "Columbus, OH",
         "state": "Ohio",
+        # radius (km) for the calibrated volume query — chosen to cover most of
+        # the CBSA's counties. National rollout derives this from CBSA extent.
+        "radius_km": 40,
         "counties": {
             "Delaware County", "Fairfield County", "Franklin County",
             "Hocking County", "Licking County", "Madison County",
