@@ -192,17 +192,26 @@ The disclosed error rate is a release gate, not documentation.
    identical queries returned 31,188 every time (relative spread 0.0), so
    counts are safe to trust week-over-week for views 1 and 5.
 
-7. **Adzuna `where` is radius-based, not CBSA-bounded (Phase 0 finding).**
-   A `where=Columbus, Ohio` query counts postings within a default radius of
-   the place, not within CBSA 18140. Consequences: (a) adjacent-metro radii
-   overlap and double-count; (b) the view-1 numerator (radius count) and
-   denominator (CBSA LAUS labor force) describe different geographies, so the
-   rate is biased upward for metros with dense neighbors. Options to resolve in
-   Phase 1, cheapest first: pass Adzuna's `distance` param tuned per metro; or
-   switch to Adzuna's lat/long + small radius centered on the CBSA; or treat
-   the number as "labor-market-area demand near metro X" and rename the view
-   accordingly. Decision required before national rollout — do not scale the
-   counts pipeline until the geography is pinned down.
+7. **Adzuna `where` is radius-based, not CBSA-bounded — resolved via county
+   (Phase 0 finding + fix).** A `where=Columbus, Ohio` query counts postings
+   within a radius of the place (measured default ≈ 10 km), not within CBSA
+   18140. Measured leakage for Columbus: default radius caught only Franklin +
+   Delaware counties (undercovers the 10-county MSA); a 25 km radius reached
+   the outer counties but leaked 4.6% into Knox County (not in the CBSA).
+   **Resolution: county is the geographic unit.** Every Adzuna result carries
+   its county in `location.area` (e.g. `[US, Ohio, Franklin County, Hilliard]`),
+   and a CBSA is defined as a set of counties (OMB delineation). So:
+   - **Counts:** sum per-county `count` queries for the counties in each CBSA
+     (`where="<County>, <ST>"`, small distance). Numerator geography now matches
+     the CBSA LAUS denominator. Cost: ~1,167 metro-affiliated counties/week,
+     which fits the free tier spread across ~5 days (≤250/day).
+   - **Sample:** bucket pulled postings by their returned county → CBSA, drop
+     any posting whose county is in no target CBSA.
+   - Residual caveat: a county `where` is still radius-centered, so minor
+     boundary bleed between adjacent counties remains; bleed *within* a CBSA is
+     harmless (same total), only cross-CBSA edges matter. Phase 1 uses the
+     hardcoded Columbus county set; national rollout loads the OMB county↔CBSA
+     crosswalk (`geo.py`).
 2. **Changed call: don't commit the `.duckdb` file.** A binary that churns
    100% every weekly run bloats git history and merge-conflicts by design.
    Committed source of truth = append-only weekly Parquet partitions;
