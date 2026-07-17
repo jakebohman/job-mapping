@@ -21,6 +21,9 @@ CBSA_COUNTIES = {
         # radius (km) for the calibrated volume query — chosen to cover most of
         # the CBSA's counties. National rollout derives this from CBSA extent.
         "radius_km": 40,
+        # BLS LAUS labor-force series (measure 06). National rollout builds this
+        # from the LAUS area-code lookup; hardcoded for the Phase 1 metro.
+        "laus_lf_series": "LAUMT391814000000006",
         "counties": {
             "Delaware County", "Fairfield County", "Franklin County",
             "Hocking County", "Licking County", "Madison County",

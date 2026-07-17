@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metro Labor Market Map — Phase 1</title>
+<style>
+  :root { --ink:#1a2233; --muted:#5b6b82; --line:#d9e0ea; --accent:#2563eb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+         color:var(--ink); background:#f6f8fb; }
+  header { padding:20px 24px 8px; }
+  h1 { margin:0; font-size:20px; }
+  .sub { color:var(--muted); font-size:13px; }
+  .wrap { display:flex; flex-wrap:wrap; gap:20px; padding:16px 24px 32px; }
+  .map { flex:1 1 420px; min-width:320px; background:#fff; border:1px solid var(--line);
+         border-radius:10px; padding:12px; }
+  .panel { flex:1 1 320px; min-width:300px; }
+  svg { width:100%; height:auto; display:block; }
+  .cbsa { stroke:#fff; stroke-width:1.2; cursor:pointer; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px;
+          padding:14px 16px; margin-bottom:14px; }
+  .big { font-size:34px; font-weight:700; }
+  .big small { font-size:14px; font-weight:400; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:4px 0; border-bottom:1px solid var(--line); }
+  td.n { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .bar { height:8px; background:var(--accent); border-radius:4px; }
+  .caveats { font-size:12.5px; color:var(--muted); }
+  .caveats li { margin:3px 0; }
+  .tag { display:inline-block; font-size:11px; background:#eef2f8; color:var(--muted);
+         border-radius:4px; padding:1px 6px; margin-left:6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Metro Labor Market Map <span class="tag">Phase 1 · one metro</span></h1>
+  <div class="sub">Postings per 1,000 workers — insight, not a job board. Every view is a rate or share.</div>
+</header>
+<div class="wrap">
+  <div class="map"><svg id="map" viewBox="0 0 640 460" role="img" aria-label="Metro choropleth"></svg></div>
+  <div class="panel" id="panel"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script>
+const CBSA = "18140";
+Promise.all([
+  d3.json(`data/${CBSA}.json`),
+  d3.json(`data/cbsa_${CBSA}.geojson`)
+]).then(([d, geo]) => {
+  // --- map: single CBSA polygon, shaded by the headline rate ---
+  const svg = d3.select("#map");
+  const w = 640, h = 460;
+  const proj = d3.geoMercator().fitSize([w - 20, h - 20], geo);
+  const path = d3.geoPath(proj);
+  const rate = d.view1_postings_per_1000;
+  const color = d3.scaleSequential(d3.interpolateBlues).domain([0, 40]);
+  svg.append("g").attr("transform","translate(10,10)")
+    .selectAll("path").data(geo.features).join("path")
+      .attr("class","cbsa").attr("d",path)
+      .attr("fill", color(rate))
+      .append("title").text(`${d.name}: ${rate} postings / 1,000 workers`);
+
+  // --- panel ---
+  const lf = d.labor_force, v = d.volume, m = d.meta;
+  const fmt = n => n == null ? "—" : n.toLocaleString();
+  const maxShare = d3.max(d.occupation_shares, r => r.share) || 1;
+  const rows = d.occupation_shares.slice(0, 10).map(r => `
+    <tr><td>${r.title}</td>
+        <td style="width:32%"><div class="bar" style="width:${(r.share/maxShare*100).toFixed(0)}%"></div></td>
+        <td class="n">${(r.share*100).toFixed(0)}% <span style="opacity:.6">(n=${r.n})</span></td></tr>`).join("");
+
+  document.getElementById("panel").innerHTML = `
+    <div class="card">
+      <div class="sub">${d.name} · CBSA ${d.cbsa}</div>
+      <div class="big">${rate ?? "—"} <small>postings / 1,000 workers</small></div>
+      <div class="sub">distinct estimate · raw-with-reposts ${d.view1_range_per_1000.raw_with_reposts ?? "—"}
+        &nbsp;|&nbsp; labor force ${fmt(lf.labor_force)} (${lf.as_of})</div>
+    </div>
+    <div class="card">
+      <div class="sub">Occupation mix (SOC major) — classified sample n=${d.sample.n_coded}</div>
+      <table>${rows}</table>
+    </div>
+    <div class="card caveats">
+      <strong>How to read this</strong> · coder: ${m.coder}
+      <ul>
+        <li>${m.threshold_note}</li>
+        ${m.caveats.map(c => `<li>${c}</li>`).join("")}
+      </ul>
+      <div style="opacity:.7">Generated ${d.generated_at} · volume: calibrated ${fmt(v.count)}×f_m ${v.f_m} = ${fmt(v.volume)}, distinct est. ${fmt(v.distinct_estimate)}.</div>
+    </div>`;
+}).catch(e => {
+  document.getElementById("panel").innerHTML =
+    `<div class="card">Failed to load data: ${e}. Serve this dir over HTTP (fetch needs it) and run pipeline.py first.</div>`;
+});
+</script>
+</body>
+</html>

@@ -152,20 +152,45 @@ The disclosed error rate is a release gate, not documentation.
 5. **Detailed-level gate** — detailed O*NET-SOC views stay unshipped until a
    detailed-level error rate is measured on its own labeled sample.
 
+## Phase 1 empirical findings (Columbus, CBSA 18140)
+
+Everything the pipeline surfaced on real data — the aggregate-vs-OEWS sanity
+check (validation item 3) effectively fired on the first run:
+
+- **Aggregator repost saturation dominates the raw signal.** ~58% of the
+  in-CBSA sample were near-duplicate reposts (same normalized title + employer,
+  distinct Adzuna ids), e.g. 30× "CDL A Delivery Truck Driver". Semantic dedup
+  cut Transportation from 53% → ~29% of the sample and lifted Healthcare
+  17% → ~32%. Consequence: id-dedup is insufficient; `ingest.dedupe_semantic`
+  collapses reposts, and view 1 is reported as a **range** — raw count
+  (upper bound, ~38/1,000) and repost-collapsed distinct estimate (lower bound,
+  ~16/1,000) — because Adzuna's `count` field can't itself be de-duped.
+- **NIOCCS (interim coder) leaves ~21% uncoded** (its `00-9900` sentinel),
+  concentrated in physician "Opportunity" ads it can't parse from title alone.
+  These bias shares away from Healthcare Practitioners. An LLM reading the
+  description would recover most; this is a concrete reason NIOCCS is interim.
+- **Transportation is still elevated after dedup (~29%)** vs ~8% OEWS
+  employment share — expected direction (postings overweight high-churn work),
+  larger magnitude. This is the kind of divergence the outliers panel is meant
+  to catch, and evidence the raw map without dedup would badly mislead.
+
 ## Build phases
 
-- **Phase 0 — source spike (days, throwaway code).** Get Adzuna and
-  CareerOneStop keys. For one mid-size metro (e.g. Columbus OH, CBSA 18140),
-  measure: daily posting volume, `count`-field stability across identical
-  queries, description truncation length, cross-day duplicate rate,
-  remote-detectability from truncated text, CareerOneStop text quality and
-  effective rate limits. **Exit criterion:** decide the Adzuna/CareerOneStop
-  split for counts vs sample text, with numbers. This is the riskiest
-  assumption in the project; it gets tested before any real code.
-- **Phase 1 — one metro, end to end.** Weekly GitHub Action: ingest Columbus
-  → classify (Groq or Gemini, prompt v1, closed skill vocab) → Parquet →
-  aggregate JSON → React + d3-geo page on GitHub Pages rendering one shaded
-  CBSA polygon with view 1. Ugly is fine; the pipe is the deliverable.
+- **Phase 0 — source spike (DONE).** Adzuna + CareerOneStop keys obtained.
+  Measured: `count` stable (31,188 ×5, zero spread); descriptions hard-capped
+  at 500 chars (100%); Adzuna `where` radius-based → resolved via county
+  (risk 7); CareerOneStop Jobs API gated (401) → skills source-limited (risk 1);
+  repost saturation (finding above). Cross-day duplicate rate still pending a
+  second-day spike run. Exit criterion met for Adzuna (counts) and negatively
+  for CareerOneStop (no self-serve text) — NLx is the text upgrade path.
+- **Phase 1 — one metro, end to end (DONE, with interim substitutions).**
+  `pipeline.py`: ingest Columbus (`ingest.py`) → classify (`classify.py`,
+  **NIOCCS interim** in place of the LLM) → **JSON store** (Parquet deferred to
+  national scale) → aggregate → **static d3-geo page** (`site/`, plain HTML +
+  CDN d3 instead of a React toolchain — deferred until the UI justifies it).
+  Renders the Columbus CBSA polygon shaded by view 1 with the occupation mix,
+  disclosed threshold, and caveats. Swap-in points for the LLM classifier and
+  Parquet are isolated. Not yet on a GitHub Action / Pages.
 - **Phase 2 — validation harness.** Labeling flow (a local CLI is enough),
   300 labels, NIOCCS agreement run, golden set wired into CI, error rate
   rendered on the page. No scaling until this exists.

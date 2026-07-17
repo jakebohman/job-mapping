@@ -13,6 +13,7 @@ is source-limited until NLx (see PROJECT.md risk 1).
 """
 
 import os
+import re
 import sys
 import time
 
@@ -61,6 +62,29 @@ def dedupe(results):
     return out
 
 
+def _norm_title(t):
+    t = re.sub(r"[^a-z0-9 ]", " ", (t or "").lower())
+    t = re.sub(r"\b(now hiring|hiring|urgent|apply now|immediately)\b", " ", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def dedupe_semantic(results):
+    """Collapse near-identical reposts by (normalized title, employer). Adzuna
+    (an aggregator) is flooded with bulk reposts that carry distinct ids, so
+    id-dedup alone leaves ~60% duplicates (measured, Columbus). ponytail: same
+    title+employer is treated as one posting — this can merge genuine
+    multi-site openings, so it is a lower bound on distinct demand; the raw
+    count is the upper bound. Truth is between; NLx's cleaner feed narrows it."""
+    seen, out = set(), []
+    for r in results:
+        key = (_norm_title(r.get("title")),
+               (r.get("company") or {}).get("display_name", ""))
+        if key not in seen:
+            seen.add(key)
+            out.append(r)
+    return out
+
+
 def pull_sample(cbsa_code, want, app_id, app_key, max_pages=10):
     """Pull postings over the CBSA's radius, keep only those whose reported
     county is in the CBSA, dedupe. Pulling at the same radius used for the
@@ -79,22 +103,34 @@ def pull_sample(cbsa_code, want, app_id, app_key, max_pages=10):
             break
         time.sleep(1)
     kept, dropped = geo.bucket_by_cbsa(dedupe(raw))
-    in_cbsa = kept.get(cbsa_code) or []
+    in_cbsa = kept.get(cbsa_code) or []              # id-deduped, in-CBSA
     total = len(in_cbsa) + len(dropped)
-    return {"sample": in_cbsa[:want], "n": min(len(in_cbsa), want),
+    distinct = dedupe_semantic(in_cbsa)              # repost-collapsed
+    dedup_ratio = len(distinct) / len(in_cbsa) if in_cbsa else 0.0
+    return {"sample": distinct[:want], "n": min(len(distinct), want),
             "pulled": len(raw), "dropped_out_of_cbsa": len(dropped),
-            "f_m": in_cbsa and (len(in_cbsa) / total) or 0.0}
+            "f_m": len(in_cbsa) / total if in_cbsa else 0.0,
+            "dedup_ratio": round(dedup_ratio, 3),
+            "reposts_collapsed": len(in_cbsa) - len(distinct)}
 
 
 def _selftest():
-    a = {"id": 1, "location": {"area": ["US", "Ohio", "Franklin County", "X"]}}
+    fr = {"area": ["US", "Ohio", "Franklin County", "X"]}
+    a = {"id": 1, "location": fr, "title": "CDL A Driver - Now Hiring",
+         "company": {"display_name": "Acme"}}
     b = {"id": 2, "location": {"area": ["US", "Ohio", "Knox County", "Y"]}}
     assert [r["id"] for r in dedupe([a, a, b])] == [1, 2]
 
-    # pull_sample logic without network: exercise geo bucketing + cap
-    flat = [a, a, b, dict(a, id=3)]
-    kept, dropped = geo.bucket_by_cbsa(dedupe(flat))
-    assert len(kept["18140"]) == 2 and len(dropped) == 1  # ids 1,3 in; 2 out
+    # geo bucketing
+    kept, dropped = geo.bucket_by_cbsa(dedupe([a, a, b, dict(a, id=3)]))
+    assert len(kept["18140"]) == 2 and len(dropped) == 1   # ids 1,3 in; 2 out
+
+    # semantic dedup: same title (post-normalization) + employer collapses
+    a2 = {"id": 9, "location": fr, "title": "CDL A Driver",   # "now hiring" stripped
+          "company": {"display_name": "Acme"}}
+    a3 = {"id": 10, "location": fr, "title": "CDL A Driver",
+          "company": {"display_name": "Other Co"}}            # diff employer -> kept
+    assert len(dedupe_semantic([a, a2, a3])) == 2
     print("selftest ok")
 
 

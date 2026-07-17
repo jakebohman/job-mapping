@@ -1,0 +1,111 @@
+{
+  "cbsa": "18140",
+  "name": "Columbus, OH",
+  "generated_at": "2026-07-17T23:08:00+00:00",
+  "view1_postings_per_1000": 16.47,
+  "view1_range_per_1000": {
+    "distinct": 16.47,
+    "raw_with_reposts": 37.96
+  },
+  "volume": {
+    "cbsa": "18140",
+    "count": 52856,
+    "f_m": 0.837,
+    "volume": 44223,
+    "distinct_estimate": 19193,
+    "dedup_ratio": 0.434
+  },
+  "labor_force": {
+    "labor_force": 1165012,
+    "as_of": "May 2026",
+    "series": "LAUMT391814000000006"
+  },
+  "sample": {
+    "n": 109,
+    "n_coded": 80,
+    "dropped_out_of_cbsa": 49,
+    "reposts_collapsed": 142,
+    "f_m": 0.837,
+    "dedup_ratio": 0.434
+  },
+  "occupation_shares": [
+    {
+      "soc_major": "29",
+      "title": "Healthcare Practitioners",
+      "n": 26,
+      "share": 0.325
+    },
+    {
+      "soc_major": "53",
+      "title": "Transportation & Material Moving",
+      "n": 23,
+      "share": 0.2875
+    },
+    {
+      "soc_major": "49",
+      "title": "Installation, Maintenance & Repair",
+      "n": 8,
+      "share": 0.1
+    },
+    {
+      "soc_major": "43",
+      "title": "Office & Admin Support",
+      "n": 6,
+      "share": 0.075
+    },
+    {
+      "soc_major": "11",
+      "title": "Management",
+      "n": 6,
+      "share": 0.075
+    },
+    {
+      "soc_major": "21",
+      "title": "Community & Social Service",
+      "n": 3,
+      "share": 0.0375
+    },
+    {
+      "soc_major": "13",
+      "title": "Business & Financial",
+      "n": 2,
+      "share": 0.025
+    },
+    {
+      "soc_major": "33",
+      "title": "Protective Service",
+      "n": 2,
+      "share": 0.025
+    },
+    {
+      "soc_major": "41",
+      "title": "Sales",
+      "n": 2,
+      "share": 0.025
+    },
+    {
+      "soc_major": "19",
+      "title": "Life, Physical & Social Science",
+      "n": 1,
+      "share": 0.0125
+    },
+    {
+      "soc_major": "31",
+      "title": "Healthcare Support",
+      "n": 1,
+      "share": 0.0125
+    }
+  ],
+  "meta": {
+    "coder": "NIOSH NIOCCS (interim; LLM to replace)",
+    "min_cell_n": 50,
+    "threshold_note": "Cells below n=50 are low-confidence (Poisson CV<=15% requires n>=50).",
+    "below_threshold": false,
+    "caveats": [
+      "Volume is a calibrated estimate: radius count x in-CBSA fraction (f_m), not a census.",
+      "~57% of the sample were near-duplicate reposts (same title+employer); headline uses the repost-collapsed estimate, raw count is the upper bound.",
+      "Occupation shares are from a sample; skills not extracted (Adzuna text is 500-char capped).",
+      "29/109 postings uncoded by NIOCCS (interim coder), concentrated in physician 'opportunity' ads."
+    ]
+  }
+}
