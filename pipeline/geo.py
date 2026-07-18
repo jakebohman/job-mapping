@@ -8,9 +8,28 @@ key on the same. Keying by (state, county) disambiguates same-named counties
 """
 
 import csv
+import os
 import re
 import sys
 from pathlib import Path
+
+
+def _load_dotenv(path=None):
+    """Load KEY=VALUE lines from the repo-root .env into os.environ (without
+    overriding a real env var), so builds run without inline keys. .env is
+    gitignored; kept dependency-free (no python-dotenv). Runs on `import geo`,
+    which every key-using script does."""
+    path = path or Path(__file__).parent.parent / ".env"
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            key, _, val = line.partition("=")
+            os.environ.setdefault(key.strip(), val.strip().strip("'\""))
+
+
+_load_dotenv()
 
 CROSSWALK = Path(__file__).parent / "cbsa_counties.csv"
 DEFAULT_RADIUS_KM = 50   # calibrated volume self-corrects, so one default is fine
@@ -96,6 +115,16 @@ def _selftest():
     assert cbsa_of(res("US", "Ohio", "Knox County", "Mount Vernon")) is None
     assert cbsa_of(res("US", "Tennessee", "Knox County", "Knoxville")) is not None
     assert county_of(res("US", "Ohio")) is None
+
+    # .env loader: loads + unquotes new keys, never overrides a real env var
+    import tempfile
+    p = Path(tempfile.gettempdir()) / "_jm_env_test.env"
+    p.write_text('# comment\nJM_TEST_KEY = "hello"\nJM_EXISTING=fromfile\n')
+    os.environ["JM_EXISTING"] = "real"
+    _load_dotenv(p)
+    assert os.environ["JM_TEST_KEY"] == "hello"
+    assert os.environ["JM_EXISTING"] == "real"
+    p.unlink()
     print(f"selftest ok ({len(CBSA_COUNTIES)} MSAs loaded)")
 
 

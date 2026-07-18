@@ -49,9 +49,8 @@ Each build script writes JSON/GeoJSON into `site/data/`, and one page renders it
 
 ```sh
 pip install -r requirements.txt
-export ADZUNA_APP_ID=...  ADZUNA_APP_KEY=...   # free key: developer.adzuna.com
-export BLS_API_KEY=...                         # free key: data.bls.gov/registrationEngine
-                                               # (needed for the national map's ~390 metros)
+cp .env.example .env    # then fill in keys — auto-loaded by the pipeline, no export needed
+                        # (ADZUNA_APP_ID/KEY for all builds; BLS_API_KEY for the national map)
 
 python pipeline/build_geometry.py    # one-time: map shapes + d3-geo (no API key)
 python pipeline/build_national.py     # US map data (~390 Adzuna calls, resumable)

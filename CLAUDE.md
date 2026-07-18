@@ -25,8 +25,10 @@ Run everything from the repo root. There is no framework/lint/CI yet.
 
 ```sh
 pip install -r requirements.txt          # one dependency: requests
-export ADZUNA_APP_ID=... ADZUNA_APP_KEY=...   # free: developer.adzuna.com (all builds)
-export BLS_API_KEY=...                         # free: data.bls.gov/registrationEngine (national map)
+# Keys: put them in a gitignored .env at the repo root (copy .env.example) — it's
+# auto-loaded by pipeline/geo.py, so builds run without passing keys. Or export
+# them. Needed: ADZUNA_APP_ID, ADZUNA_APP_KEY (all builds), BLS_API_KEY (national
+# map), GEMINI_API_KEY (ROADMAP task 5). This repo already has a local .env.
 
 # Build the site data (writes JSON/GeoJSON into site/data/):
 python pipeline/build_geometry.py    # one-time: metro/state shapes + vendored d3-geo (no key)
