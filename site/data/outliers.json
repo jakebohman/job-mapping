@@ -1,6 +1,18 @@
 {
-  "generated_at": "2026-07-18T00:19:02+00:00",
+  "generated_at": "2026-07-18T00:45:52+00:00",
   "metros_sampled": 10,
+  "national_total": 1249322,
+  "lead": {
+    "cbsa": "41860",
+    "metro": "San Francisco-Oakland-Fremont, CA",
+    "category": "IT Jobs",
+    "share_metro": 0.1765,
+    "share_national": 0.087,
+    "log2_ratio": 1.02,
+    "ratio": 2.03,
+    "n": 21631,
+    "sentence": "In San Francisco-Oakland-Fremont, CA, IT Jobs is 18% of postings vs 9% nationally \u2014 2.0x national, over-represented."
+  },
   "basis": "Adzuna category posting counts (census per category)",
   "method": "Category share = category count / metro total (same radius, so CBSA-radius imprecision cancels). Ranked by log2(metro share / national share) \u2014 effect size, since near-census counts make a significance test meaningless. Sentences templated from the numbers.",
   "national_share": [
@@ -149,50 +161,6 @@
       "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Travel Jobs is 2% of postings vs 6% nationally \u2014 0.4x national, under-represented."
     },
     {
-      "cbsa": "19740",
-      "metro": "Denver-Aurora-Centennial, CO",
-      "category": "Travel Jobs",
-      "share_metro": 0.0244,
-      "share_national": 0.0578,
-      "log2_ratio": -1.25,
-      "ratio": 0.42,
-      "n": 2127,
-      "sentence": "In Denver-Aurora-Centennial, CO, Travel Jobs is 2% of postings vs 6% nationally \u2014 0.4x national, under-represented."
-    },
-    {
-      "cbsa": "26420",
-      "metro": "Houston-Pasadena-The Woodlands, TX",
-      "category": "PR, Advertising & Marketing Jobs",
-      "share_metro": 0.0071,
-      "share_national": 0.0154,
-      "log2_ratio": -1.12,
-      "ratio": 0.46,
-      "n": 617,
-      "sentence": "In Houston-Pasadena-The Woodlands, TX, PR, Advertising & Marketing Jobs is 1% of postings vs 2% nationally \u2014 0.5x national, under-represented."
-    },
-    {
-      "cbsa": "16980",
-      "metro": "Chicago-Naperville-Elgin, IL-IN",
-      "category": "Travel Jobs",
-      "share_metro": 0.1247,
-      "share_national": 0.0578,
-      "log2_ratio": 1.11,
-      "ratio": 2.16,
-      "n": 19097,
-      "sentence": "In Chicago-Naperville-Elgin, IL-IN, Travel Jobs is 12% of postings vs 6% nationally \u2014 2.2x national, over-represented."
-    },
-    {
-      "cbsa": "19100",
-      "metro": "Dallas-Fort Worth-Arlington, TX",
-      "category": "Travel Jobs",
-      "share_metro": 0.0281,
-      "share_national": 0.0578,
-      "log2_ratio": -1.04,
-      "ratio": 0.49,
-      "n": 3566,
-      "sentence": "In Dallas-Fort Worth-Arlington, TX, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.5x national, under-represented."
-    },
-    {
       "cbsa": "41860",
       "metro": "San Francisco-Oakland-Fremont, CA",
       "category": "IT Jobs",
@@ -226,50 +194,6 @@
       "sentence": "In Houston-Pasadena-The Woodlands, TX, IT Jobs is 4% of postings vs 9% nationally \u2014 0.5x national, under-represented."
     },
     {
-      "cbsa": "41860",
-      "metro": "San Francisco-Oakland-Fremont, CA",
-      "category": "Logistics & Warehouse Jobs",
-      "share_metro": 0.0282,
-      "share_national": 0.0546,
-      "log2_ratio": -0.95,
-      "ratio": 0.52,
-      "n": 3461,
-      "sentence": "In San Francisco-Oakland-Fremont, CA, Logistics & Warehouse Jobs is 3% of postings vs 5% nationally \u2014 0.5x national, under-represented."
-    },
-    {
-      "cbsa": "26420",
-      "metro": "Houston-Pasadena-The Woodlands, TX",
-      "category": "Travel Jobs",
-      "share_metro": 0.1105,
-      "share_national": 0.0578,
-      "log2_ratio": 0.94,
-      "ratio": 1.91,
-      "n": 9635,
-      "sentence": "In Houston-Pasadena-The Woodlands, TX, Travel Jobs is 11% of postings vs 6% nationally \u2014 1.9x national, over-represented."
-    },
-    {
-      "cbsa": "42660",
-      "metro": "Seattle-Tacoma-Bellevue, WA",
-      "category": "Travel Jobs",
-      "share_metro": 0.0305,
-      "share_national": 0.0578,
-      "log2_ratio": -0.92,
-      "ratio": 0.53,
-      "n": 2447,
-      "sentence": "In Seattle-Tacoma-Bellevue, WA, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.5x national, under-represented."
-    },
-    {
-      "cbsa": "19100",
-      "metro": "Dallas-Fort Worth-Arlington, TX",
-      "category": "Scientific & QA Jobs",
-      "share_metro": 0.0083,
-      "share_national": 0.0156,
-      "log2_ratio": -0.91,
-      "ratio": 0.53,
-      "n": 1057,
-      "sentence": "In Dallas-Fort Worth-Arlington, TX, Scientific & QA Jobs is 1% of postings vs 2% nationally \u2014 0.5x national, under-represented."
-    },
-    {
       "cbsa": "12060",
       "metro": "Atlanta-Sandy Springs-Roswell, GA",
       "category": "Teaching Jobs",
@@ -281,15 +205,70 @@
       "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
     },
     {
+      "cbsa": "16980",
+      "metro": "Chicago-Naperville-Elgin, IL-IN",
+      "category": "Logistics & Warehouse Jobs",
+      "share_metro": 0.0912,
+      "share_national": 0.0546,
+      "log2_ratio": 0.74,
+      "ratio": 1.67,
+      "n": 13972,
+      "sentence": "In Chicago-Naperville-Elgin, IL-IN, Logistics & Warehouse Jobs is 9% of postings vs 5% nationally \u2014 1.7x national, over-represented."
+    },
+    {
+      "cbsa": "33100",
+      "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+      "category": "Engineering Jobs",
+      "share_metro": 0.0522,
+      "share_national": 0.0815,
+      "log2_ratio": -0.64,
+      "ratio": 0.64,
+      "n": 3083,
+      "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Engineering Jobs is 5% of postings vs 8% nationally \u2014 0.6x national, under-represented."
+    },
+    {
+      "cbsa": "33100",
+      "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+      "category": "Hospitality & Catering Jobs",
+      "share_metro": 0.1096,
+      "share_national": 0.073,
+      "log2_ratio": 0.59,
+      "ratio": 1.5,
+      "n": 6472,
+      "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Hospitality & Catering Jobs is 11% of postings vs 7% nationally \u2014 1.5x national, over-represented."
+    },
+    {
+      "cbsa": "35620",
+      "metro": "New York-Newark-Jersey City, NY-NJ",
+      "category": "Logistics & Warehouse Jobs",
+      "share_metro": 0.0386,
+      "share_national": 0.0546,
+      "log2_ratio": -0.5,
+      "ratio": 0.71,
+      "n": 9976,
+      "sentence": "In New York-Newark-Jersey City, NY-NJ, Logistics & Warehouse Jobs is 4% of postings vs 5% nationally \u2014 0.7x national, under-represented."
+    },
+    {
+      "cbsa": "42660",
+      "metro": "Seattle-Tacoma-Bellevue, WA",
+      "category": "Teaching Jobs",
+      "share_metro": 0.0246,
+      "share_national": 0.0343,
+      "log2_ratio": -0.48,
+      "ratio": 0.72,
+      "n": 1968,
+      "sentence": "In Seattle-Tacoma-Bellevue, WA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.7x national, under-represented."
+    },
+    {
       "cbsa": "19740",
       "metro": "Denver-Aurora-Centennial, CO",
-      "category": "PR, Advertising & Marketing Jobs",
-      "share_metro": 0.0086,
-      "share_national": 0.0154,
-      "log2_ratio": -0.85,
-      "ratio": 0.56,
-      "n": 747,
-      "sentence": "In Denver-Aurora-Centennial, CO, PR, Advertising & Marketing Jobs is 1% of postings vs 2% nationally \u2014 0.6x national, under-represented."
+      "category": "Healthcare & Nursing Jobs",
+      "share_metro": 0.3461,
+      "share_national": 0.2489,
+      "log2_ratio": 0.48,
+      "ratio": 1.39,
+      "n": 30225,
+      "sentence": "In Denver-Aurora-Centennial, CO, Healthcare & Nursing Jobs is 35% of postings vs 25% nationally \u2014 1.4x national, over-represented."
     }
   ]
 }

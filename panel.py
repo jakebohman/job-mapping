@@ -31,9 +31,11 @@ import geo
 # Diverse large metros. ~31 count calls each; the cache makes runs resumable.
 METROS = ["35620", "31080", "16980", "19100", "26420", "12060", "41860",
           "42660", "19740", "33100"]
-MIN_NAT_SHARE = 0.015   # ignore tiny national categories (noise)
+MIN_NAT_SHARE = 0.03    # focus on substantial sectors (>=3% of national postings)
 MIN_CAT_COUNT = 50      # metro must have >=50 postings in the category
-TOP_N = 15
+TOP_N = 12
+PER_METRO_CAP = 2       # diversify the ranked list so it isn't one metro/category
+PER_CATEGORY_CAP = 2
 CALL_INTERVAL = 2.6     # seconds between calls: Adzuna free tier is ~25/min
 SEARCH = "https://api.adzuna.com/v1/api/jobs/us/search/1"
 CATS_URL = "https://api.adzuna.com/v1/api/jobs/us/categories"
@@ -110,6 +112,25 @@ def rank_outliers(per_metro, national_share):
     return cells
 
 
+def diversify(cells, per_metro=PER_METRO_CAP, per_category=PER_CATEGORY_CAP,
+              top_n=TOP_N):
+    """Greedily take the strongest deviations while capping how many cells any
+    one metro or category contributes, so the list reads as distinct insights
+    instead of e.g. seven Travel Jobs rows. cells must be sorted by |log2|."""
+    picked, seen_m, seen_c = [], {}, {}
+    for c in cells:
+        if seen_m.get(c["cbsa"], 0) >= per_metro:
+            continue
+        if seen_c.get(c["category"], 0) >= per_category:
+            continue
+        picked.append(c)
+        seen_m[c["cbsa"]] = seen_m.get(c["cbsa"], 0) + 1
+        seen_c[c["category"]] = seen_c.get(c["category"], 0) + 1
+        if len(picked) >= top_n:
+            break
+    return picked
+
+
 def run():
     app_id, app_key = os.environ.get("ADZUNA_APP_ID"), os.environ.get("ADZUNA_APP_KEY")
     if not (app_id and app_key):
@@ -152,11 +173,16 @@ def run():
     if len(per_metro) < 3:
         sys.exit(f"Only {len(per_metro)} metros — need >=3 for a national baseline.")
     national = pool_national(per_metro)
-    cells = rank_outliers(per_metro, national)
+    ranked = rank_outliers(per_metro, national)
+    cells = diversify(ranked)
+    # Lead = sharpest over-representation, for the page's hero reading.
+    lead = next((c for c in cells if c["ratio"] > 1), cells[0] if cells else None)
 
     report = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "metros_sampled": len(per_metro),
+        "national_total": sum(sum(m["mix"].values()) for m in per_metro.values()),
+        "lead": lead,
         "basis": "Adzuna category posting counts (census per category)",
         "method": ("Category share = category count / metro total (same radius, "
                    "so CBSA-radius imprecision cancels). Ranked by "
@@ -166,12 +192,12 @@ def run():
         "national_share": [
             {"category": l, "share": round(s, 4)}
             for l, s in sorted(national.items(), key=lambda kv: -kv[1])],
-        "outliers": cells[:TOP_N],
+        "outliers": cells,
     }
     (OUT / "outliers.json").write_text(json.dumps(report, indent=2))
     print(f"\nWrote {OUT/'outliers.json'} — {len(per_metro)} metros, "
-          f"top {min(TOP_N, len(cells))} outliers:")
-    for c in cells[:TOP_N]:
+          f"{len(cells)} diversified outliers:")
+    for c in cells:
         print("  ", c["sentence"])
 
 
@@ -198,6 +224,14 @@ def _selftest():
     # floors respected
     assert all(c["n"] >= MIN_CAT_COUNT and c["share_national"] >= MIN_NAT_SHARE
                for c in cells)
+
+    # diversify caps per-metro and per-category contributions
+    fake = [{"cbsa": "M", "category": "C", "log2_ratio": 9},
+            {"cbsa": "M", "category": "D", "log2_ratio": 8},
+            {"cbsa": "M", "category": "E", "log2_ratio": 7},   # 3rd M -> dropped
+            {"cbsa": "N", "category": "C", "log2_ratio": 6}]
+    picked = diversify(fake, per_metro=2, per_category=2, top_n=10)
+    assert [c["cbsa"] for c in picked] == ["M", "M", "N"]      # M capped at 2
     print("selftest ok")
 
 

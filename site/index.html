@@ -3,76 +3,236 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Metro Labor Market Outliers</title>
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Where U.S. metro hiring demand departs from the national pattern — ten major metros ranked by how far each one's mix of open jobs deviates from the national baseline.">
+<title>Metro Labor Demand — Deviation Index</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="fonts.css"><!-- self-hosted, embedded woff2 (no external deps) -->
 <style>
-  :root { --ink:#1a2233; --muted:#5b6b82; --line:#e2e8f2; --up:#c2410c; --down:#1d4ed8; --card:#fff; --bg:#f6f8fb; }
-  @media (prefers-color-scheme: dark){
-    :root{ --ink:#e8edf5; --muted:#95a3b8; --line:#2a3345; --up:#fb923c; --down:#60a5fa; --card:#161c28; --bg:#0e131c; }
+  :root{
+    --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
+    --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
+    --over:#b4552a; --over-soft:#e7d3c7; --under:#2f6ea3; --under-soft:#cbdcea;
+    --spine:#b3bfce;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink);
-         font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
-  .head { padding:26px 24px 6px; max-width:940px; margin:0 auto; }
-  h1 { margin:0 0 4px; font-size:22px; }
-  .sub { color:var(--muted); font-size:13.5px; }
-  .wrap { max-width:940px; margin:0 auto; padding:12px 24px 40px; }
-  .row { background:var(--card); border:1px solid var(--line); border-radius:10px;
-         padding:13px 16px; margin:9px 0; display:grid;
-         grid-template-columns:60px 1fr 160px; gap:14px; align-items:center; }
-  .mult { font-weight:700; font-size:17px; text-align:center; font-variant-numeric:tabular-nums; }
-  .mult.up{ color:var(--up); } .mult.down{ color:var(--down); }
-  .sent { font-size:14.5px; }
-  .meta { color:var(--muted); font-size:12px; margin-top:2px; }
-  .bars .barlbl { font-size:10.5px; color:var(--muted); display:flex; justify-content:space-between; }
-  .bar { height:7px; border-radius:4px; margin:2px 0 6px; background:#00000010; }
-  .bar > span { display:block; height:100%; border-radius:4px; }
-  .bar.m > span{ background:var(--up); } .bar.n > span{ background:var(--muted); opacity:.55; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:10px;
-          padding:14px 16px; margin:14px 0; font-size:13px; color:var(--muted); }
-  a { color:var(--down); }
-  @media (max-width:600px){ .row{ grid-template-columns:52px 1fr; } .bars{ display:none; } }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
+      --faint:#6d7c91; --rule:#25303d; --hair:#1c2530;
+      --over:#e08a5c; --over-soft:#3a2a20; --under:#5ea6d8; --under-soft:#1e2c3a;
+      --spine:#38475a;
+    }
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+       font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+       text-rendering:optimizeLegibility;}
+  .shell{max-width:1000px;margin:0 auto;padding:0 28px;}
+
+  /* ---- masthead ---- */
+  header{padding:52px 0 30px;border-bottom:2px solid var(--ink);}
+  .eyebrow{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+           font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
+           text-transform:uppercase;color:var(--muted);}
+  .eyebrow b{color:var(--ink);font-weight:600;}
+  h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,6.2vw,62px);
+     line-height:1.02;letter-spacing:-.015em;margin:22px 0 0;max-width:16ch;}
+  h1 em{font-style:italic;font-weight:400;color:var(--under);}
+  .standfirst{margin:20px 0 0;max-width:60ch;font-size:17px;line-height:1.5;
+              color:var(--muted);}
+  .standfirst b{color:var(--ink);font-weight:500;}
+
+  /* ---- lead reading ---- */
+  .lead{display:flex;gap:18px;align-items:flex-start;padding:22px 0 4px;}
+  .lead .flag{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+              text-transform:uppercase;color:var(--over);white-space:nowrap;
+              padding-top:6px;font-weight:600;}
+  .lead p{margin:0;font-family:var(--serif);font-size:clamp(20px,3vw,27px);
+          line-height:1.28;font-weight:400;letter-spacing:-.01em;}
+  .lead strong{font-weight:600;}
+
+  /* ---- chart header ---- */
+  .axis-head{display:grid;grid-template-columns:34px 1fr minmax(180px,360px) 118px;
+             gap:16px;align-items:end;padding:26px 0 10px;
+             border-bottom:1px solid var(--rule);}
+  .axis-head .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+                  text-transform:uppercase;color:var(--faint);}
+  .axis-legend{display:flex;justify-content:space-between;align-items:center;
+               font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+               text-transform:uppercase;color:var(--faint);}
+  .axis-legend .u{color:var(--under);} .axis-legend .o{color:var(--over);}
+  .axis-legend .n{color:var(--muted);letter-spacing:.1em;}
+  .right{text-align:right;}
+
+  /* ---- rows ---- */
+  .rows{margin:0 0 8px;}
+  .row{display:grid;grid-template-columns:34px 1fr minmax(180px,360px) 118px;
+       gap:16px;align-items:center;padding:15px 0;border-bottom:1px solid var(--hair);
+       transition:background .15s;}
+  .row:hover{background:color-mix(in srgb,var(--ink) 3%,transparent);}
+  .rank{font-family:var(--mono);font-size:12px;color:var(--faint);
+        font-weight:500;padding-top:2px;align-self:start;}
+  .metro{font-weight:500;font-size:15.5px;letter-spacing:-.005em;}
+  .sector{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:2px;
+          text-transform:uppercase;letter-spacing:.04em;}
+
+  /* diverging bar — the signature: a shared national spine */
+  .track{position:relative;height:30px;}
+  .track::before{content:"";position:absolute;left:50%;top:-8px;bottom:-8px;
+                 width:1.5px;background:var(--spine);transform:translateX(-50%);z-index:1;}
+  .fill{position:absolute;top:7px;height:16px;border-radius:2px;z-index:2;
+        transform:scaleX(0);transition:transform .6s cubic-bezier(.2,.7,.2,1);}
+  .fill.over{left:50%;transform-origin:left;background:var(--over);}
+  .fill.under{right:50%;transform-origin:right;background:var(--under);}
+  .row.show .fill{transform:scaleX(1);}
+
+  .figures{text-align:right;font-family:var(--mono);}
+  .mult{font-size:16px;font-weight:600;letter-spacing:-.01em;}
+  .mult.over{color:var(--over);} .mult.under{color:var(--under);}
+  .share{font-size:11px;color:var(--faint);margin-top:3px;}
+
+  /* ---- footer ---- */
+  footer{border-top:2px solid var(--ink);margin-top:14px;padding:26px 0 60px;}
+  .fgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;}
+  .fgrid h2{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+            text-transform:uppercase;color:var(--faint);margin:0 0 10px;font-weight:600;}
+  .fgrid p{margin:0 0 10px;font-size:13px;line-height:1.6;color:var(--muted);}
+  .fgrid a{color:var(--under);text-decoration:none;border-bottom:1px solid var(--under-soft);}
+  .fgrid a:hover{border-bottom-color:var(--under);}
+  .natbar{display:flex;height:10px;border-radius:3px;overflow:hidden;margin:4px 0 12px;}
+  .natbar span{height:100%;}
+  .natlist{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.8;}
+  .natlist b{color:var(--ink);font-weight:500;}
+  .stamp{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.03em;
+         margin-top:20px;padding-top:16px;border-top:1px solid var(--hair);}
+
+  .loading{padding:60px 0;color:var(--muted);font-family:var(--mono);font-size:13px;}
+  @media (max-width:720px){
+    .shell{padding:0 18px;}
+    .axis-head{grid-template-columns:26px 1fr 84px;}
+    .axis-head .axis-legend,.axis-head .colbar{display:none;}
+    .row{grid-template-columns:26px 1fr 84px;}
+    .track{display:none;}
+    .fgrid{grid-template-columns:1fr;gap:22px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .fill{transition:none;transform:scaleX(1);} .tipval{transition:none;opacity:1;}
+  }
 </style>
 </head>
 <body>
-<div class="head">
-  <h1>Where metro hiring demand is unusual</h1>
-  <div class="sub">Each metro's job-category mix vs. the national mix, ranked by how far it deviates. The list does the looking — no map required.</div>
-</div>
-<div class="wrap" id="wrap">
-  <div class="card">Loading… run <code>python panel.py</code> and serve this directory over HTTP.</div>
-</div>
-<script>
-fetch("data/outliers.json").then(r=>r.json()).then(d=>{
-  const wrap = document.getElementById("wrap");
-  const maxShare = Math.max(...d.outliers.flatMap(o=>[o.share_metro,o.share_national]), 0.01);
-  const rows = d.outliers.map(o=>{
-    const up = o.ratio >= 1;
-    const pct = x => (x*100).toFixed(0)+"%";
-    return `<div class="row">
-      <div class="mult ${up?'up':'down'}">${o.ratio.toFixed(1)}×</div>
+<div class="shell">
+  <header>
+    <div class="eyebrow">
+      <span>U.S. Metro Labor Demand</span>
+      <span id="stamp-top"></span>
+    </div>
+    <h1>Where hiring breaks from the <em>national pattern</em></h1>
+    <p class="standfirst">Ten of the largest U.S. metros, ranked by how far each
+    one's mix of open jobs departs from the national norm. Postings are counted
+    by sector — a near-census — so the list reflects <b>what employers advertise,
+    where</b>, not who ranks highest in a search. The list does the looking.</p>
+  </header>
+
+  <div id="app"><div class="loading">Loading the index…</div></div>
+
+  <footer>
+    <div class="fgrid">
       <div>
-        <div class="sent">${o.sentence}</div>
-        <div class="meta">${o.metro} · ${o.category} · ${o.n.toLocaleString()} postings</div>
+        <h2>How to read this</h2>
+        <p id="method"></p>
+        <p>Each bar measures a sector's share of a metro's postings against its
+        national share, on a log scale — a bar reaching the same length on both
+        sides means twice, or half, the national rate. Healthcare is the largest
+        sector everywhere, so it rarely appears here: the index surfaces what is
+        <em>distinctive</em> about a metro, not what is merely large.</p>
+        <p><a href="map.html">View the single-metro choropleth →</a></p>
       </div>
-      <div class="bars">
-        <div class="barlbl"><span>this metro</span><span>${pct(o.share_metro)}</span></div>
-        <div class="bar m"><span style="width:${(o.share_metro/maxShare*100).toFixed(0)}%"></span></div>
-        <div class="barlbl"><span>national</span><span>${pct(o.share_national)}</span></div>
-        <div class="bar n"><span style="width:${(o.share_national/maxShare*100).toFixed(0)}%"></span></div>
+      <div>
+        <h2>National mix</h2>
+        <div class="natbar" id="natbar"></div>
+        <div class="natlist" id="natlist"></div>
       </div>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </footer>
+</div>
+
+<script>
+const DOMAIN = 2.5;                 // log2 axis half-range (0.18x .. 5.7x)
+const HALF = 46;                    // max bar width, % of track half
+const NAT_COLORS = ["#4b7ea8","#b4552a","#5a8f6b","#8a6bb0","#c08a3e",
+                    "#3f8f97","#a85a7a","#7d8794","#c2a24a","#6b8fb8"];
+
+const monthOf = iso => new Date(iso).toLocaleDateString("en-US",
+  {month:"long",year:"numeric"});
+const cap = s => s.replace(/\b\w/g,c=>c.toUpperCase());
+const metroName = full => full.split(",")[0].split("-")[0].trim();
+const sectorName = s => s.replace(/\s*Jobs$/,"");
+
+fetch("data/outliers.json").then(r=>r.json()).then(d=>{
+  const month = monthOf(d.generated_at);
+  document.getElementById("stamp-top").innerHTML =
+    `<b>${d.metros_sampled}</b> Metros · ${month}`;
+
+  // lead reading
+  const L = d.lead;
+  const leadHTML = `<div class="lead">
+      <span class="flag">Sharpest signal</span>
+      <p>${metroName(L.metro)} advertises <strong>${sectorName(L.category)}</strong>
+      roles at <strong>${L.ratio.toFixed(1)}×</strong> the national rate —
+      ${(L.share_metro*100).toFixed(0)}% of its postings against
+      ${(L.share_national*100).toFixed(0)}% nationwide.</p>
     </div>`;
+
+  const head = `<div class="axis-head">
+      <div></div><div class="lbl">Metro / Sector</div>
+      <div class="axis-legend colbar"><span class="u">◄ under</span>
+        <span class="n">national</span><span class="o">over ►</span></div>
+      <div class="lbl right">Share vs U.S.</div>
+    </div>`;
+
+  const rows = d.outliers.map((c,i)=>{
+    const over = c.ratio >= 1;
+    const mag = Math.min(Math.abs(c.log2_ratio)/DOMAIN, 1) * HALF;
+    const fill = over
+      ? `<div class="fill over" style="width:${mag}%"></div>`
+      : `<div class="fill under" style="width:${mag}%"></div>`;
+    return `<div class="row" style="--i:${i}">
+        <div class="rank">${String(i+1).padStart(2,"0")}</div>
+        <div><div class="metro">${metroName(c.metro)}</div>
+             <div class="sector">${sectorName(c.category)}</div></div>
+        <div class="track">${fill}</div>
+        <div class="figures">
+          <div class="mult ${over?'over':'under'}">${c.ratio.toFixed(1)}×</div>
+          <div class="share">${(c.share_metro*100).toFixed(0)}% · ${(c.share_national*100).toFixed(0)}% U.S.</div>
+        </div>
+      </div>`;
   }).join("");
-  wrap.innerHTML = rows + `
-    <div class="card">
-      <strong>Method.</strong> ${d.method}<br><br>
-      ${d.metros_sampled} metros · basis: ${d.basis} · generated ${d.generated_at}.<br>
-      Job-posting demand, not employment; Adzuna categories, not O*NET occupations
-      (the SOC path needs a representative text source — see PROJECT.md).
-      <a href="map.html">View the single-metro choropleth →</a>
-    </div>`;
+
+  document.getElementById("app").innerHTML = leadHTML + head + `<div class="rows">${rows}</div>`;
+
+  // staggered bar reveal
+  const rowEls = [...document.querySelectorAll(".row")];
+  rowEls.forEach((el,i)=>setTimeout(()=>el.classList.add("show"), 120 + i*55));
+
+  // footer
+  document.getElementById("method").textContent = d.method;
+  const nat = d.national_share.slice(0,10);
+  document.getElementById("natbar").innerHTML = nat.map((r,i)=>
+    `<span style="width:${(r.share*100).toFixed(1)}%;background:${NAT_COLORS[i%NAT_COLORS.length]}" title="${r.category} ${(r.share*100).toFixed(0)}%"></span>`).join("");
+  document.getElementById("natlist").innerHTML = nat.slice(0,6).map((r,i)=>
+    `<div><b>${(r.share*100).toFixed(0)}%</b> &nbsp;${sectorName(r.category)}</div>`).join("");
+  document.getElementById("stamp").textContent =
+    `${d.basis} · national baseline pooled from ${d.national_total.toLocaleString()} postings across ${d.metros_sampled} metros · generated ${d.generated_at.replace("T"," ").replace("+00:00"," UTC")}. ` +
+    `Job-posting demand, not employment. Adzuna sector categories, not O*NET occupations.`;
 }).catch(e=>{
-  document.getElementById("wrap").innerHTML =
-    `<div class="card">No data yet (${e}). Run <code>python panel.py</code>, then serve over HTTP.</div>`;
+  document.getElementById("app").innerHTML =
+    `<div class="loading">Couldn't load the index (${e}). Run <code>python panel.py</code>, then serve this directory over HTTP.</div>`;
 });
 </script>
 </body>
