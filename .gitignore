@@ -18,3 +18,6 @@ venv/
 # Node / frontend
 node_modules/
 dist/
+
+# Panel resumable cache (regenerated)
+site/data/_mix_cache.json

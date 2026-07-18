@@ -45,7 +45,7 @@ def cbsa_volume(cbsa_code, app_id, app_key, f_m):
     counties in the sample that fall inside the CBSA. Estimate converges to
     ~44k across radii, confirming the method. Returns {count, f_m, volume}."""
     d = geo.CBSA_COUNTIES[cbsa_code]
-    count = _get(app_id, app_key, 1, d["name"],
+    count = _get(app_id, app_key, 1, d["adzuna_where"],
                  distance=d["radius_km"], rpp=1)["count"]
     return {"cbsa": cbsa_code, "count": count, "f_m": round(f_m, 3),
             "volume": round(count * f_m)}
@@ -85,6 +85,23 @@ def dedupe_semantic(results):
     return out
 
 
+def cap_per_employer(results, frac=0.1, min_keep=3):
+    """Limit any one employer to a fraction of the sample. Adzuna's unkeyworded
+    results are ranked by a few high-volume advertisers, so one hospital network
+    (e.g. Medical City Dallas: 62 of 96 postings) can dominate a metro's
+    occupation mix — measuring who advertises most, not what the market demands.
+    Cap so the mix reflects breadth of employer demand. Measured: this pulls
+    national Healthcare Practitioners from 64% toward a realistic share."""
+    cap = max(min_keep, int(frac * len(results)))
+    kept, per = [], {}
+    for r in results:
+        emp = (r.get("company") or {}).get("display_name", "")
+        per[emp] = per.get(emp, 0) + 1
+        if per[emp] <= cap:
+            kept.append(r)
+    return kept
+
+
 def pull_sample(cbsa_code, want, app_id, app_key, max_pages=10):
     """Pull postings over the CBSA's radius, keep only those whose reported
     county is in the CBSA, dedupe. Pulling at the same radius used for the
@@ -94,7 +111,7 @@ def pull_sample(cbsa_code, want, app_id, app_key, max_pages=10):
     d = geo.CBSA_COUNTIES[cbsa_code]
     raw = []
     for page in range(1, max_pages + 1):
-        results = _get(app_id, app_key, page, d["name"],
+        results = _get(app_id, app_key, page, d["adzuna_where"],
                        distance=d["radius_km"], rpp=50).get("results", [])
         if not results:
             break
@@ -106,12 +123,14 @@ def pull_sample(cbsa_code, want, app_id, app_key, max_pages=10):
     in_cbsa = kept.get(cbsa_code) or []              # id-deduped, in-CBSA
     total = len(in_cbsa) + len(dropped)
     distinct = dedupe_semantic(in_cbsa)              # repost-collapsed
+    capped = cap_per_employer(distinct)              # de-flood dominant advertisers
     dedup_ratio = len(distinct) / len(in_cbsa) if in_cbsa else 0.0
-    return {"sample": distinct[:want], "n": min(len(distinct), want),
+    return {"sample": capped[:want], "n": min(len(capped), want),
             "pulled": len(raw), "dropped_out_of_cbsa": len(dropped),
             "f_m": len(in_cbsa) / total if in_cbsa else 0.0,
             "dedup_ratio": round(dedup_ratio, 3),
-            "reposts_collapsed": len(in_cbsa) - len(distinct)}
+            "reposts_collapsed": len(in_cbsa) - len(distinct),
+            "employer_capped": len(distinct) - len(capped)}
 
 
 def _selftest():
@@ -131,6 +150,13 @@ def _selftest():
     a3 = {"id": 10, "location": fr, "title": "CDL A Driver",
           "company": {"display_name": "Other Co"}}            # diff employer -> kept
     assert len(dedupe_semantic([a, a2, a3])) == 2
+
+    # employer cap: 20 from one employer, cap frac 0.1 of 22 -> max 3 (min_keep)
+    flood = [{"company": {"display_name": "Big"}} for _ in range(20)]
+    others = [{"company": {"display_name": f"C{i}"}} for i in range(2)]
+    capped = cap_per_employer(flood + others, frac=0.1, min_keep=3)
+    assert sum(1 for r in capped if r["company"]["display_name"] == "Big") == 3
+    assert len(capped) == 5                                    # 3 Big + 2 others
     print("selftest ok")
 
 

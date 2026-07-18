@@ -50,10 +50,12 @@ def code_title(title):
     return occ.get("Code"), float(occ.get("Probability") or 0.0)
 
 
-def classify_sample(postings, coder=code_title, pause=0.2):
+def classify_sample(postings, coder=code_title, pause=0.2, cache=None):
     """Classify Adzuna postings. Caches by title so duplicate titles cost one
-    call. Returns list of {posting_id, title, soc_detailed, soc_major, prob}."""
-    cache, out = {}, []
+    call; pass a shared `cache` dict to reuse codings across metros. Returns
+    list of {posting_id, title, soc_detailed, soc_major, prob}."""
+    cache = {} if cache is None else cache
+    out = []
     for p in postings:
         title = (p.get("title") or "").strip()
         if title not in cache:

@@ -174,6 +174,39 @@ check (validation item 3) effectively fired on the first run:
   larger magnitude. This is the kind of divergence the outliers panel is meant
   to catch, and evidence the raw map without dedup would badly mislead.
 
+## Direction change: panel-first, on category *counts* not classified samples
+
+Stepping back after Phase 1: we were building outward from view 1 (the least
+insightful view) while the stated point — the outliers panel — needs almost
+none of that machinery (no map, no LAUS, no volume calibration). So the panel
+was pulled forward as the demo (`panel.py`, ranked-list page at `site/`; the
+choropleth is kept at `site/map.html` as context).
+
+Building the panel then forced a second, deeper correction. The first cut
+sampled + classified postings per metro and read **64% Healthcare nationally,
+94% in Dallas** — nonsense. Cause: **Adzuna's unkeyworded search is ranked by a
+few high-volume advertisers** (one HCA hospital network was 62 of 96 Dallas
+postings). Per-employer capping didn't fix it (the advertiser spans many
+subsidiary names, and the whole draw is skewed). The lesson is the Phase 0
+lesson again: **Adzuna is a counting instrument, not a sampling one.** A ranked
+*sample* is biased; a *count* is a census.
+
+So the panel is built on **Adzuna category counts**: for each metro, one count
+per category → a category mix that is immune to advertiser ranking, and a
+category share (count/total at the same radius) cancels the CBSA-radius
+imprecision too. Dallas via counts reads a believable Healthcare & Nursing 25%,
+Engineering 9%, IT 8%, Logistics 7%. Ranked by log2(metro share / national
+share) — an effect size, since near-census counts make a significance test
+meaningless. **Tradeoff (a cut corner):** Adzuna's ~30 categories are not O*NET
+SOC, so this trades taxonomy alignment and OEWS validation for a mix we can
+actually trust today. The SOC/occupation path (NIOCCS/LLM) returns once a
+representative text source exists (NLx) — sampling only becomes safe when the
+draw isn't advertiser-ranked.
+
+Operational note: Adzuna free tier is ~25 calls/min; `panel.py` throttles to
+that and caches each metro's mix (`site/data/_mix_cache.json`) so runs resume
+after a hiccup instead of re-spending calls.
+
 ## Build phases
 
 - **Phase 0 — source spike (DONE).** Adzuna + CareerOneStop keys obtained.

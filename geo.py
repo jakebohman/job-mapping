@@ -8,11 +8,22 @@ key on the same. Keying by (state, county) disambiguates same-named counties
 """
 
 import csv
+import re
 import sys
 from pathlib import Path
 
 CROSSWALK = Path(__file__).parent / "cbsa_counties.csv"
 DEFAULT_RADIUS_KM = 50   # calibrated volume self-corrects, so one default is fine
+
+
+def principal_place(cbsa_title):
+    """A geocodable 'City, ST' Adzuna understands, from a CBSA title. Adzuna
+    can't geocode compound titles like 'New York-Newark-Jersey City, NY-NJ' —
+    take the first city and first state: -> 'New York, NY'."""
+    city_part, _, state_part = cbsa_title.partition(",")
+    city = re.split(r"[-/]", city_part)[0].strip()
+    state = re.split(r"[-/]", state_part)[0].strip()
+    return f"{city}, {state}" if state else city
 
 
 def _load(path=CROSSWALK):
@@ -35,6 +46,7 @@ def _load(path=CROSSWALK):
     for code, c in cbsas.items():
         # LAUS labor-force series: LAUMT + state(2) + cbsa(5) + 00000006
         c["laus_lf_series"] = f"LAUMT{c['state_fips']}{code}00000006"
+        c["adzuna_where"] = principal_place(c["name"])
     return cbsas, index
 
 

@@ -1,0 +1,295 @@
+{
+  "generated_at": "2026-07-18T00:19:02+00:00",
+  "metros_sampled": 10,
+  "basis": "Adzuna category posting counts (census per category)",
+  "method": "Category share = category count / metro total (same radius, so CBSA-radius imprecision cancels). Ranked by log2(metro share / national share) \u2014 effect size, since near-census counts make a significance test meaningless. Sentences templated from the numbers.",
+  "national_share": [
+    {
+      "category": "Healthcare & Nursing Jobs",
+      "share": 0.2489
+    },
+    {
+      "category": "IT Jobs",
+      "share": 0.087
+    },
+    {
+      "category": "Engineering Jobs",
+      "share": 0.0815
+    },
+    {
+      "category": "Hospitality & Catering Jobs",
+      "share": 0.073
+    },
+    {
+      "category": "Travel Jobs",
+      "share": 0.0578
+    },
+    {
+      "category": "Sales Jobs",
+      "share": 0.0556
+    },
+    {
+      "category": "Logistics & Warehouse Jobs",
+      "share": 0.0546
+    },
+    {
+      "category": "Accounting & Finance Jobs",
+      "share": 0.0542
+    },
+    {
+      "category": "Retail Jobs",
+      "share": 0.0409
+    },
+    {
+      "category": "Teaching Jobs",
+      "share": 0.0343
+    },
+    {
+      "category": "Part time Jobs",
+      "share": 0.0233
+    },
+    {
+      "category": "Admin Jobs",
+      "share": 0.0233
+    },
+    {
+      "category": "Trade & Construction Jobs",
+      "share": 0.0201
+    },
+    {
+      "category": "Customer Services Jobs",
+      "share": 0.0199
+    },
+    {
+      "category": "Scientific & QA Jobs",
+      "share": 0.0156
+    },
+    {
+      "category": "PR, Advertising & Marketing Jobs",
+      "share": 0.0154
+    },
+    {
+      "category": "Legal Jobs",
+      "share": 0.013
+    },
+    {
+      "category": "Manufacturing Jobs",
+      "share": 0.013
+    },
+    {
+      "category": "HR & Recruitment Jobs",
+      "share": 0.0122
+    },
+    {
+      "category": "Maintenance Jobs",
+      "share": 0.0122
+    },
+    {
+      "category": "Social work Jobs",
+      "share": 0.0112
+    },
+    {
+      "category": "Consultancy Jobs",
+      "share": 0.0088
+    },
+    {
+      "category": "Energy, Oil & Gas Jobs",
+      "share": 0.0063
+    },
+    {
+      "category": "Creative & Design Jobs",
+      "share": 0.0061
+    },
+    {
+      "category": "Domestic help & Cleaning Jobs",
+      "share": 0.0058
+    },
+    {
+      "category": "Property Jobs",
+      "share": 0.0035
+    },
+    {
+      "category": "Other/General Jobs",
+      "share": 0.0017
+    },
+    {
+      "category": "Graduate Jobs",
+      "share": 0.0007
+    },
+    {
+      "category": "Charity & Voluntary Jobs",
+      "share": 0.0001
+    },
+    {
+      "category": "Unknown",
+      "share": 0.0
+    }
+  ],
+  "outliers": [
+    {
+      "cbsa": "41860",
+      "metro": "San Francisco-Oakland-Fremont, CA",
+      "category": "Travel Jobs",
+      "share_metro": 0.0109,
+      "share_national": 0.0578,
+      "log2_ratio": -2.4,
+      "ratio": 0.19,
+      "n": 1342,
+      "sentence": "In San Francisco-Oakland-Fremont, CA, Travel Jobs is 1% of postings vs 6% nationally \u2014 0.2x national, under-represented."
+    },
+    {
+      "cbsa": "31080",
+      "metro": "Los Angeles-Long Beach-Anaheim, CA",
+      "category": "Travel Jobs",
+      "share_metro": 0.0239,
+      "share_national": 0.0578,
+      "log2_ratio": -1.27,
+      "ratio": 0.41,
+      "n": 3634,
+      "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Travel Jobs is 2% of postings vs 6% nationally \u2014 0.4x national, under-represented."
+    },
+    {
+      "cbsa": "19740",
+      "metro": "Denver-Aurora-Centennial, CO",
+      "category": "Travel Jobs",
+      "share_metro": 0.0244,
+      "share_national": 0.0578,
+      "log2_ratio": -1.25,
+      "ratio": 0.42,
+      "n": 2127,
+      "sentence": "In Denver-Aurora-Centennial, CO, Travel Jobs is 2% of postings vs 6% nationally \u2014 0.4x national, under-represented."
+    },
+    {
+      "cbsa": "26420",
+      "metro": "Houston-Pasadena-The Woodlands, TX",
+      "category": "PR, Advertising & Marketing Jobs",
+      "share_metro": 0.0071,
+      "share_national": 0.0154,
+      "log2_ratio": -1.12,
+      "ratio": 0.46,
+      "n": 617,
+      "sentence": "In Houston-Pasadena-The Woodlands, TX, PR, Advertising & Marketing Jobs is 1% of postings vs 2% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "16980",
+      "metro": "Chicago-Naperville-Elgin, IL-IN",
+      "category": "Travel Jobs",
+      "share_metro": 0.1247,
+      "share_national": 0.0578,
+      "log2_ratio": 1.11,
+      "ratio": 2.16,
+      "n": 19097,
+      "sentence": "In Chicago-Naperville-Elgin, IL-IN, Travel Jobs is 12% of postings vs 6% nationally \u2014 2.2x national, over-represented."
+    },
+    {
+      "cbsa": "19100",
+      "metro": "Dallas-Fort Worth-Arlington, TX",
+      "category": "Travel Jobs",
+      "share_metro": 0.0281,
+      "share_national": 0.0578,
+      "log2_ratio": -1.04,
+      "ratio": 0.49,
+      "n": 3566,
+      "sentence": "In Dallas-Fort Worth-Arlington, TX, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "41860",
+      "metro": "San Francisco-Oakland-Fremont, CA",
+      "category": "IT Jobs",
+      "share_metro": 0.1765,
+      "share_national": 0.087,
+      "log2_ratio": 1.02,
+      "ratio": 2.03,
+      "n": 21631,
+      "sentence": "In San Francisco-Oakland-Fremont, CA, IT Jobs is 18% of postings vs 9% nationally \u2014 2.0x national, over-represented."
+    },
+    {
+      "cbsa": "35620",
+      "metro": "New York-Newark-Jersey City, NY-NJ",
+      "category": "Engineering Jobs",
+      "share_metro": 0.0414,
+      "share_national": 0.0815,
+      "log2_ratio": -0.98,
+      "ratio": 0.51,
+      "n": 10699,
+      "sentence": "In New York-Newark-Jersey City, NY-NJ, Engineering Jobs is 4% of postings vs 8% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "26420",
+      "metro": "Houston-Pasadena-The Woodlands, TX",
+      "category": "IT Jobs",
+      "share_metro": 0.0448,
+      "share_national": 0.087,
+      "log2_ratio": -0.96,
+      "ratio": 0.51,
+      "n": 3907,
+      "sentence": "In Houston-Pasadena-The Woodlands, TX, IT Jobs is 4% of postings vs 9% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "41860",
+      "metro": "San Francisco-Oakland-Fremont, CA",
+      "category": "Logistics & Warehouse Jobs",
+      "share_metro": 0.0282,
+      "share_national": 0.0546,
+      "log2_ratio": -0.95,
+      "ratio": 0.52,
+      "n": 3461,
+      "sentence": "In San Francisco-Oakland-Fremont, CA, Logistics & Warehouse Jobs is 3% of postings vs 5% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "26420",
+      "metro": "Houston-Pasadena-The Woodlands, TX",
+      "category": "Travel Jobs",
+      "share_metro": 0.1105,
+      "share_national": 0.0578,
+      "log2_ratio": 0.94,
+      "ratio": 1.91,
+      "n": 9635,
+      "sentence": "In Houston-Pasadena-The Woodlands, TX, Travel Jobs is 11% of postings vs 6% nationally \u2014 1.9x national, over-represented."
+    },
+    {
+      "cbsa": "42660",
+      "metro": "Seattle-Tacoma-Bellevue, WA",
+      "category": "Travel Jobs",
+      "share_metro": 0.0305,
+      "share_national": 0.0578,
+      "log2_ratio": -0.92,
+      "ratio": 0.53,
+      "n": 2447,
+      "sentence": "In Seattle-Tacoma-Bellevue, WA, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "19100",
+      "metro": "Dallas-Fort Worth-Arlington, TX",
+      "category": "Scientific & QA Jobs",
+      "share_metro": 0.0083,
+      "share_national": 0.0156,
+      "log2_ratio": -0.91,
+      "ratio": 0.53,
+      "n": 1057,
+      "sentence": "In Dallas-Fort Worth-Arlington, TX, Scientific & QA Jobs is 1% of postings vs 2% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "12060",
+      "metro": "Atlanta-Sandy Springs-Roswell, GA",
+      "category": "Teaching Jobs",
+      "share_metro": 0.0185,
+      "share_national": 0.0343,
+      "log2_ratio": -0.89,
+      "ratio": 0.54,
+      "n": 2266,
+      "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "19740",
+      "metro": "Denver-Aurora-Centennial, CO",
+      "category": "PR, Advertising & Marketing Jobs",
+      "share_metro": 0.0086,
+      "share_national": 0.0154,
+      "log2_ratio": -0.85,
+      "ratio": 0.56,
+      "n": 747,
+      "sentence": "In Denver-Aurora-Centennial, CO, PR, Advertising & Marketing Jobs is 1% of postings vs 2% nationally \u2014 0.6x national, under-represented."
+    }
+  ]
+}

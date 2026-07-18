@@ -6,31 +6,37 @@ for the full design, view formulas, validation plan, and build phases.
 
 ## Where things stand
 
-**Phase 0 (source spike) and Phase 1 (one metro, end to end) are working** for
-Columbus OH (CBSA 18140). See PROJECT.md for findings and the honest caveats.
+**The demo is the outliers panel** — where each metro's hiring mix deviates
+from national, ranked, with a templated sentence each. Built on Adzuna category
+**counts** (a census, immune to advertiser ranking), not classified samples.
+See PROJECT.md for why (the pivot and its findings).
 
 ```sh
 pip install -r requirements.txt
 export ADZUNA_APP_ID=... ADZUNA_APP_KEY=...   # free key from developer.adzuna.com
 
-python pipeline.py            # ingest -> classify -> aggregate -> site/data/*.json
+python panel.py               # ~25 calls/min, resumable -> site/data/outliers.json
 cd site && python -m http.server 8000         # open http://localhost:8000
 ```
 
-The pipeline writes `site/data/<cbsa>.json` + geometry; `site/index.html`
-renders the shaded CBSA polygon (view 1) with the occupation mix and caveats.
+`site/index.html` is the ranked panel; `site/map.html` is the earlier
+single-metro choropleth (view 1) kept as context, fed by `python pipeline.py`.
 
 ### Modules
+- `panel.py` — **the demo**: metro category-count mix vs national, ranked by deviation
 - `ingest.py` — Adzuna sample + calibrated CBSA volume (county-bucketed, repost-deduped)
-- `classify.py` — occupation coding via **NIOCCS** (keyless, interim; LLM to replace)
+- `classify.py` — occupation coding via **NIOCCS** (keyless, interim; used by the map)
 - `bls.py` — LAUS labor force (keyless), the view-1 denominator
-- `geo.py` — county ↔ CBSA (Columbus hardcoded; national loads the OMB crosswalk)
-- `pipeline.py` — orchestrates the above into static JSON
-- `phase0_source_spike.py` — the throwaway measurement spike (`--selftest` needs no keys)
+- `geo.py` — county ↔ CBSA from the national OMB crosswalk (393 MSAs)
+- `build_crosswalk.py` — one-time: builds `cbsa_counties.csv` from the Census delineation
+- `pipeline.py` — single-metro map pipeline -> static JSON + geometry
 
 Each module self-tests: `python <module>.py --selftest`.
 
+### Cut corners (deliberate, reversible — see PROJECT.md)
+Categories not O*NET SOC (sampling is advertiser-biased until NLx); templated
+sentences not LLM; JSON not Parquet; ranked list not national choropleth.
+
 ### Not yet done
-LLM classifier (needs a Groq/Gemini key), skill extraction (blocked on NLx —
-Adzuna text is 500-char capped), national rollout, GitHub Action + Pages
-deploy, cross-day duplicate rate (needs a second-day spike run).
+LLM sentences/classifier (needs a Groq/Gemini key), skills (blocked on NLx),
+GitHub Action + Pages deploy, cross-day duplicate rate (second-day spike run).
