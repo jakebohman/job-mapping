@@ -16,7 +16,7 @@ job board** (you can't click through to apply). Two views:
 ```
 job-mapping/
 ├── README.md          you are here
-├── PROJECT.md         full design: goals, data sources, formulas, decisions, findings
+├── CLAUDE.md          full design + architecture: decisions, findings, gotchas
 ├── requirements.txt   one dependency (requests)
 ├── .env.example       the one credential you need (a free Adzuna key)
 │
@@ -84,9 +84,9 @@ Adzuna posting COUNTS per sector, per metro   (a census — not a ranked sample)
 Counts, not sampled-and-classified postings: Adzuna's search is ranked by a few
 high-volume advertisers, so a *sample* is biased (one hospital network made
 Dallas read 94% healthcare), but a *count* is not. This is the core lesson —
-see PROJECT.md.
+see CLAUDE.md.
 
-## Known limits (deliberate, documented in PROJECT.md)
+## Known limits (deliberate, documented in CLAUDE.md)
 
 - Job-posting demand, not employment; postings over-represent high-churn work.
 - Adzuna's own ~30 sector categories, not O*NET occupations (the occupation

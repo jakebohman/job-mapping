@@ -7,7 +7,7 @@ Writes site/data/<cbsa>.json and site/data/cbsa_<cbsa>.geojson.
 
 This is the "view 1" (postings per 1,000 workers) path. The national deviation
 index — the main demo — is panel.py. Storage is JSON, read directly by the
-page; the Parquet/DuckDB store in PROJECT.md is deferred to national scale.
+page; the Parquet/DuckDB store in CLAUDE.md is deferred to national scale.
 """
 
 import json
@@ -23,7 +23,7 @@ import geo
 import ingest
 
 SAMPLE_WANT = 150
-MIN_CELL_N = 50   # PROJECT.md small-cell threshold (Poisson CV<=15% -> n>=50)
+MIN_CELL_N = 50   # CLAUDE.md small-cell threshold (Poisson CV<=15% -> n>=50)
 OUT = Path(__file__).parent.parent / "site" / "data"
 TIGERWEB = ("https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/"
             "CBSA/MapServer/3/query")

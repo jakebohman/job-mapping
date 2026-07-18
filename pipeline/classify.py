@@ -1,12 +1,12 @@
 """Occupation classification.
 
 INTERIM CODER: uses the NIOSH NIOCCS autocoder (free, keyless GET) to map a
-posting title to a SOC 2018 code. In PROJECT.md NIOCCS is the independent
-*validator*; here it stands in as the primary coder until an LLM key exists.
-When the LLM lands it becomes primary and NIOCCS returns to validation (the
-circularity the design warns about only bites once both roles are filled).
-Skills are NOT extracted here — that needs fuller text than Adzuna's 500 chars
-(see risk 1).
+posting title to a SOC 2018 code. In the original design NIOCCS is the
+independent *validator*; here it stands in as the primary coder until an LLM
+key exists. When the LLM lands it becomes primary and NIOCCS returns to
+validation (the circularity the design warns about only bites once both roles
+are filled). Skills are NOT extracted here — that needs fuller text than
+Adzuna's 500 chars (see CLAUDE.md).
 
     python pipeline/classify.py --selftest   # no network
 """

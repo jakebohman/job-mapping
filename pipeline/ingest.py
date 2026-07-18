@@ -1,15 +1,17 @@
-"""Phase 1 ingest for one CBSA: the two Adzuna pipelines from PROJECT.md.
+"""Adzuna ingest for one CBSA (see CLAUDE.md for the calibration ideas).
 
-  cbsa_volume() — CBSA-bounded posting count (view 1 numerator), summed from
-                  per-county `count` queries so the geography matches LAUS.
-  pull_sample() — deduped, county-filtered postings ready for classification.
+  cbsa_volume() — calibrated CBSA volume = radius `count` x f_m (the in-CBSA
+                  fraction of the sample), correcting the radius count to CBSA
+                  geography.
+  pull_sample() — deduped, employer-capped, county-filtered postings ready for
+                  classification; also returns f_m and the repost dedup ratio.
 
     pip install requests
     ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python pipeline/ingest.py   # live, Columbus
     python pipeline/ingest.py --selftest                             # no keys
 
 Occupation coding works on title + Adzuna's 500-char text; skill extraction
-is source-limited until NLx (see PROJECT.md risk 1).
+is source-limited until NLx (see CLAUDE.md).
 """
 
 import os

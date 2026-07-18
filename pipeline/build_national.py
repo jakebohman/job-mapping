@@ -8,7 +8,7 @@ impossibly hot (Columbus IN: 1,246/1,000 uncorrected).
 
 Still uncalibrated for reposts (which inflate ~uniformly), so read the map for
 relative intensity. Metros with fewer than 50 in-CBSA postings, or no labor
-force, are drawn gray (PROJECT.md's n>=50 rule).
+force, are drawn gray (CLAUDE.md's n>=50 rule).
 
     ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python pipeline/build_national.py
 
@@ -29,7 +29,7 @@ import geo
 import ingest
 
 OUT = Path(__file__).parent.parent / "site" / "data"
-MIN_COUNT = 50          # PROJECT.md small-cell threshold (in-CBSA postings)
+MIN_COUNT = 50          # CLAUDE.md small-cell threshold (in-CBSA postings)
 CALL_INTERVAL = 2.6     # Adzuna free tier ~25/min
 
 
