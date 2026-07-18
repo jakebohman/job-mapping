@@ -17,6 +17,7 @@ job board** (you can't click through to apply). Two views:
 job-mapping/
 ├── README.md          you are here
 ├── CLAUDE.md          full design + architecture: decisions, findings, gotchas
+├── ROADMAP.md         ordered next steps, one work-session each
 ├── requirements.txt   one dependency (requests)
 ├── .env.example       the one credential you need (a free Adzuna key)
 │

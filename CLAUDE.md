@@ -143,6 +143,8 @@ rebuild is never served stale.
 
 ## Status and roadmap
 
+**`ROADMAP.md` has the ordered, one-session-each next steps** — start there.
+
 **Working now:** national intensity map (view 1), sector deviation index (a
 category-based realization of view 2), single-metro detail. Committed on `main`;
 push only when the user asks (they push themselves).
