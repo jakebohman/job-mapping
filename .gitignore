@@ -18,3 +18,9 @@ venv/
 # Node / frontend
 node_modules/
 dist/
+
+# National map resumable count cache (regenerated)
+site/data/_national_cache.json
+
+# Labor-force cache (accumulates across runs; regenerated)
+site/data/_lf_cache.json

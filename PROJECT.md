@@ -230,9 +230,19 @@ after a hiccup instead of re-spending calls.
 - **Phase 2 — validation harness.** Labeling flow (a local CLI is enough),
   300 labels, NIOCCS agreement run, golden set wired into CI, error rate
   rendered on the page. No scaling until this exists.
-- **Phase 3 — national counts.** Counts pipeline for all ~387 CBSAs, full
-  TopoJSON, thresholds + gray-out, views 1 live nationally. Sample-allocation
-  logic for classification across metros.
+- **Phase 3 — national view-1 map (DONE for view 1).** Interactive US
+  choropleth of postings per 1,000 workers across all ~393 MSAs, now the
+  landing page (`site/index.html`, built by `pipeline/build_national.py`).
+  Geometry: all MSA + state polygons from TIGERweb, server-simplified via
+  `maxAllowableOffset` (`build_geometry.py`, ~210 KB); rendered with a locally
+  vendored `d3-geo` (`geoAlbersUsa`, no CDN). One Adzuna call per metro gives
+  both the count and f_m (in-CBSA fraction of the returned 50), correcting the
+  radius count to CBSA geography — **without this, a small metro's radius
+  swallows a neighboring big metro and reads as impossibly hot (Columbus IN:
+  1,246/1,000 → grays out, f_m≈0)**. Metros with <50 in-CBSA postings gray out
+  (disclosed). Still uncalibrated for reposts (inflate ~uniformly → read for
+  relative intensity). Not yet: repost calibration, per-metro sector drilldown,
+  GitHub Action / Pages deploy.
 - **Phase 4 — sample views + the panel.** Views 2, 3, 4; outliers panel with
   cached LLM sentences.
 - **Phase 5 — trends.** After 13 weekly snapshots: view 5 and trend context
