@@ -262,7 +262,7 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
     `Job-posting demand, not employment. Adzuna sector categories, not O*NET occupations.`;
 }).catch(e=>{
   document.getElementById("app").innerHTML =
-    `<div class="loading">Couldn't load the index (${e}). Run <code>python panel.py</code>, then serve this directory over HTTP.</div>`;
+    `<div class="loading">Couldn't load the index (${e}). Run <code>python pipeline/panel.py</code>, then serve this directory over HTTP.</div>`;
 });
 </script>
 </body>

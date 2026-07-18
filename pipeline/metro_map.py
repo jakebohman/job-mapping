@@ -1,14 +1,13 @@
-"""Phase 1 end-to-end for one CBSA: ingest -> classify -> aggregate -> static
-JSON + geometry, ready for the map. This is the pipe the design's Phase 1 asks
-for; ugly is fine.
+"""Build the data for the single-metro map (site/map.html): ingest -> classify
+-> aggregate -> static JSON + geometry, for one CBSA.
 
-    ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python pipeline.py
+    ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python pipeline/metro_map.py [CBSA]
 
 Writes site/data/<cbsa>.json and site/data/cbsa_<cbsa>.geojson.
 
-Storage note: Phase 1 persists JSON (the frontend reads it directly). The
-Parquet/DuckDB store from PROJECT.md arrives with national scale (Phase 3),
-where query volume justifies the engine; ~150 rows for one metro does not.
+This is the "view 1" (postings per 1,000 workers) path. The national deviation
+index — the main demo — is panel.py. Storage is JSON, read directly by the
+page; the Parquet/DuckDB store in PROJECT.md is deferred to national scale.
 """
 
 import json
@@ -25,7 +24,7 @@ import ingest
 
 SAMPLE_WANT = 150
 MIN_CELL_N = 50   # PROJECT.md small-cell threshold (Poisson CV<=15% -> n>=50)
-OUT = Path(__file__).parent / "site" / "data"
+OUT = Path(__file__).parent.parent / "site" / "data"
 TIGERWEB = ("https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/"
             "CBSA/MapServer/3/query")
 

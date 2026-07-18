@@ -8,7 +8,7 @@ circularity the design warns about only bites once both roles are filled).
 Skills are NOT extracted here — that needs fuller text than Adzuna's 500 chars
 (see risk 1).
 
-    python classify.py --selftest      # no network
+    python pipeline/classify.py --selftest   # no network
 """
 
 import sys

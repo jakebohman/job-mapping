@@ -213,16 +213,19 @@ after a hiccup instead of re-spending calls.
   Measured: `count` stable (31,188 ×5, zero spread); descriptions hard-capped
   at 500 chars (100%); Adzuna `where` radius-based → resolved via county
   (risk 7); CareerOneStop Jobs API gated (401) → skills source-limited (risk 1);
-  repost saturation (finding above). Cross-day duplicate rate still pending a
-  second-day spike run. Exit criterion met for Adzuna (counts) and negatively
-  for CareerOneStop (no self-serve text) — NLx is the text upgrade path.
+  repost saturation (finding above). Exit criterion met for Adzuna (counts) and
+  negatively for CareerOneStop (no self-serve text) — NLx is the text upgrade
+  path. (The throwaway spike script is not kept in the repo; its numbers live
+  here. Cross-day duplicate rate went unmeasured and matters less now the demo
+  rests on stable counts, not sampling.)
 - **Phase 1 — one metro, end to end (DONE, with interim substitutions).**
-  `pipeline.py`: ingest Columbus (`ingest.py`) → classify (`classify.py`,
-  **NIOCCS interim** in place of the LLM) → **JSON store** (Parquet deferred to
-  national scale) → aggregate → **static d3-geo page** (`site/`, plain HTML +
-  CDN d3 instead of a React toolchain — deferred until the UI justifies it).
-  Renders the Columbus CBSA polygon shaded by view 1 with the occupation mix,
-  disclosed threshold, and caveats. Swap-in points for the LLM classifier and
+  `pipeline/metro_map.py`: ingest Columbus (`ingest.py`) → classify
+  (`classify.py`, **NIOCCS interim** in place of the LLM) → **JSON store**
+  (Parquet deferred to national scale) → aggregate → **static page** (`site/`,
+  plain HTML with a hand-rolled projection — no d3, no React toolchain).
+  `site/map.html` renders the Columbus CBSA polygon and the calibrated view-1
+  rate; sector detail lives in the index (its sampled occupation mix was
+  dropped as advertiser-biased). Swap-in points for the LLM classifier and
   Parquet are isolated. Not yet on a GitHub Action / Pages.
 - **Phase 2 — validation harness.** Labeling flow (a local CLI is enough),
   300 labels, NIOCCS agreement run, golden set wired into CI, error rate

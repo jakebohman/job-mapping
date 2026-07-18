@@ -4,7 +4,7 @@ Adzuna results report their county, a CBSA is a set of counties, and BLS series
 key on the same. Keying by (state, county) disambiguates same-named counties
 (Ohio's Knox County is in no MSA; Tennessee's is in Knoxville).
 
-    python geo.py --selftest
+    python pipeline/geo.py --selftest
 """
 
 import csv

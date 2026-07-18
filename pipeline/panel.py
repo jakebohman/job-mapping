@@ -12,8 +12,8 @@ categories are not O*NET SOC — the SOC path returns when we have a
 representative text source (NLx). This is the Phase 0 lesson applied: Adzuna is
 a counting instrument, not a sampling one.
 
-    ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python panel.py
-    python panel.py --selftest      # pooling + ranking logic, no network
+    ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python pipeline/panel.py
+    python pipeline/panel.py --selftest   # pooling + ranking logic, no network
 
 Writes site/data/outliers.json.
 """
@@ -149,7 +149,7 @@ def run():
 
     # Resumable cache: each metro's mix is saved as fetched, so a flaky API or an
     # exhausted daily budget doesn't lose completed metros — re-run to continue.
-    OUT = Path(__file__).parent / "site" / "data"
+    OUT = Path(__file__).parent.parent / "site" / "data"
     OUT.mkdir(parents=True, exist_ok=True)
     cache_path = OUT / "_mix_cache.json"
     per_metro = json.loads(cache_path.read_text()) if cache_path.exists() else {}

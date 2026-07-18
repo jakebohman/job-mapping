@@ -5,8 +5,8 @@
   pull_sample() — deduped, county-filtered postings ready for classification.
 
     pip install requests
-    ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python ingest.py            # live, Columbus
-    python ingest.py --selftest                                      # no keys
+    ADZUNA_APP_ID=... ADZUNA_APP_KEY=... python pipeline/ingest.py   # live, Columbus
+    python pipeline/ingest.py --selftest                             # no keys
 
 Occupation coding works on title + Adzuna's 500-char text; skill extraction
 is source-limited until NLx (see PROJECT.md risk 1).

@@ -2,7 +2,7 @@
 metro; national rollout registers a key (v2, 500 series/query) and pins one
 release vintage per PROJECT.md.
 
-    python bls.py --selftest
+    python pipeline/bls.py --selftest
 """
 
 import sys

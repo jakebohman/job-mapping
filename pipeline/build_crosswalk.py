@@ -4,15 +4,15 @@ Areas only (~387), matching the design and the TIGERweb MSA geometry layer.
 
 xlsx is a zip of XML, so we parse it with the stdlib — no pandas/openpyxl.
 
-    python build_crosswalk.py        # writes cbsa_counties.csv
+    python pipeline/build_crosswalk.py     # writes pipeline/cbsa_counties.csv
 """
 
 import csv
 import io
 import re
-import sys
 import urllib.request
 import zipfile
+from pathlib import Path
 from xml.etree import ElementTree as ET
 
 URL = ("https://www2.census.gov/programs-surveys/metro-micro/geographies/"
@@ -43,7 +43,7 @@ def _cells(xlsx_bytes):
         yield out
 
 
-def build(url=URL, out_path="cbsa_counties.csv"):
+def build(url=URL, out_path=Path(__file__).parent / "cbsa_counties.csv"):
     data = urllib.request.urlopen(url, timeout=60).read()
     rows = []
     for cells in _cells(data):

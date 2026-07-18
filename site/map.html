@@ -153,7 +153,7 @@ Promise.all([
 }).catch(e=>{
   document.getElementById("title").textContent = "Couldn't load metro data";
   document.getElementById("foot").textContent =
-    `${e}. Run python pipeline.py, then serve this directory over HTTP.`;
+    `${e}. Run python pipeline/metro_map.py, then serve this directory over HTTP.`;
 });
 </script>
 </body>
