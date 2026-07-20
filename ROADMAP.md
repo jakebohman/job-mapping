@@ -87,7 +87,12 @@ tasks 2–3 are independent quick wins and can move around 1 and 4.
   figure appears on the site.
 - **Depends on:** task 5.
 
-## 7. Scale the sector index + map↔sector integration
+## 7. Scale the sector index + map↔sector integration  ◐ CODE DONE, COVERAGE FILLING
+- **Status:** the integration is built — `panel.py` emits per-metro `by_metro`,
+  the map click-through + side panel and `sectors.html?metro=` spotlight work,
+  and `select_metros` targets the ~50 largest metros by labor force. Remaining is
+  just data: the ~40 uncached metros fill in as the resumable `panel.py` fetch
+  runs against the Adzuna free-tier budget.
 - **Goal:** more metros in the sector index, and clicking a metro on the US map
   shows its sector deviations.
 - **Scope:** extend `pipeline/panel.py` to ~40–50 metros (write per-metro sector

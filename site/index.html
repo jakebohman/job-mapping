@@ -13,7 +13,7 @@
     --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
     --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
     --base:#e4e9f0; --base-line:#ccd4df; --nodata:#c8cfd9; --hi:#131b26;
-    --metro-line:#8b9aab;
+    --metro-line:#8b9aab; --over:#b4552a; --under:#2f6ea3;
     --serif:"Fraunces",Georgia,"Times New Roman",serif;
     --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -23,7 +23,7 @@
       --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
       --faint:#6d7c91; --rule:#25303d; --hair:#1c2530;
       --base:#1a2430; --base-line:#26313f; --nodata:#2c3949; --hi:#eef4fb;
-      --metro-line:#465a70;
+      --metro-line:#465a70; --over:#e08a5c; --under:#5ea6d8;
     }
   }
   *{box-sizing:border-box;}
@@ -48,8 +48,34 @@
   .maparea{position:relative;margin:14px 0 0;}
   svg{width:100%;height:auto;display:block;}
   .state{fill:var(--base);stroke:var(--base-line);stroke-width:.5;}
-  .metro{stroke:var(--metro-line);stroke-width:.5;stroke-linejoin:round;cursor:default;}
+  .metro{stroke:var(--metro-line);stroke-width:.5;stroke-linejoin:round;cursor:pointer;}
   .metro:hover{stroke:var(--hi);stroke-width:1.4;}
+  .metro.sel{stroke:var(--hi);stroke-width:1.9;}
+
+  /* click-through sector-detail panel */
+  .detail{position:absolute;top:10px;right:10px;width:300px;
+          max-width:calc(100% - 20px);max-height:calc(100% - 20px);overflow:auto;
+          background:var(--panel);border:1px solid var(--rule);border-radius:12px;
+          padding:15px 16px 14px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:11;}
+  .detail[hidden]{display:none;}
+  .detail .x{position:absolute;top:8px;right:11px;border:0;background:none;
+             color:var(--faint);font-size:19px;line-height:1;cursor:pointer;padding:2px;}
+  .detail .x:hover{color:var(--ink);}
+  .detail .dm{font-family:var(--serif);font-size:21px;font-weight:500;
+              letter-spacing:-.01em;line-height:1.1;margin:0 22px 3px 0;}
+  .detail .dr{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .detail .dr b{color:var(--ink);}
+  .detail h3{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+             text-transform:uppercase;color:var(--faint);margin:13px 0 5px;font-weight:600;}
+  .srow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+        padding:4px 0;border-bottom:1px solid var(--hair);font-size:13.5px;}
+  .srow .sv{font-family:var(--mono);font-size:12.5px;font-weight:600;white-space:nowrap;}
+  .srow.o .sv{color:var(--over);} .srow.u .sv{color:var(--under);}
+  .detail .more{display:inline-block;margin-top:12px;font-size:12.5px;
+                font-family:var(--mono);color:#1f6397;text-decoration:none;}
+  .detail .more:hover{text-decoration:underline;}
+  .detail .none{color:var(--muted);font-size:13px;line-height:1.5;}
+  @media (prefers-color-scheme:dark){.detail .more{color:#7cbde6;}}
 
   .tip{position:fixed;pointer-events:none;z-index:10;background:var(--panel);
        border:1px solid var(--rule);border-radius:8px;padding:8px 11px;
@@ -90,12 +116,13 @@
     <p class="standfirst">Job postings per 1,000 workers across ~390 US metro
     areas — a measure of hiring <b>intensity</b>, not size, so a small metro can
     run as hot as a big one. Darker means more open jobs relative to the local
-    workforce. Hover a metro for its rate.</p>
+    workforce. Hover a metro for its rate; click one for its sector mix.</p>
   </header>
 
   <div class="maparea">
     <svg id="map" viewBox="0 0 960 600" role="img" aria-label="US metro hiring-intensity choropleth"></svg>
     <div class="tip" id="tip"></div>
+    <aside class="detail" id="detail" hidden></aside>
   </div>
 
   <div class="legend">
@@ -130,15 +157,21 @@ function ramp(t){
   return `rgb(${lerp(a[0],b[0],f)},${lerp(a[1],b[1],f)},${lerp(a[2],b[2],f)})`;
 }
 
+const sectorName = s => s.replace(/\s*Jobs$/,"");
+const metroName = full => full.split(",")[0].split("-")[0].trim();
+
 const nocache = {cache: "no-store"};   // data is rebuilt regularly; never serve stale
 Promise.all([
   fetch("data/national.json", nocache).then(r=>r.json()),
   fetch("data/us_states.geojson", nocache).then(r=>r.json()),
   fetch("data/us_metros.geojson", nocache).then(r=>r.json()),
-]).then(([nat, states, metros])=>{
+  fetch("data/outliers.json", nocache).then(r=>r.json()).catch(()=>({by_metro:{}})),
+]).then(([nat, states, metros, sect])=>{
   const byCbsa={}; nat.metros.forEach(m=>byCbsa[m.cbsa]=m);
   const rank={}; nat.metros.filter(m=>m.rate!=null).forEach((m,i)=>rank[m.cbsa]=i+1);
   const shadedN = nat.metros.filter(m=>!m.below_threshold).length;
+  const byMetro = (sect && sect.by_metro) || {};
+  const sectorCount = Object.keys(byMetro).length;
   const [d0,d1] = nat.rate_range;   // scale spans the true lowest..highest metro rate
 
   const proj = d3.geoAlbersUsa().fitSize([960,600], states);
@@ -160,11 +193,14 @@ Promise.all([
     // high outlier (e.g. The Villages) doesn't wash the rest of the map pale
     return ramp(Math.sqrt(Math.max(0,(rec.rate-d0)/(d1-d0||1))));
   }
+  const pathByCode={};
   metros.features.forEach(f=>{
     const d=path(f); if(!d) return;
     const code=f.properties.GEOID, rec=byCbsa[code];
     const p=document.createElementNS(NS,"path");
     p.setAttribute("d",d); p.setAttribute("class","metro"); p.setAttribute("fill",fillFor(rec));
+    p.setAttribute("data-cbsa",code);
+    pathByCode[code]=p;
     p.addEventListener("mousemove",e=>{
       tip.style.opacity=1; tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY+14)+"px";
       const name=(rec&&rec.name)||f.properties.NAME;
@@ -178,8 +214,45 @@ Promise.all([
       }
     });
     p.addEventListener("mouseleave",()=>tip.style.opacity=0);
+    p.addEventListener("click",()=>selectMetro(code, f));
     metroG.appendChild(p);
   });
+
+  // ---- click-through sector detail ----
+  const detail=document.getElementById("detail");
+  let selEl=null;
+  function selectMetro(code, f){
+    if(selEl) selEl.classList.remove("sel");
+    selEl = pathByCode[code] || null;
+    if(selEl) selEl.classList.add("sel");
+    renderDetail(code, f);
+  }
+  function closeDetail(){
+    detail.hidden=true;
+    if(selEl){ selEl.classList.remove("sel"); selEl=null; }
+  }
+  function renderDetail(code, f){
+    const rec=byCbsa[code], bm=byMetro[code];
+    const name=(rec&&rec.name)||(f&&f.properties.NAME)||code;
+    const rateLine = rec&&rec.rate!=null
+      ? `<div class="dr"><b>${rec.rate.toFixed(1)}</b> postings / 1,000 workers · #${rank[code]} of ${shadedN}</div>`
+      : `<div class="dr">below measurement threshold</div>`;
+    const srow=(c,cls)=>`<div class="srow ${cls}"><span class="sn">${sectorName(c.category)}</span><span class="sv">${c.ratio.toFixed(1)}×</span></div>`;
+    let body;
+    if(bm){
+      const over=(bm.over||[]).map(c=>srow(c,"o")).join("")||`<div class="none">—</div>`;
+      const under=(bm.under||[]).map(c=>srow(c,"u")).join("")||`<div class="none">—</div>`;
+      body=`<h3>Over-indexed sectors</h3>${over}<h3>Under-indexed sectors</h3>${under}
+        <a class="more" href="sectors.html?metro=${code}">Full sector index →</a>`;
+    } else {
+      body=`<div class="none">Sector detail covers the ${sectorCount} largest metros.
+        <a class="more" href="sectors.html">See the sector index →</a></div>`;
+    }
+    detail.innerHTML=`<button class="x" aria-label="Close">×</button>
+      <div class="dm">${metroName(name)}</div>${rateLine}${body}`;
+    detail.hidden=false;
+    detail.querySelector(".x").addEventListener("click",closeDetail);
+  }
 
   // legend
   document.getElementById("rampbar").style.background =

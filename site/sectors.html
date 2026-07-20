@@ -131,6 +131,16 @@
   .stamp{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.03em;
          margin-top:20px;padding-top:16px;border-top:1px solid var(--hair);}
 
+  /* ---- per-metro spotlight (arrived from the US map via ?metro=) ---- */
+  .spotlight{margin:24px 0 8px;padding:18px 20px 10px;border:1px solid var(--rule);
+             border-radius:12px;background:var(--panel);}
+  .sp-eyebrow{display:inline-block;font-family:var(--mono);font-size:11px;
+              letter-spacing:.12em;text-transform:uppercase;color:var(--under);
+              text-decoration:none;}
+  .sp-eyebrow:hover{color:var(--ink);}
+  .sp-title{font-family:var(--serif);font-weight:500;font-size:clamp(22px,3.4vw,30px);
+            letter-spacing:-.01em;margin:8px 0 4px;}
+
   .loading{padding:60px 0;color:var(--muted);font-family:var(--mono);font-size:13px;}
   @media (max-width:720px){
     .shell{padding:0 18px;}
@@ -236,25 +246,44 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
       <div class="lbl right">vs U.S. avg</div>
     </div>`;
 
-  const rows = d.outliers.map((c,i)=>{
+  const rowHTML = (c,i,spotlight)=>{
     const over = c.ratio >= 1;
     const mag = Math.min(Math.abs(c.log2_ratio)/DOMAIN, 1) * HALF;
-    const fill = over
-      ? `<div class="fill over" style="width:${mag}%"></div>`
-      : `<div class="fill under" style="width:${mag}%"></div>`;
+    const fill = `<div class="fill ${over?'over':'under'}" style="width:${mag}%"></div>`;
+    // in the metro spotlight every row is the same metro, so lead with the sector
+    const label = spotlight
+      ? `<div class="metro">${sectorName(c.category)}</div>`
+      : `<div class="metro">${metroName(c.metro)}</div>
+         <div class="sector">${sectorName(c.category)}</div>`;
     return `<div class="row" style="--i:${i}">
         <div class="rank">${String(i+1).padStart(2,"0")}</div>
-        <div><div class="metro">${metroName(c.metro)}</div>
-             <div class="sector">${sectorName(c.category)}</div></div>
+        <div>${label}</div>
         <div class="track">${fill}</div>
         <div class="figures">
           <div class="mult ${over?'over':'under'}">${c.ratio.toFixed(1)}×</div>
           <div class="share">${pct(c.share_metro)} local · ${pct(c.share_national)} U.S.</div>
         </div>
       </div>`;
-  }).join("");
+  };
 
-  document.getElementById("app").innerHTML = leadHTML + readkey + head + `<div class="rows">${rows}</div>`;
+  // ?metro=<cbsa> (a click-through from the US map) spotlights that metro's own
+  // over/under sectors above the global ranking.
+  const spot = new URLSearchParams(location.search).get("metro");
+  const sm = spot && d.by_metro && d.by_metro[spot];
+  let spotlightHTML = "";
+  if(sm){
+    const cells = [...(sm.over||[]), ...(sm.under||[])];
+    const sprows = cells.map((c,i)=>rowHTML(c,i,true)).join("");
+    spotlightHTML = `<section class="spotlight">
+        <a class="sp-eyebrow" href="index.html">◄ Back to the US map</a>
+        <h2 class="sp-title">${metroName(sm.name)} — where its mix departs from the U.S.</h2>
+        ${head}<div class="rows">${sprows}</div>
+      </section>`;
+  }
+
+  const rows = d.outliers.map((c,i)=>rowHTML(c,i,false)).join("");
+  document.getElementById("app").innerHTML =
+    spotlightHTML + leadHTML + readkey + head + `<div class="rows">${rows}</div>`;
 
   // staggered bar reveal
   const rowEls = [...document.querySelectorAll(".row")];

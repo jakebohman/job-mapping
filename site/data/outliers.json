@@ -1,132 +1,132 @@
 {
-  "generated_at": "2026-07-18T00:45:52+00:00",
-  "metros_sampled": 10,
-  "national_total": 1249322,
+  "generated_at": "2026-07-20T04:36:52+00:00",
+  "metros_sampled": 25,
+  "national_total": 2647676,
   "lead": {
-    "cbsa": "41860",
-    "metro": "San Francisco-Oakland-Fremont, CA",
-    "category": "IT Jobs",
-    "share_metro": 0.1765,
-    "share_national": 0.087,
-    "log2_ratio": 1.02,
-    "ratio": 2.03,
-    "n": 21631,
-    "sentence": "In San Francisco-Oakland-Fremont, CA, IT Jobs is 18% of postings vs 9% nationally \u2014 2.0x national, over-represented."
+    "cbsa": "33460",
+    "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+    "category": "Logistics & Warehouse Jobs",
+    "share_metro": 0.1108,
+    "share_national": 0.0523,
+    "log2_ratio": 1.08,
+    "ratio": 2.12,
+    "n": 7048,
+    "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Logistics & Warehouse Jobs is 11% of postings vs 5% nationally \u2014 2.1x national, over-represented."
   },
   "basis": "Adzuna category posting counts (census per category)",
   "method": "Category share = category count / metro total (same radius, so CBSA-radius imprecision cancels). Ranked by log2(metro share / national share) \u2014 effect size, since near-census counts make a significance test meaningless. Sentences templated from the numbers.",
   "national_share": [
     {
       "category": "Healthcare & Nursing Jobs",
-      "share": 0.2489
+      "share": 0.2404
     },
     {
       "category": "IT Jobs",
-      "share": 0.087
+      "share": 0.1062
     },
     {
       "category": "Engineering Jobs",
-      "share": 0.0815
+      "share": 0.0866
     },
     {
       "category": "Hospitality & Catering Jobs",
-      "share": 0.073
+      "share": 0.0714
     },
     {
       "category": "Travel Jobs",
-      "share": 0.0578
-    },
-    {
-      "category": "Sales Jobs",
-      "share": 0.0556
+      "share": 0.0589
     },
     {
       "category": "Logistics & Warehouse Jobs",
-      "share": 0.0546
+      "share": 0.0523
+    },
+    {
+      "category": "Sales Jobs",
+      "share": 0.0521
     },
     {
       "category": "Accounting & Finance Jobs",
-      "share": 0.0542
+      "share": 0.0485
     },
     {
       "category": "Retail Jobs",
-      "share": 0.0409
+      "share": 0.04
     },
     {
       "category": "Teaching Jobs",
-      "share": 0.0343
+      "share": 0.0348
     },
     {
       "category": "Part time Jobs",
-      "share": 0.0233
+      "share": 0.024
     },
     {
       "category": "Admin Jobs",
-      "share": 0.0233
+      "share": 0.0234
     },
     {
       "category": "Trade & Construction Jobs",
-      "share": 0.0201
+      "share": 0.0218
     },
     {
       "category": "Customer Services Jobs",
-      "share": 0.0199
+      "share": 0.0197
     },
     {
       "category": "Scientific & QA Jobs",
-      "share": 0.0156
-    },
-    {
-      "category": "PR, Advertising & Marketing Jobs",
-      "share": 0.0154
-    },
-    {
-      "category": "Legal Jobs",
-      "share": 0.013
+      "share": 0.0157
     },
     {
       "category": "Manufacturing Jobs",
       "share": 0.013
     },
     {
-      "category": "HR & Recruitment Jobs",
-      "share": 0.0122
+      "category": "PR, Advertising & Marketing Jobs",
+      "share": 0.0127
     },
     {
       "category": "Maintenance Jobs",
-      "share": 0.0122
+      "share": 0.0124
+    },
+    {
+      "category": "HR & Recruitment Jobs",
+      "share": 0.0117
+    },
+    {
+      "category": "Legal Jobs",
+      "share": 0.0117
     },
     {
       "category": "Social work Jobs",
-      "share": 0.0112
+      "share": 0.011
     },
     {
       "category": "Consultancy Jobs",
-      "share": 0.0088
+      "share": 0.0086
     },
     {
       "category": "Energy, Oil & Gas Jobs",
-      "share": 0.0063
-    },
-    {
-      "category": "Creative & Design Jobs",
-      "share": 0.0061
+      "share": 0.0065
     },
     {
       "category": "Domestic help & Cleaning Jobs",
-      "share": 0.0058
+      "share": 0.0059
+    },
+    {
+      "category": "Creative & Design Jobs",
+      "share": 0.005
     },
     {
       "category": "Property Jobs",
-      "share": 0.0035
+      "share": 0.0031
     },
     {
       "category": "Other/General Jobs",
-      "share": 0.0017
+      "share": 0.0018
     },
     {
       "category": "Graduate Jobs",
-      "share": 0.0007
+      "share": 0.0008
     },
     {
       "category": "Charity & Voluntary Jobs",
@@ -137,138 +137,2430 @@
       "share": 0.0
     }
   ],
+  "by_metro": {
+    "41740": {
+      "name": "San Diego-Chula Vista-Carlsbad, CA",
+      "over": [
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1321,
+          "share_national": 0.0866,
+          "log2_ratio": 0.61,
+          "ratio": 1.53,
+          "n": 4668,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Engineering Jobs is 13% of postings vs 9% nationally \u2014 1.5x national, over-represented."
+        },
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0936,
+          "share_national": 0.0714,
+          "log2_ratio": 0.39,
+          "ratio": 1.31,
+          "n": 3308,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Hospitality & Catering Jobs is 9% of postings vs 7% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0421,
+          "share_national": 0.0348,
+          "log2_ratio": 0.28,
+          "ratio": 1.21,
+          "n": 1489,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Teaching Jobs is 4% of postings vs 3% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "Sales Jobs",
+          "share_metro": 0.0551,
+          "share_national": 0.0521,
+          "log2_ratio": 0.08,
+          "ratio": 1.06,
+          "n": 1949,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Sales Jobs is 6% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "Travel Jobs",
+          "share_metro": 0.0094,
+          "share_national": 0.0589,
+          "log2_ratio": -2.65,
+          "ratio": 0.16,
+          "n": 332,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Travel Jobs is 1% of postings vs 6% nationally \u2014 0.2x national, under-represented."
+        },
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0339,
+          "share_national": 0.0523,
+          "log2_ratio": -0.63,
+          "ratio": 0.65,
+          "n": 1199,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Logistics & Warehouse Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "IT Jobs",
+          "share_metro": 0.0847,
+          "share_national": 0.1062,
+          "log2_ratio": -0.33,
+          "ratio": 0.8,
+          "n": 2995,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, IT Jobs is 8% of postings vs 11% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "41740",
+          "metro": "San Diego-Chula Vista-Carlsbad, CA",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2038,
+          "share_national": 0.2404,
+          "log2_ratio": -0.24,
+          "ratio": 0.85,
+          "n": 7203,
+          "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Healthcare & Nursing Jobs is 20% of postings vs 24% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 35349
+    },
+    "41860": {
+      "name": "San Francisco-Oakland-Fremont, CA",
+      "over": [
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "IT Jobs",
+          "share_metro": 0.1765,
+          "share_national": 0.1062,
+          "log2_ratio": 0.73,
+          "ratio": 1.66,
+          "n": 21631,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, IT Jobs is 18% of postings vs 11% nationally \u2014 1.7x national, over-represented."
+        },
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1272,
+          "share_national": 0.0866,
+          "log2_ratio": 0.55,
+          "ratio": 1.47,
+          "n": 15594,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, Engineering Jobs is 13% of postings vs 9% nationally \u2014 1.5x national, over-represented."
+        },
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "Sales Jobs",
+          "share_metro": 0.0575,
+          "share_national": 0.0521,
+          "log2_ratio": 0.14,
+          "ratio": 1.11,
+          "n": 7054,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, Sales Jobs is 6% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0376,
+          "share_national": 0.0348,
+          "log2_ratio": 0.11,
+          "ratio": 1.08,
+          "n": 4612,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, Teaching Jobs is 4% of postings vs 3% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "Travel Jobs",
+          "share_metro": 0.0109,
+          "share_national": 0.0589,
+          "log2_ratio": -2.43,
+          "ratio": 0.19,
+          "n": 1342,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, Travel Jobs is 1% of postings vs 6% nationally \u2014 0.2x national, under-represented."
+        },
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0282,
+          "share_national": 0.0523,
+          "log2_ratio": -0.89,
+          "ratio": 0.54,
+          "n": 3461,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, Logistics & Warehouse Jobs is 3% of postings vs 5% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0485,
+          "share_national": 0.0714,
+          "log2_ratio": -0.56,
+          "ratio": 0.68,
+          "n": 5951,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "41860",
+          "metro": "San Francisco-Oakland-Fremont, CA",
+          "category": "Retail Jobs",
+          "share_metro": 0.0305,
+          "share_national": 0.04,
+          "log2_ratio": -0.39,
+          "ratio": 0.76,
+          "n": 3743,
+          "sentence": "In San Francisco-Oakland-Fremont, CA, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 122582
+    },
+    "36740": {
+      "name": "Orlando-Kissimmee-Sanford, FL",
+      "over": [
+        {
+          "cbsa": "36740",
+          "metro": "Orlando-Kissimmee-Sanford, FL",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.1067,
+          "share_national": 0.0714,
+          "log2_ratio": 0.58,
+          "ratio": 1.5,
+          "n": 5764,
+          "sentence": "In Orlando-Kissimmee-Sanford, FL, Hospitality & Catering Jobs is 11% of postings vs 7% nationally \u2014 1.5x national, over-represented."
+        },
+        {
+          "cbsa": "36740",
+          "metro": "Orlando-Kissimmee-Sanford, FL",
+          "category": "Travel Jobs",
+          "share_metro": 0.0789,
+          "share_national": 0.0589,
+          "log2_ratio": 0.42,
+          "ratio": 1.34,
+          "n": 4265,
+          "sentence": "In Orlando-Kissimmee-Sanford, FL, Travel Jobs is 8% of postings vs 6% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "36740",
+          "metro": "Orlando-Kissimmee-Sanford, FL",
+          "category": "Retail Jobs",
+          "share_metro": 0.0516,
+          "share_national": 0.04,
+          "log2_ratio": 0.37,
+          "ratio": 1.29,
+          "n": 2788,
+          "sentence": "In Orlando-Kissimmee-Sanford, FL, Retail Jobs is 5% of postings vs 4% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "36740",
+          "metro": "Orlando-Kissimmee-Sanford, FL",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0977,
+          "share_national": 0.0866,
+          "log2_ratio": 0.17,
+          "ratio": 1.13,
+          "n": 5279,
+          "sentence": "In Orlando-Kissimmee-Sanford, FL, Engineering Jobs is 10% of postings vs 9% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "36740",
+          "metro": "Orlando-Kissimmee-Sanford, FL",
+          "category": "IT Jobs",
+          "share_metro": 0.0396,
+          "share_national": 0.1062,
+          "log2_ratio": -1.42,
+          "ratio": 0.37,
+          "n": 2141,
+          "sentence": "In Orlando-Kissimmee-Sanford, FL, IT Jobs is 4% of postings vs 11% nationally \u2014 0.4x national, under-represented."
+        },
+        {
+          "cbsa": "36740",
+          "metro": "Orlando-Kissimmee-Sanford, FL",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0307,
+          "share_national": 0.0485,
+          "log2_ratio": -0.66,
+          "ratio": 0.63,
+          "n": 1656,
+          "sentence": "In Orlando-Kissimmee-Sanford, FL, Accounting & Finance Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "36740",
+          "metro": "Orlando-Kissimmee-Sanford, FL",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0235,
+          "share_national": 0.0348,
+          "log2_ratio": -0.57,
+          "ratio": 0.68,
+          "n": 1269,
+          "sentence": "In Orlando-Kissimmee-Sanford, FL, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.7x national, under-represented."
+        }
+      ],
+      "total": 54029
+    },
+    "31080": {
+      "name": "Los Angeles-Long Beach-Anaheim, CA",
+      "over": [
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1119,
+          "share_national": 0.0866,
+          "log2_ratio": 0.37,
+          "ratio": 1.29,
+          "n": 17039,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Engineering Jobs is 11% of postings vs 9% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0615,
+          "share_national": 0.0485,
+          "log2_ratio": 0.35,
+          "ratio": 1.27,
+          "n": 9368,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Accounting & Finance Jobs is 6% of postings vs 5% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.083,
+          "share_national": 0.0714,
+          "log2_ratio": 0.22,
+          "ratio": 1.16,
+          "n": 12640,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Hospitality & Catering Jobs is 8% of postings vs 7% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "Retail Jobs",
+          "share_metro": 0.0457,
+          "share_national": 0.04,
+          "log2_ratio": 0.19,
+          "ratio": 1.14,
+          "n": 6959,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Retail Jobs is 5% of postings vs 4% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "Travel Jobs",
+          "share_metro": 0.0239,
+          "share_national": 0.0589,
+          "log2_ratio": -1.3,
+          "ratio": 0.41,
+          "n": 3634,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Travel Jobs is 2% of postings vs 6% nationally \u2014 0.4x national, under-represented."
+        },
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "IT Jobs",
+          "share_metro": 0.0596,
+          "share_national": 0.1062,
+          "log2_ratio": -0.83,
+          "ratio": 0.56,
+          "n": 9073,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, IT Jobs is 6% of postings vs 11% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2185,
+          "share_national": 0.2404,
+          "log2_ratio": -0.14,
+          "ratio": 0.91,
+          "n": 33255,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Healthcare & Nursing Jobs is 22% of postings vs 24% nationally \u2014 0.9x national, under-represented."
+        },
+        {
+          "cbsa": "31080",
+          "metro": "Los Angeles-Long Beach-Anaheim, CA",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0497,
+          "share_national": 0.0523,
+          "log2_ratio": -0.07,
+          "ratio": 0.95,
+          "n": 7571,
+          "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Logistics & Warehouse Jobs is 5% of postings vs 5% nationally \u2014 1.0x national, under-represented."
+        }
+      ],
+      "total": 152212
+    },
+    "19740": {
+      "name": "Denver-Aurora-Centennial, CO",
+      "over": [
+        {
+          "cbsa": "19740",
+          "metro": "Denver-Aurora-Centennial, CO",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.3461,
+          "share_national": 0.2404,
+          "log2_ratio": 0.53,
+          "ratio": 1.44,
+          "n": 30225,
+          "sentence": "In Denver-Aurora-Centennial, CO, Healthcare & Nursing Jobs is 35% of postings vs 24% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "19740",
+          "metro": "Denver-Aurora-Centennial, CO",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1078,
+          "share_national": 0.0866,
+          "log2_ratio": 0.32,
+          "ratio": 1.25,
+          "n": 9418,
+          "sentence": "In Denver-Aurora-Centennial, CO, Engineering Jobs is 11% of postings vs 9% nationally \u2014 1.2x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "19740",
+          "metro": "Denver-Aurora-Centennial, CO",
+          "category": "Travel Jobs",
+          "share_metro": 0.0244,
+          "share_national": 0.0589,
+          "log2_ratio": -1.27,
+          "ratio": 0.41,
+          "n": 2127,
+          "sentence": "In Denver-Aurora-Centennial, CO, Travel Jobs is 2% of postings vs 6% nationally \u2014 0.4x national, under-represented."
+        },
+        {
+          "cbsa": "19740",
+          "metro": "Denver-Aurora-Centennial, CO",
+          "category": "IT Jobs",
+          "share_metro": 0.0815,
+          "share_national": 0.1062,
+          "log2_ratio": -0.38,
+          "ratio": 0.77,
+          "n": 7117,
+          "sentence": "In Denver-Aurora-Centennial, CO, IT Jobs is 8% of postings vs 11% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "19740",
+          "metro": "Denver-Aurora-Centennial, CO",
+          "category": "Teaching Jobs",
+          "share_metro": 0.027,
+          "share_national": 0.0348,
+          "log2_ratio": -0.36,
+          "ratio": 0.78,
+          "n": 2360,
+          "sentence": "In Denver-Aurora-Centennial, CO, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "19740",
+          "metro": "Denver-Aurora-Centennial, CO",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0438,
+          "share_national": 0.0523,
+          "log2_ratio": -0.26,
+          "ratio": 0.84,
+          "n": 3824,
+          "sentence": "In Denver-Aurora-Centennial, CO, Logistics & Warehouse Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 87340
+    },
+    "26420": {
+      "name": "Houston-Pasadena-The Woodlands, TX",
+      "over": [
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "Travel Jobs",
+          "share_metro": 0.1105,
+          "share_national": 0.0589,
+          "log2_ratio": 0.91,
+          "ratio": 1.88,
+          "n": 9635,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, Travel Jobs is 11% of postings vs 6% nationally \u2014 1.9x national, over-represented."
+        },
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "Sales Jobs",
+          "share_metro": 0.0574,
+          "share_national": 0.0521,
+          "log2_ratio": 0.14,
+          "ratio": 1.1,
+          "n": 5004,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, Sales Jobs is 6% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0957,
+          "share_national": 0.0866,
+          "log2_ratio": 0.14,
+          "ratio": 1.11,
+          "n": 8349,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, Engineering Jobs is 10% of postings vs 9% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.076,
+          "share_national": 0.0714,
+          "log2_ratio": 0.09,
+          "ratio": 1.06,
+          "n": 6627,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, Hospitality & Catering Jobs is 8% of postings vs 7% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "IT Jobs",
+          "share_metro": 0.0448,
+          "share_national": 0.1062,
+          "log2_ratio": -1.25,
+          "ratio": 0.42,
+          "n": 3907,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, IT Jobs is 4% of postings vs 11% nationally \u2014 0.4x national, under-represented."
+        },
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0428,
+          "share_national": 0.0485,
+          "log2_ratio": -0.18,
+          "ratio": 0.88,
+          "n": 3737,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, Accounting & Finance Jobs is 4% of postings vs 5% nationally \u2014 0.9x national, under-represented."
+        },
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2201,
+          "share_national": 0.2404,
+          "log2_ratio": -0.13,
+          "ratio": 0.92,
+          "n": 19197,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, Healthcare & Nursing Jobs is 22% of postings vs 24% nationally \u2014 0.9x national, under-represented."
+        },
+        {
+          "cbsa": "26420",
+          "metro": "Houston-Pasadena-The Woodlands, TX",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0339,
+          "share_national": 0.0348,
+          "log2_ratio": -0.04,
+          "ratio": 0.98,
+          "n": 2960,
+          "sentence": "In Houston-Pasadena-The Woodlands, TX, Teaching Jobs is 3% of postings vs 3% nationally \u2014 1.0x national, under-represented."
+        }
+      ],
+      "total": 87219
+    },
+    "47900": {
+      "name": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+      "over": [
+        {
+          "cbsa": "47900",
+          "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+          "category": "IT Jobs",
+          "share_metro": 0.2525,
+          "share_national": 0.1062,
+          "log2_ratio": 1.25,
+          "ratio": 2.38,
+          "n": 55838,
+          "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, IT Jobs is 25% of postings vs 11% nationally \u2014 2.4x national, over-represented."
+        },
+        {
+          "cbsa": "47900",
+          "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+          "category": "Travel Jobs",
+          "share_metro": 0.0698,
+          "share_national": 0.0589,
+          "log2_ratio": 0.24,
+          "ratio": 1.18,
+          "n": 15434,
+          "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, Travel Jobs is 7% of postings vs 6% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "47900",
+          "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0947,
+          "share_national": 0.0866,
+          "log2_ratio": 0.13,
+          "ratio": 1.09,
+          "n": 20946,
+          "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, Engineering Jobs is 9% of postings vs 9% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "47900",
+          "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0288,
+          "share_national": 0.0523,
+          "log2_ratio": -0.86,
+          "ratio": 0.55,
+          "n": 6362,
+          "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, Logistics & Warehouse Jobs is 3% of postings vs 5% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "47900",
+          "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+          "category": "Retail Jobs",
+          "share_metro": 0.0268,
+          "share_national": 0.04,
+          "log2_ratio": -0.58,
+          "ratio": 0.67,
+          "n": 5917,
+          "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "47900",
+          "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0515,
+          "share_national": 0.0714,
+          "log2_ratio": -0.47,
+          "ratio": 0.72,
+          "n": 11392,
+          "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "47900",
+          "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.1743,
+          "share_national": 0.2404,
+          "log2_ratio": -0.46,
+          "ratio": 0.72,
+          "n": 38543,
+          "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, Healthcare & Nursing Jobs is 17% of postings vs 24% nationally \u2014 0.7x national, under-represented."
+        }
+      ],
+      "total": 221142
+    },
+    "40140": {
+      "name": "Riverside-San Bernardino-Ontario, CA",
+      "over": [
+        {
+          "cbsa": "40140",
+          "metro": "Riverside-San Bernardino-Ontario, CA",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0667,
+          "share_national": 0.0523,
+          "log2_ratio": 0.35,
+          "ratio": 1.27,
+          "n": 6710,
+          "sentence": "In Riverside-San Bernardino-Ontario, CA, Logistics & Warehouse Jobs is 7% of postings vs 5% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "40140",
+          "metro": "Riverside-San Bernardino-Ontario, CA",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0601,
+          "share_national": 0.0485,
+          "log2_ratio": 0.31,
+          "ratio": 1.24,
+          "n": 6053,
+          "sentence": "In Riverside-San Bernardino-Ontario, CA, Accounting & Finance Jobs is 6% of postings vs 5% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "40140",
+          "metro": "Riverside-San Bernardino-Ontario, CA",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0875,
+          "share_national": 0.0714,
+          "log2_ratio": 0.29,
+          "ratio": 1.23,
+          "n": 8809,
+          "sentence": "In Riverside-San Bernardino-Ontario, CA, Hospitality & Catering Jobs is 9% of postings vs 7% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "40140",
+          "metro": "Riverside-San Bernardino-Ontario, CA",
+          "category": "Retail Jobs",
+          "share_metro": 0.0485,
+          "share_national": 0.04,
+          "log2_ratio": 0.28,
+          "ratio": 1.21,
+          "n": 4877,
+          "sentence": "In Riverside-San Bernardino-Ontario, CA, Retail Jobs is 5% of postings vs 4% nationally \u2014 1.2x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "40140",
+          "metro": "Riverside-San Bernardino-Ontario, CA",
+          "category": "IT Jobs",
+          "share_metro": 0.0459,
+          "share_national": 0.1062,
+          "log2_ratio": -1.21,
+          "ratio": 0.43,
+          "n": 4619,
+          "sentence": "In Riverside-San Bernardino-Ontario, CA, IT Jobs is 5% of postings vs 11% nationally \u2014 0.4x national, under-represented."
+        },
+        {
+          "cbsa": "40140",
+          "metro": "Riverside-San Bernardino-Ontario, CA",
+          "category": "Travel Jobs",
+          "share_metro": 0.0341,
+          "share_national": 0.0589,
+          "log2_ratio": -0.79,
+          "ratio": 0.58,
+          "n": 3434,
+          "sentence": "In Riverside-San Bernardino-Ontario, CA, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "40140",
+          "metro": "Riverside-San Bernardino-Ontario, CA",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2347,
+          "share_national": 0.2404,
+          "log2_ratio": -0.03,
+          "ratio": 0.98,
+          "n": 23624,
+          "sentence": "In Riverside-San Bernardino-Ontario, CA, Healthcare & Nursing Jobs is 23% of postings vs 24% nationally \u2014 1.0x national, under-represented."
+        }
+      ],
+      "total": 100651
+    },
+    "12580": {
+      "name": "Baltimore-Columbia-Towson, MD",
+      "over": [
+        {
+          "cbsa": "12580",
+          "metro": "Baltimore-Columbia-Towson, MD",
+          "category": "IT Jobs",
+          "share_metro": 0.2458,
+          "share_national": 0.1062,
+          "log2_ratio": 1.21,
+          "ratio": 2.31,
+          "n": 50173,
+          "sentence": "In Baltimore-Columbia-Towson, MD, IT Jobs is 25% of postings vs 11% nationally \u2014 2.3x national, over-represented."
+        },
+        {
+          "cbsa": "12580",
+          "metro": "Baltimore-Columbia-Towson, MD",
+          "category": "Travel Jobs",
+          "share_metro": 0.0688,
+          "share_national": 0.0589,
+          "log2_ratio": 0.22,
+          "ratio": 1.17,
+          "n": 14050,
+          "sentence": "In Baltimore-Columbia-Towson, MD, Travel Jobs is 7% of postings vs 6% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "12580",
+          "metro": "Baltimore-Columbia-Towson, MD",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0909,
+          "share_national": 0.0866,
+          "log2_ratio": 0.07,
+          "ratio": 1.05,
+          "n": 18547,
+          "sentence": "In Baltimore-Columbia-Towson, MD, Engineering Jobs is 9% of postings vs 9% nationally \u2014 1.0x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "12580",
+          "metro": "Baltimore-Columbia-Towson, MD",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0307,
+          "share_national": 0.0523,
+          "log2_ratio": -0.77,
+          "ratio": 0.59,
+          "n": 6257,
+          "sentence": "In Baltimore-Columbia-Towson, MD, Logistics & Warehouse Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "12580",
+          "metro": "Baltimore-Columbia-Towson, MD",
+          "category": "Retail Jobs",
+          "share_metro": 0.0276,
+          "share_national": 0.04,
+          "log2_ratio": -0.53,
+          "ratio": 0.69,
+          "n": 5640,
+          "sentence": "In Baltimore-Columbia-Towson, MD, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "12580",
+          "metro": "Baltimore-Columbia-Towson, MD",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.052,
+          "share_national": 0.0714,
+          "log2_ratio": -0.46,
+          "ratio": 0.73,
+          "n": 10625,
+          "sentence": "In Baltimore-Columbia-Towson, MD, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "12580",
+          "metro": "Baltimore-Columbia-Towson, MD",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.1815,
+          "share_national": 0.2404,
+          "log2_ratio": -0.41,
+          "ratio": 0.75,
+          "n": 37050,
+          "sentence": "In Baltimore-Columbia-Towson, MD, Healthcare & Nursing Jobs is 18% of postings vs 24% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 204139
+    },
+    "19820": {
+      "name": "Detroit-Warren-Dearborn, MI",
+      "over": [
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0846,
+          "share_national": 0.0523,
+          "log2_ratio": 0.69,
+          "ratio": 1.62,
+          "n": 5409,
+          "sentence": "In Detroit-Warren-Dearborn, MI, Logistics & Warehouse Jobs is 8% of postings vs 5% nationally \u2014 1.6x national, over-represented."
+        },
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "Retail Jobs",
+          "share_metro": 0.061,
+          "share_national": 0.04,
+          "log2_ratio": 0.61,
+          "ratio": 1.52,
+          "n": 3903,
+          "sentence": "In Detroit-Warren-Dearborn, MI, Retail Jobs is 6% of postings vs 4% nationally \u2014 1.5x national, over-represented."
+        },
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0942,
+          "share_national": 0.0714,
+          "log2_ratio": 0.4,
+          "ratio": 1.32,
+          "n": 6026,
+          "sentence": "In Detroit-Warren-Dearborn, MI, Hospitality & Catering Jobs is 9% of postings vs 7% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1066,
+          "share_national": 0.0866,
+          "log2_ratio": 0.3,
+          "ratio": 1.23,
+          "n": 6818,
+          "sentence": "In Detroit-Warren-Dearborn, MI, Engineering Jobs is 11% of postings vs 9% nationally \u2014 1.2x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "IT Jobs",
+          "share_metro": 0.0494,
+          "share_national": 0.1062,
+          "log2_ratio": -1.1,
+          "ratio": 0.47,
+          "n": 3161,
+          "sentence": "In Detroit-Warren-Dearborn, MI, IT Jobs is 5% of postings vs 11% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0344,
+          "share_national": 0.0485,
+          "log2_ratio": -0.5,
+          "ratio": 0.71,
+          "n": 2197,
+          "sentence": "In Detroit-Warren-Dearborn, MI, Accounting & Finance Jobs is 3% of postings vs 5% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "Travel Jobs",
+          "share_metro": 0.044,
+          "share_national": 0.0589,
+          "log2_ratio": -0.42,
+          "ratio": 0.75,
+          "n": 2812,
+          "sentence": "In Detroit-Warren-Dearborn, MI, Travel Jobs is 4% of postings vs 6% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "19820",
+          "metro": "Detroit-Warren-Dearborn, MI",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2283,
+          "share_national": 0.2404,
+          "log2_ratio": -0.07,
+          "ratio": 0.95,
+          "n": 14598,
+          "sentence": "In Detroit-Warren-Dearborn, MI, Healthcare & Nursing Jobs is 23% of postings vs 24% nationally \u2014 0.9x national, under-represented."
+        }
+      ],
+      "total": 63951
+    },
+    "16980": {
+      "name": "Chicago-Naperville-Elgin, IL-IN",
+      "over": [
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "Travel Jobs",
+          "share_metro": 0.1247,
+          "share_national": 0.0589,
+          "log2_ratio": 1.08,
+          "ratio": 2.12,
+          "n": 19097,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, Travel Jobs is 12% of postings vs 6% nationally \u2014 2.1x national, over-represented."
+        },
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0912,
+          "share_national": 0.0523,
+          "log2_ratio": 0.8,
+          "ratio": 1.74,
+          "n": 13972,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, Logistics & Warehouse Jobs is 9% of postings vs 5% nationally \u2014 1.7x national, over-represented."
+        },
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0553,
+          "share_national": 0.0485,
+          "log2_ratio": 0.19,
+          "ratio": 1.14,
+          "n": 8476,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, Accounting & Finance Jobs is 6% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0792,
+          "share_national": 0.0714,
+          "log2_ratio": 0.15,
+          "ratio": 1.11,
+          "n": 12137,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, Hospitality & Catering Jobs is 8% of postings vs 7% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "IT Jobs",
+          "share_metro": 0.0579,
+          "share_national": 0.1062,
+          "log2_ratio": -0.87,
+          "ratio": 0.55,
+          "n": 8872,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, IT Jobs is 6% of postings vs 11% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0662,
+          "share_national": 0.0866,
+          "log2_ratio": -0.39,
+          "ratio": 0.76,
+          "n": 10135,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, Engineering Jobs is 7% of postings vs 9% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.1849,
+          "share_national": 0.2404,
+          "log2_ratio": -0.38,
+          "ratio": 0.77,
+          "n": 28316,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, Healthcare & Nursing Jobs is 18% of postings vs 24% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "16980",
+          "metro": "Chicago-Naperville-Elgin, IL-IN",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0328,
+          "share_national": 0.0348,
+          "log2_ratio": -0.09,
+          "ratio": 0.94,
+          "n": 5020,
+          "sentence": "In Chicago-Naperville-Elgin, IL-IN, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.9x national, under-represented."
+        }
+      ],
+      "total": 153174
+    },
+    "33460": {
+      "name": "Minneapolis-St. Paul-Bloomington, MN-WI",
+      "over": [
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.1108,
+          "share_national": 0.0523,
+          "log2_ratio": 1.08,
+          "ratio": 2.12,
+          "n": 7048,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Logistics & Warehouse Jobs is 11% of postings vs 5% nationally \u2014 2.1x national, over-represented."
+        },
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1069,
+          "share_national": 0.0866,
+          "log2_ratio": 0.3,
+          "ratio": 1.23,
+          "n": 6797,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Engineering Jobs is 11% of postings vs 9% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "Retail Jobs",
+          "share_metro": 0.0488,
+          "share_national": 0.04,
+          "log2_ratio": 0.29,
+          "ratio": 1.22,
+          "n": 3106,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Retail Jobs is 5% of postings vs 4% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "Sales Jobs",
+          "share_metro": 0.059,
+          "share_national": 0.0521,
+          "log2_ratio": 0.18,
+          "ratio": 1.13,
+          "n": 3750,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Sales Jobs is 6% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.1675,
+          "share_national": 0.2404,
+          "log2_ratio": -0.52,
+          "ratio": 0.7,
+          "n": 10652,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Healthcare & Nursing Jobs is 17% of postings vs 24% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "IT Jobs",
+          "share_metro": 0.077,
+          "share_national": 0.1062,
+          "log2_ratio": -0.46,
+          "ratio": 0.73,
+          "n": 4898,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, IT Jobs is 8% of postings vs 11% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "Travel Jobs",
+          "share_metro": 0.0441,
+          "share_national": 0.0589,
+          "log2_ratio": -0.42,
+          "ratio": 0.75,
+          "n": 2808,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Travel Jobs is 4% of postings vs 6% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "33460",
+          "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0671,
+          "share_national": 0.0714,
+          "log2_ratio": -0.09,
+          "ratio": 0.94,
+          "n": 4269,
+          "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Hospitality & Catering Jobs is 7% of postings vs 7% nationally \u2014 0.9x national, under-represented."
+        }
+      ],
+      "total": 63605
+    },
+    "19100": {
+      "name": "Dallas-Fort Worth-Arlington, TX",
+      "over": [
+        {
+          "cbsa": "19100",
+          "metro": "Dallas-Fort Worth-Arlington, TX",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0717,
+          "share_national": 0.0523,
+          "log2_ratio": 0.45,
+          "ratio": 1.37,
+          "n": 9097,
+          "sentence": "In Dallas-Fort Worth-Arlington, TX, Logistics & Warehouse Jobs is 7% of postings vs 5% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "19100",
+          "metro": "Dallas-Fort Worth-Arlington, TX",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0877,
+          "share_national": 0.0714,
+          "log2_ratio": 0.3,
+          "ratio": 1.23,
+          "n": 11131,
+          "sentence": "In Dallas-Fort Worth-Arlington, TX, Hospitality & Catering Jobs is 9% of postings vs 7% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "19100",
+          "metro": "Dallas-Fort Worth-Arlington, TX",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0564,
+          "share_national": 0.0485,
+          "log2_ratio": 0.22,
+          "ratio": 1.16,
+          "n": 7155,
+          "sentence": "In Dallas-Fort Worth-Arlington, TX, Accounting & Finance Jobs is 6% of postings vs 5% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "19100",
+          "metro": "Dallas-Fort Worth-Arlington, TX",
+          "category": "Sales Jobs",
+          "share_metro": 0.057,
+          "share_national": 0.0521,
+          "log2_ratio": 0.13,
+          "ratio": 1.09,
+          "n": 7229,
+          "sentence": "In Dallas-Fort Worth-Arlington, TX, Sales Jobs is 6% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "19100",
+          "metro": "Dallas-Fort Worth-Arlington, TX",
+          "category": "Travel Jobs",
+          "share_metro": 0.0281,
+          "share_national": 0.0589,
+          "log2_ratio": -1.07,
+          "ratio": 0.48,
+          "n": 3566,
+          "sentence": "In Dallas-Fort Worth-Arlington, TX, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "19100",
+          "metro": "Dallas-Fort Worth-Arlington, TX",
+          "category": "IT Jobs",
+          "share_metro": 0.0846,
+          "share_national": 0.1062,
+          "log2_ratio": -0.33,
+          "ratio": 0.8,
+          "n": 10735,
+          "sentence": "In Dallas-Fort Worth-Arlington, TX, IT Jobs is 8% of postings vs 11% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "19100",
+          "metro": "Dallas-Fort Worth-Arlington, TX",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0282,
+          "share_national": 0.0348,
+          "log2_ratio": -0.3,
+          "ratio": 0.81,
+          "n": 3577,
+          "sentence": "In Dallas-Fort Worth-Arlington, TX, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 126861
+    },
+    "37980": {
+      "name": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+      "over": [
+        {
+          "cbsa": "37980",
+          "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+          "category": "Travel Jobs",
+          "share_metro": 0.1238,
+          "share_national": 0.0589,
+          "log2_ratio": 1.07,
+          "ratio": 2.1,
+          "n": 17612,
+          "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, Travel Jobs is 12% of postings vs 6% nationally \u2014 2.1x national, over-represented."
+        },
+        {
+          "cbsa": "37980",
+          "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0483,
+          "share_national": 0.0348,
+          "log2_ratio": 0.47,
+          "ratio": 1.39,
+          "n": 6870,
+          "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, Teaching Jobs is 5% of postings vs 3% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "37980",
+          "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+          "category": "Retail Jobs",
+          "share_metro": 0.0428,
+          "share_national": 0.04,
+          "log2_ratio": 0.1,
+          "ratio": 1.07,
+          "n": 6093,
+          "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, Retail Jobs is 4% of postings vs 4% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "37980",
+          "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+          "category": "IT Jobs",
+          "share_metro": 0.0625,
+          "share_national": 0.1062,
+          "log2_ratio": -0.77,
+          "ratio": 0.59,
+          "n": 8886,
+          "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, IT Jobs is 6% of postings vs 11% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "37980",
+          "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0715,
+          "share_national": 0.0866,
+          "log2_ratio": -0.28,
+          "ratio": 0.83,
+          "n": 10170,
+          "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, Engineering Jobs is 7% of postings vs 9% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "37980",
+          "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+          "category": "Sales Jobs",
+          "share_metro": 0.0431,
+          "share_national": 0.0521,
+          "log2_ratio": -0.27,
+          "ratio": 0.83,
+          "n": 6128,
+          "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "37980",
+          "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0432,
+          "share_national": 0.0485,
+          "log2_ratio": -0.17,
+          "ratio": 0.89,
+          "n": 6138,
+          "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, Accounting & Finance Jobs is 4% of postings vs 5% nationally \u2014 0.9x national, under-represented."
+        }
+      ],
+      "total": 142245
+    },
+    "35620": {
+      "name": "New York-Newark-Jersey City, NY-NJ",
+      "over": [
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0469,
+          "share_national": 0.0348,
+          "log2_ratio": 0.43,
+          "ratio": 1.35,
+          "n": 12113,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, Teaching Jobs is 5% of postings vs 3% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.065,
+          "share_national": 0.0485,
+          "log2_ratio": 0.42,
+          "ratio": 1.34,
+          "n": 16791,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, Accounting & Finance Jobs is 6% of postings vs 5% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "Travel Jobs",
+          "share_metro": 0.0758,
+          "share_national": 0.0589,
+          "log2_ratio": 0.36,
+          "ratio": 1.29,
+          "n": 19577,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, Travel Jobs is 8% of postings vs 6% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2687,
+          "share_national": 0.2404,
+          "log2_ratio": 0.16,
+          "ratio": 1.12,
+          "n": 69413,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, Healthcare & Nursing Jobs is 27% of postings vs 24% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0414,
+          "share_national": 0.0866,
+          "log2_ratio": -1.06,
+          "ratio": 0.48,
+          "n": 10699,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, Engineering Jobs is 4% of postings vs 9% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0386,
+          "share_national": 0.0523,
+          "log2_ratio": -0.44,
+          "ratio": 0.74,
+          "n": 9976,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, Logistics & Warehouse Jobs is 4% of postings vs 5% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0608,
+          "share_national": 0.0714,
+          "log2_ratio": -0.23,
+          "ratio": 0.85,
+          "n": 15704,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, Hospitality & Catering Jobs is 6% of postings vs 7% nationally \u2014 0.9x national, under-represented."
+        },
+        {
+          "cbsa": "35620",
+          "metro": "New York-Newark-Jersey City, NY-NJ",
+          "category": "IT Jobs",
+          "share_metro": 0.091,
+          "share_national": 0.1062,
+          "log2_ratio": -0.22,
+          "ratio": 0.86,
+          "n": 23518,
+          "sentence": "In New York-Newark-Jersey City, NY-NJ, IT Jobs is 9% of postings vs 11% nationally \u2014 0.9x national, under-represented."
+        }
+      ],
+      "total": 258346
+    },
+    "45300": {
+      "name": "Tampa-St. Petersburg-Clearwater, FL",
+      "over": [
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.3026,
+          "share_national": 0.2404,
+          "log2_ratio": 0.33,
+          "ratio": 1.26,
+          "n": 20051,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Healthcare & Nursing Jobs is 30% of postings vs 24% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "Travel Jobs",
+          "share_metro": 0.074,
+          "share_national": 0.0589,
+          "log2_ratio": 0.33,
+          "ratio": 1.26,
+          "n": 4906,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Travel Jobs is 7% of postings vs 6% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0849,
+          "share_national": 0.0714,
+          "log2_ratio": 0.25,
+          "ratio": 1.19,
+          "n": 5629,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Hospitality & Catering Jobs is 8% of postings vs 7% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "Retail Jobs",
+          "share_metro": 0.0429,
+          "share_national": 0.04,
+          "log2_ratio": 0.1,
+          "ratio": 1.07,
+          "n": 2842,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Retail Jobs is 4% of postings vs 4% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "IT Jobs",
+          "share_metro": 0.0534,
+          "share_national": 0.1062,
+          "log2_ratio": -0.99,
+          "ratio": 0.5,
+          "n": 3537,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, IT Jobs is 5% of postings vs 11% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0254,
+          "share_national": 0.0348,
+          "log2_ratio": -0.45,
+          "ratio": 0.73,
+          "n": 1686,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0396,
+          "share_national": 0.0523,
+          "log2_ratio": -0.4,
+          "ratio": 0.76,
+          "n": 2626,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Logistics & Warehouse Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "45300",
+          "metro": "Tampa-St. Petersburg-Clearwater, FL",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0705,
+          "share_national": 0.0866,
+          "log2_ratio": -0.3,
+          "ratio": 0.81,
+          "n": 4674,
+          "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Engineering Jobs is 7% of postings vs 9% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 66263
+    },
+    "42660": {
+      "name": "Seattle-Tacoma-Bellevue, WA",
+      "over": [
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "IT Jobs",
+          "share_metro": 0.13,
+          "share_national": 0.1062,
+          "log2_ratio": 0.29,
+          "ratio": 1.22,
+          "n": 10415,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, IT Jobs is 13% of postings vs 11% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1017,
+          "share_national": 0.0866,
+          "log2_ratio": 0.23,
+          "ratio": 1.17,
+          "n": 8149,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, Engineering Jobs is 10% of postings vs 9% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2662,
+          "share_national": 0.2404,
+          "log2_ratio": 0.15,
+          "ratio": 1.11,
+          "n": 21335,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, Healthcare & Nursing Jobs is 27% of postings vs 24% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "Sales Jobs",
+          "share_metro": 0.0548,
+          "share_national": 0.0521,
+          "log2_ratio": 0.07,
+          "ratio": 1.05,
+          "n": 4393,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, Sales Jobs is 5% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "Travel Jobs",
+          "share_metro": 0.0305,
+          "share_national": 0.0589,
+          "log2_ratio": -0.95,
+          "ratio": 0.52,
+          "n": 2447,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0246,
+          "share_national": 0.0348,
+          "log2_ratio": -0.5,
+          "ratio": 0.71,
+          "n": 1968,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0576,
+          "share_national": 0.0714,
+          "log2_ratio": -0.31,
+          "ratio": 0.81,
+          "n": 4614,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, Hospitality & Catering Jobs is 6% of postings vs 7% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "42660",
+          "metro": "Seattle-Tacoma-Bellevue, WA",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0437,
+          "share_national": 0.0485,
+          "log2_ratio": -0.15,
+          "ratio": 0.9,
+          "n": 3504,
+          "sentence": "In Seattle-Tacoma-Bellevue, WA, Accounting & Finance Jobs is 4% of postings vs 5% nationally \u2014 0.9x national, under-represented."
+        }
+      ],
+      "total": 80141
+    },
+    "41180": {
+      "name": "St. Louis, MO-IL",
+      "over": [
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0727,
+          "share_national": 0.0523,
+          "log2_ratio": 0.47,
+          "ratio": 1.39,
+          "n": 4298,
+          "sentence": "In St. Louis, MO-IL, Logistics & Warehouse Jobs is 7% of postings vs 5% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0981,
+          "share_national": 0.0714,
+          "log2_ratio": 0.46,
+          "ratio": 1.37,
+          "n": 5801,
+          "sentence": "In St. Louis, MO-IL, Hospitality & Catering Jobs is 10% of postings vs 7% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.3255,
+          "share_national": 0.2404,
+          "log2_ratio": 0.44,
+          "ratio": 1.35,
+          "n": 19257,
+          "sentence": "In St. Louis, MO-IL, Healthcare & Nursing Jobs is 33% of postings vs 24% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "Retail Jobs",
+          "share_metro": 0.0451,
+          "share_national": 0.04,
+          "log2_ratio": 0.17,
+          "ratio": 1.13,
+          "n": 2669,
+          "sentence": "In St. Louis, MO-IL, Retail Jobs is 5% of postings vs 4% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "IT Jobs",
+          "share_metro": 0.0549,
+          "share_national": 0.1062,
+          "log2_ratio": -0.95,
+          "ratio": 0.52,
+          "n": 3248,
+          "sentence": "In St. Louis, MO-IL, IT Jobs is 5% of postings vs 11% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0182,
+          "share_national": 0.0348,
+          "log2_ratio": -0.94,
+          "ratio": 0.52,
+          "n": 1075,
+          "sentence": "In St. Louis, MO-IL, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "Sales Jobs",
+          "share_metro": 0.0359,
+          "share_national": 0.0521,
+          "log2_ratio": -0.54,
+          "ratio": 0.69,
+          "n": 2122,
+          "sentence": "In St. Louis, MO-IL, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "41180",
+          "metro": "St. Louis, MO-IL",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0641,
+          "share_national": 0.0866,
+          "log2_ratio": -0.43,
+          "ratio": 0.74,
+          "n": 3790,
+          "sentence": "In St. Louis, MO-IL, Engineering Jobs is 6% of postings vs 9% nationally \u2014 0.7x national, under-represented."
+        }
+      ],
+      "total": 59156
+    },
+    "12060": {
+      "name": "Atlanta-Sandy Springs-Roswell, GA",
+      "over": [
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0654,
+          "share_national": 0.0523,
+          "log2_ratio": 0.32,
+          "ratio": 1.25,
+          "n": 8007,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Logistics & Warehouse Jobs is 7% of postings vs 5% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2838,
+          "share_national": 0.2404,
+          "log2_ratio": 0.24,
+          "ratio": 1.18,
+          "n": 34734,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Healthcare & Nursing Jobs is 28% of postings vs 24% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0833,
+          "share_national": 0.0714,
+          "log2_ratio": 0.22,
+          "ratio": 1.17,
+          "n": 10194,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Hospitality & Catering Jobs is 8% of postings vs 7% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "Travel Jobs",
+          "share_metro": 0.0684,
+          "share_national": 0.0589,
+          "log2_ratio": 0.22,
+          "ratio": 1.16,
+          "n": 8369,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Travel Jobs is 7% of postings vs 6% nationally \u2014 1.2x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0185,
+          "share_national": 0.0348,
+          "log2_ratio": -0.91,
+          "ratio": 0.53,
+          "n": 2266,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
+        },
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0636,
+          "share_national": 0.0866,
+          "log2_ratio": -0.45,
+          "ratio": 0.73,
+          "n": 7779,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Engineering Jobs is 6% of postings vs 9% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "IT Jobs",
+          "share_metro": 0.0818,
+          "share_national": 0.1062,
+          "log2_ratio": -0.38,
+          "ratio": 0.77,
+          "n": 10009,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, IT Jobs is 8% of postings vs 11% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "12060",
+          "metro": "Atlanta-Sandy Springs-Roswell, GA",
+          "category": "Sales Jobs",
+          "share_metro": 0.0517,
+          "share_national": 0.0521,
+          "log2_ratio": -0.01,
+          "ratio": 0.99,
+          "n": 6330,
+          "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Sales Jobs is 5% of postings vs 5% nationally \u2014 1.0x national, under-represented."
+        }
+      ],
+      "total": 122371
+    },
+    "33100": {
+      "name": "Miami-Fort Lauderdale-West Palm Beach, FL",
+      "over": [
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.1096,
+          "share_national": 0.0714,
+          "log2_ratio": 0.62,
+          "ratio": 1.54,
+          "n": 6472,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Hospitality & Catering Jobs is 11% of postings vs 7% nationally \u2014 1.5x national, over-represented."
+        },
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "Sales Jobs",
+          "share_metro": 0.0692,
+          "share_national": 0.0521,
+          "log2_ratio": 0.41,
+          "ratio": 1.33,
+          "n": 4089,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Sales Jobs is 7% of postings vs 5% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "Retail Jobs",
+          "share_metro": 0.0509,
+          "share_national": 0.04,
+          "log2_ratio": 0.35,
+          "ratio": 1.27,
+          "n": 3008,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Retail Jobs is 5% of postings vs 4% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0521,
+          "share_national": 0.0485,
+          "log2_ratio": 0.1,
+          "ratio": 1.07,
+          "n": 3077,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Accounting & Finance Jobs is 5% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "IT Jobs",
+          "share_metro": 0.0588,
+          "share_national": 0.1062,
+          "log2_ratio": -0.85,
+          "ratio": 0.55,
+          "n": 3473,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, IT Jobs is 6% of postings vs 11% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0522,
+          "share_national": 0.0866,
+          "log2_ratio": -0.73,
+          "ratio": 0.6,
+          "n": 3083,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Engineering Jobs is 5% of postings vs 9% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "Travel Jobs",
+          "share_metro": 0.0401,
+          "share_national": 0.0589,
+          "log2_ratio": -0.55,
+          "ratio": 0.68,
+          "n": 2370,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Travel Jobs is 4% of postings vs 6% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "33100",
+          "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2361,
+          "share_national": 0.2404,
+          "log2_ratio": -0.03,
+          "ratio": 0.98,
+          "n": 13946,
+          "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Healthcare & Nursing Jobs is 24% of postings vs 24% nationally \u2014 1.0x national, under-represented."
+        }
+      ],
+      "total": 59076
+    },
+    "14460": {
+      "name": "Boston-Cambridge-Newton, MA-NH",
+      "over": [
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0501,
+          "share_national": 0.0348,
+          "log2_ratio": 0.53,
+          "ratio": 1.44,
+          "n": 7746,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, Teaching Jobs is 5% of postings vs 3% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.312,
+          "share_national": 0.2404,
+          "log2_ratio": 0.38,
+          "ratio": 1.3,
+          "n": 48228,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, Healthcare & Nursing Jobs is 31% of postings vs 24% nationally \u2014 1.3x national, over-represented."
+        },
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "Retail Jobs",
+          "share_metro": 0.0405,
+          "share_national": 0.04,
+          "log2_ratio": 0.02,
+          "ratio": 1.01,
+          "n": 6265,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, Retail Jobs is 4% of postings vs 4% nationally \u2014 1.0x national, over-represented."
+        },
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0868,
+          "share_national": 0.0866,
+          "log2_ratio": 0.0,
+          "ratio": 1.0,
+          "n": 13424,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, Engineering Jobs is 9% of postings vs 9% nationally \u2014 1.0x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "Travel Jobs",
+          "share_metro": 0.0349,
+          "share_national": 0.0589,
+          "log2_ratio": -0.76,
+          "ratio": 0.59,
+          "n": 5395,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, Travel Jobs is 3% of postings vs 6% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.0574,
+          "share_national": 0.0714,
+          "log2_ratio": -0.31,
+          "ratio": 0.8,
+          "n": 8879,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, Hospitality & Catering Jobs is 6% of postings vs 7% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0423,
+          "share_national": 0.0523,
+          "log2_ratio": -0.31,
+          "ratio": 0.81,
+          "n": 6542,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, Logistics & Warehouse Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "14460",
+          "metro": "Boston-Cambridge-Newton, MA-NH",
+          "category": "IT Jobs",
+          "share_metro": 0.087,
+          "share_national": 0.1062,
+          "log2_ratio": -0.29,
+          "ratio": 0.82,
+          "n": 13454,
+          "sentence": "In Boston-Cambridge-Newton, MA-NH, IT Jobs is 9% of postings vs 11% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 154597
+    },
+    "12420": {
+      "name": "Austin-Round Rock-San Marcos, TX",
+      "over": [
+        {
+          "cbsa": "12420",
+          "metro": "Austin-Round Rock-San Marcos, TX",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1228,
+          "share_national": 0.0866,
+          "log2_ratio": 0.5,
+          "ratio": 1.42,
+          "n": 6235,
+          "sentence": "In Austin-Round Rock-San Marcos, TX, Engineering Jobs is 12% of postings vs 9% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "12420",
+          "metro": "Austin-Round Rock-San Marcos, TX",
+          "category": "Sales Jobs",
+          "share_metro": 0.073,
+          "share_national": 0.0521,
+          "log2_ratio": 0.49,
+          "ratio": 1.4,
+          "n": 3707,
+          "sentence": "In Austin-Round Rock-San Marcos, TX, Sales Jobs is 7% of postings vs 5% nationally \u2014 1.4x national, over-represented."
+        },
+        {
+          "cbsa": "12420",
+          "metro": "Austin-Round Rock-San Marcos, TX",
+          "category": "IT Jobs",
+          "share_metro": 0.1178,
+          "share_national": 0.1062,
+          "log2_ratio": 0.15,
+          "ratio": 1.11,
+          "n": 5980,
+          "sentence": "In Austin-Round Rock-San Marcos, TX, IT Jobs is 12% of postings vs 11% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "12420",
+          "metro": "Austin-Round Rock-San Marcos, TX",
+          "category": "Travel Jobs",
+          "share_metro": 0.0355,
+          "share_national": 0.0589,
+          "log2_ratio": -0.73,
+          "ratio": 0.6,
+          "n": 1803,
+          "sentence": "In Austin-Round Rock-San Marcos, TX, Travel Jobs is 4% of postings vs 6% nationally \u2014 0.6x national, under-represented."
+        },
+        {
+          "cbsa": "12420",
+          "metro": "Austin-Round Rock-San Marcos, TX",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0352,
+          "share_national": 0.0485,
+          "log2_ratio": -0.46,
+          "ratio": 0.73,
+          "n": 1786,
+          "sentence": "In Austin-Round Rock-San Marcos, TX, Accounting & Finance Jobs is 4% of postings vs 5% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "12420",
+          "metro": "Austin-Round Rock-San Marcos, TX",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0423,
+          "share_national": 0.0523,
+          "log2_ratio": -0.31,
+          "ratio": 0.81,
+          "n": 2148,
+          "sentence": "In Austin-Round Rock-San Marcos, TX, Logistics & Warehouse Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "12420",
+          "metro": "Austin-Round Rock-San Marcos, TX",
+          "category": "Retail Jobs",
+          "share_metro": 0.0337,
+          "share_national": 0.04,
+          "log2_ratio": -0.25,
+          "ratio": 0.84,
+          "n": 1711,
+          "sentence": "In Austin-Round Rock-San Marcos, TX, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.8x national, under-represented."
+        }
+      ],
+      "total": 50771
+    },
+    "16740": {
+      "name": "Charlotte-Concord-Gastonia, NC-SC",
+      "over": [
+        {
+          "cbsa": "16740",
+          "metro": "Charlotte-Concord-Gastonia, NC-SC",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0787,
+          "share_national": 0.0523,
+          "log2_ratio": 0.59,
+          "ratio": 1.5,
+          "n": 4586,
+          "sentence": "In Charlotte-Concord-Gastonia, NC-SC, Logistics & Warehouse Jobs is 8% of postings vs 5% nationally \u2014 1.5x national, over-represented."
+        },
+        {
+          "cbsa": "16740",
+          "metro": "Charlotte-Concord-Gastonia, NC-SC",
+          "category": "Hospitality & Catering Jobs",
+          "share_metro": 0.089,
+          "share_national": 0.0714,
+          "log2_ratio": 0.32,
+          "ratio": 1.25,
+          "n": 5187,
+          "sentence": "In Charlotte-Concord-Gastonia, NC-SC, Hospitality & Catering Jobs is 9% of postings vs 7% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "16740",
+          "metro": "Charlotte-Concord-Gastonia, NC-SC",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0525,
+          "share_national": 0.0485,
+          "log2_ratio": 0.12,
+          "ratio": 1.08,
+          "n": 3060,
+          "sentence": "In Charlotte-Concord-Gastonia, NC-SC, Accounting & Finance Jobs is 5% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "16740",
+          "metro": "Charlotte-Concord-Gastonia, NC-SC",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2604,
+          "share_national": 0.2404,
+          "log2_ratio": 0.12,
+          "ratio": 1.08,
+          "n": 15174,
+          "sentence": "In Charlotte-Concord-Gastonia, NC-SC, Healthcare & Nursing Jobs is 26% of postings vs 24% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "16740",
+          "metro": "Charlotte-Concord-Gastonia, NC-SC",
+          "category": "IT Jobs",
+          "share_metro": 0.0695,
+          "share_national": 0.1062,
+          "log2_ratio": -0.61,
+          "ratio": 0.65,
+          "n": 4048,
+          "sentence": "In Charlotte-Concord-Gastonia, NC-SC, IT Jobs is 7% of postings vs 11% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "16740",
+          "metro": "Charlotte-Concord-Gastonia, NC-SC",
+          "category": "Travel Jobs",
+          "share_metro": 0.0391,
+          "share_national": 0.0589,
+          "log2_ratio": -0.59,
+          "ratio": 0.66,
+          "n": 2279,
+          "sentence": "In Charlotte-Concord-Gastonia, NC-SC, Travel Jobs is 4% of postings vs 6% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "16740",
+          "metro": "Charlotte-Concord-Gastonia, NC-SC",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0235,
+          "share_national": 0.0348,
+          "log2_ratio": -0.56,
+          "ratio": 0.68,
+          "n": 1372,
+          "sentence": "In Charlotte-Concord-Gastonia, NC-SC, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.7x national, under-represented."
+        }
+      ],
+      "total": 58273
+    },
+    "38060": {
+      "name": "Phoenix-Mesa-Chandler, AZ",
+      "over": [
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "Sales Jobs",
+          "share_metro": 0.0631,
+          "share_national": 0.0521,
+          "log2_ratio": 0.28,
+          "ratio": 1.21,
+          "n": 4990,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, Sales Jobs is 6% of postings vs 5% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "Engineering Jobs",
+          "share_metro": 0.1013,
+          "share_national": 0.0866,
+          "log2_ratio": 0.23,
+          "ratio": 1.17,
+          "n": 8005,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, Engineering Jobs is 10% of postings vs 9% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2591,
+          "share_national": 0.2404,
+          "log2_ratio": 0.11,
+          "ratio": 1.08,
+          "n": 20480,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, Healthcare & Nursing Jobs is 26% of postings vs 24% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "Retail Jobs",
+          "share_metro": 0.0423,
+          "share_national": 0.04,
+          "log2_ratio": 0.08,
+          "ratio": 1.06,
+          "n": 3341,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, Retail Jobs is 4% of postings vs 4% nationally \u2014 1.1x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "Travel Jobs",
+          "share_metro": 0.0393,
+          "share_national": 0.0589,
+          "log2_ratio": -0.58,
+          "ratio": 0.67,
+          "n": 3109,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, Travel Jobs is 4% of postings vs 6% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "IT Jobs",
+          "share_metro": 0.0773,
+          "share_national": 0.1062,
+          "log2_ratio": -0.46,
+          "ratio": 0.73,
+          "n": 6109,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, IT Jobs is 8% of postings vs 11% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0324,
+          "share_national": 0.0348,
+          "log2_ratio": -0.1,
+          "ratio": 0.93,
+          "n": 2564,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.9x national, under-represented."
+        },
+        {
+          "cbsa": "38060",
+          "metro": "Phoenix-Mesa-Chandler, AZ",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.051,
+          "share_national": 0.0523,
+          "log2_ratio": -0.04,
+          "ratio": 0.97,
+          "n": 4032,
+          "sentence": "In Phoenix-Mesa-Chandler, AZ, Logistics & Warehouse Jobs is 5% of postings vs 5% nationally \u2014 1.0x national, under-represented."
+        }
+      ],
+      "total": 79031
+    },
+    "38900": {
+      "name": "Portland-Vancouver-Hillsboro, OR-WA",
+      "over": [
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "Healthcare & Nursing Jobs",
+          "share_metro": 0.2881,
+          "share_national": 0.2404,
+          "log2_ratio": 0.26,
+          "ratio": 1.2,
+          "n": 13009,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Healthcare & Nursing Jobs is 29% of postings vs 24% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "Logistics & Warehouse Jobs",
+          "share_metro": 0.0618,
+          "share_national": 0.0523,
+          "log2_ratio": 0.24,
+          "ratio": 1.18,
+          "n": 2792,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Logistics & Warehouse Jobs is 6% of postings vs 5% nationally \u2014 1.2x national, over-represented."
+        },
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "Sales Jobs",
+          "share_metro": 0.0597,
+          "share_national": 0.0521,
+          "log2_ratio": 0.2,
+          "ratio": 1.15,
+          "n": 2695,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Sales Jobs is 6% of postings vs 5% nationally \u2014 1.1x national, over-represented."
+        },
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "Engineering Jobs",
+          "share_metro": 0.0887,
+          "share_national": 0.0866,
+          "log2_ratio": 0.03,
+          "ratio": 1.02,
+          "n": 4004,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Engineering Jobs is 9% of postings vs 9% nationally \u2014 1.0x national, over-represented."
+        }
+      ],
+      "under": [
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "IT Jobs",
+          "share_metro": 0.0729,
+          "share_national": 0.1062,
+          "log2_ratio": -0.54,
+          "ratio": 0.69,
+          "n": 3290,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, IT Jobs is 7% of postings vs 11% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "Teaching Jobs",
+          "share_metro": 0.0258,
+          "share_national": 0.0348,
+          "log2_ratio": -0.43,
+          "ratio": 0.74,
+          "n": 1164,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.7x national, under-represented."
+        },
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "Travel Jobs",
+          "share_metro": 0.0449,
+          "share_national": 0.0589,
+          "log2_ratio": -0.39,
+          "ratio": 0.76,
+          "n": 2027,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Travel Jobs is 4% of postings vs 6% nationally \u2014 0.8x national, under-represented."
+        },
+        {
+          "cbsa": "38900",
+          "metro": "Portland-Vancouver-Hillsboro, OR-WA",
+          "category": "Accounting & Finance Jobs",
+          "share_metro": 0.0423,
+          "share_national": 0.0485,
+          "log2_ratio": -0.19,
+          "ratio": 0.87,
+          "n": 1912,
+          "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Accounting & Finance Jobs is 4% of postings vs 5% nationally \u2014 0.9x national, under-represented."
+        }
+      ],
+      "total": 45152
+    }
+  },
   "outliers": [
+    {
+      "cbsa": "41740",
+      "metro": "San Diego-Chula Vista-Carlsbad, CA",
+      "category": "Travel Jobs",
+      "share_metro": 0.0094,
+      "share_national": 0.0589,
+      "log2_ratio": -2.65,
+      "ratio": 0.16,
+      "n": 332,
+      "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Travel Jobs is 1% of postings vs 6% nationally \u2014 0.2x national, under-represented."
+    },
     {
       "cbsa": "41860",
       "metro": "San Francisco-Oakland-Fremont, CA",
       "category": "Travel Jobs",
       "share_metro": 0.0109,
-      "share_national": 0.0578,
-      "log2_ratio": -2.4,
+      "share_national": 0.0589,
+      "log2_ratio": -2.43,
       "ratio": 0.19,
       "n": 1342,
       "sentence": "In San Francisco-Oakland-Fremont, CA, Travel Jobs is 1% of postings vs 6% nationally \u2014 0.2x national, under-represented."
     },
     {
-      "cbsa": "31080",
-      "metro": "Los Angeles-Long Beach-Anaheim, CA",
-      "category": "Travel Jobs",
-      "share_metro": 0.0239,
-      "share_national": 0.0578,
-      "log2_ratio": -1.27,
-      "ratio": 0.41,
-      "n": 3634,
-      "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Travel Jobs is 2% of postings vs 6% nationally \u2014 0.4x national, under-represented."
-    },
-    {
-      "cbsa": "41860",
-      "metro": "San Francisco-Oakland-Fremont, CA",
+      "cbsa": "36740",
+      "metro": "Orlando-Kissimmee-Sanford, FL",
       "category": "IT Jobs",
-      "share_metro": 0.1765,
-      "share_national": 0.087,
-      "log2_ratio": 1.02,
-      "ratio": 2.03,
-      "n": 21631,
-      "sentence": "In San Francisco-Oakland-Fremont, CA, IT Jobs is 18% of postings vs 9% nationally \u2014 2.0x national, over-represented."
-    },
-    {
-      "cbsa": "35620",
-      "metro": "New York-Newark-Jersey City, NY-NJ",
-      "category": "Engineering Jobs",
-      "share_metro": 0.0414,
-      "share_national": 0.0815,
-      "log2_ratio": -0.98,
-      "ratio": 0.51,
-      "n": 10699,
-      "sentence": "In New York-Newark-Jersey City, NY-NJ, Engineering Jobs is 4% of postings vs 8% nationally \u2014 0.5x national, under-represented."
+      "share_metro": 0.0396,
+      "share_national": 0.1062,
+      "log2_ratio": -1.42,
+      "ratio": 0.37,
+      "n": 2141,
+      "sentence": "In Orlando-Kissimmee-Sanford, FL, IT Jobs is 4% of postings vs 11% nationally \u2014 0.4x national, under-represented."
     },
     {
       "cbsa": "26420",
       "metro": "Houston-Pasadena-The Woodlands, TX",
       "category": "IT Jobs",
       "share_metro": 0.0448,
-      "share_national": 0.087,
-      "log2_ratio": -0.96,
-      "ratio": 0.51,
+      "share_national": 0.1062,
+      "log2_ratio": -1.25,
+      "ratio": 0.42,
       "n": 3907,
-      "sentence": "In Houston-Pasadena-The Woodlands, TX, IT Jobs is 4% of postings vs 9% nationally \u2014 0.5x national, under-represented."
+      "sentence": "In Houston-Pasadena-The Woodlands, TX, IT Jobs is 4% of postings vs 11% nationally \u2014 0.4x national, under-represented."
+    },
+    {
+      "cbsa": "33460",
+      "metro": "Minneapolis-St. Paul-Bloomington, MN-WI",
+      "category": "Logistics & Warehouse Jobs",
+      "share_metro": 0.1108,
+      "share_national": 0.0523,
+      "log2_ratio": 1.08,
+      "ratio": 2.12,
+      "n": 7048,
+      "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Logistics & Warehouse Jobs is 11% of postings vs 5% nationally \u2014 2.1x national, over-represented."
+    },
+    {
+      "cbsa": "35620",
+      "metro": "New York-Newark-Jersey City, NY-NJ",
+      "category": "Engineering Jobs",
+      "share_metro": 0.0414,
+      "share_national": 0.0866,
+      "log2_ratio": -1.06,
+      "ratio": 0.48,
+      "n": 10699,
+      "sentence": "In New York-Newark-Jersey City, NY-NJ, Engineering Jobs is 4% of postings vs 9% nationally \u2014 0.5x national, under-represented."
+    },
+    {
+      "cbsa": "41180",
+      "metro": "St. Louis, MO-IL",
+      "category": "Teaching Jobs",
+      "share_metro": 0.0182,
+      "share_national": 0.0348,
+      "log2_ratio": -0.94,
+      "ratio": 0.52,
+      "n": 1075,
+      "sentence": "In St. Louis, MO-IL, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
     },
     {
       "cbsa": "12060",
       "metro": "Atlanta-Sandy Springs-Roswell, GA",
       "category": "Teaching Jobs",
       "share_metro": 0.0185,
-      "share_national": 0.0343,
-      "log2_ratio": -0.89,
-      "ratio": 0.54,
+      "share_national": 0.0348,
+      "log2_ratio": -0.91,
+      "ratio": 0.53,
       "n": 2266,
       "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
     },
     {
-      "cbsa": "16980",
-      "metro": "Chicago-Naperville-Elgin, IL-IN",
+      "cbsa": "41860",
+      "metro": "San Francisco-Oakland-Fremont, CA",
       "category": "Logistics & Warehouse Jobs",
-      "share_metro": 0.0912,
-      "share_national": 0.0546,
-      "log2_ratio": 0.74,
-      "ratio": 1.67,
-      "n": 13972,
-      "sentence": "In Chicago-Naperville-Elgin, IL-IN, Logistics & Warehouse Jobs is 9% of postings vs 5% nationally \u2014 1.7x national, over-represented."
+      "share_metro": 0.0282,
+      "share_national": 0.0523,
+      "log2_ratio": -0.89,
+      "ratio": 0.54,
+      "n": 3461,
+      "sentence": "In San Francisco-Oakland-Fremont, CA, Logistics & Warehouse Jobs is 3% of postings vs 5% nationally \u2014 0.5x national, under-represented."
     },
     {
       "cbsa": "33100",
       "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
       "category": "Engineering Jobs",
       "share_metro": 0.0522,
-      "share_national": 0.0815,
-      "log2_ratio": -0.64,
-      "ratio": 0.64,
+      "share_national": 0.0866,
+      "log2_ratio": -0.73,
+      "ratio": 0.6,
       "n": 3083,
-      "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Engineering Jobs is 5% of postings vs 8% nationally \u2014 0.6x national, under-represented."
+      "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Engineering Jobs is 5% of postings vs 9% nationally \u2014 0.6x national, under-represented."
+    },
+    {
+      "cbsa": "36740",
+      "metro": "Orlando-Kissimmee-Sanford, FL",
+      "category": "Accounting & Finance Jobs",
+      "share_metro": 0.0307,
+      "share_national": 0.0485,
+      "log2_ratio": -0.66,
+      "ratio": 0.63,
+      "n": 1656,
+      "sentence": "In Orlando-Kissimmee-Sanford, FL, Accounting & Finance Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
     },
     {
       "cbsa": "33100",
       "metro": "Miami-Fort Lauderdale-West Palm Beach, FL",
       "category": "Hospitality & Catering Jobs",
       "share_metro": 0.1096,
-      "share_national": 0.073,
-      "log2_ratio": 0.59,
-      "ratio": 1.5,
+      "share_national": 0.0714,
+      "log2_ratio": 0.62,
+      "ratio": 1.54,
       "n": 6472,
       "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Hospitality & Catering Jobs is 11% of postings vs 7% nationally \u2014 1.5x national, over-represented."
-    },
-    {
-      "cbsa": "35620",
-      "metro": "New York-Newark-Jersey City, NY-NJ",
-      "category": "Logistics & Warehouse Jobs",
-      "share_metro": 0.0386,
-      "share_national": 0.0546,
-      "log2_ratio": -0.5,
-      "ratio": 0.71,
-      "n": 9976,
-      "sentence": "In New York-Newark-Jersey City, NY-NJ, Logistics & Warehouse Jobs is 4% of postings vs 5% nationally \u2014 0.7x national, under-represented."
-    },
-    {
-      "cbsa": "42660",
-      "metro": "Seattle-Tacoma-Bellevue, WA",
-      "category": "Teaching Jobs",
-      "share_metro": 0.0246,
-      "share_national": 0.0343,
-      "log2_ratio": -0.48,
-      "ratio": 0.72,
-      "n": 1968,
-      "sentence": "In Seattle-Tacoma-Bellevue, WA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.7x national, under-represented."
-    },
-    {
-      "cbsa": "19740",
-      "metro": "Denver-Aurora-Centennial, CO",
-      "category": "Healthcare & Nursing Jobs",
-      "share_metro": 0.3461,
-      "share_national": 0.2489,
-      "log2_ratio": 0.48,
-      "ratio": 1.39,
-      "n": 30225,
-      "sentence": "In Denver-Aurora-Centennial, CO, Healthcare & Nursing Jobs is 35% of postings vs 25% nationally \u2014 1.4x national, over-represented."
     }
   ]
 }

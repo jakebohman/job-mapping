@@ -112,6 +112,21 @@ def rank_outliers(per_metro, national_share):
     return cells
 
 
+def per_metro_outliers(cells, top_n=4):
+    """Group ranked cells by metro → {cbsa: {name, total, over, under}}, each
+    metro's top-N over- and under-represented sectors (by |log2_ratio|). Feeds
+    the national map's click-through side panel; reuses the cell dicts as-is.
+    `cells` must be sorted by |log2_ratio| descending (as rank_outliers returns),
+    so the first over/under per metro are already its strongest."""
+    by = {}
+    for c in cells:
+        m = by.setdefault(c["cbsa"], {"name": c["metro"], "over": [], "under": []})
+        side = "over" if c["ratio"] >= 1 else "under"
+        if len(m[side]) < top_n:
+            m[side].append(c)
+    return by
+
+
 def diversify(cells, per_metro=PER_METRO_CAP, per_category=PER_CATEGORY_CAP,
               top_n=TOP_N):
     """Greedily take the strongest deviations while capping how many cells any
@@ -129,6 +144,51 @@ def diversify(cells, per_metro=PER_METRO_CAP, per_category=PER_CATEGORY_CAP,
         if len(picked) >= top_n:
             break
     return picked
+
+
+def select_metros(n=50, fallback=METROS):
+    """The n largest shaded metros by BLS labor force, read from national.json
+    (build_national's output). These are the most-clicked metros on the map, so
+    covering them maximizes the click-through hit rate. Falls back to the
+    hardcoded diverse set if national.json hasn't been built yet."""
+    nat_path = Path(__file__).parent.parent / "site" / "data" / "national.json"
+    if not nat_path.exists():
+        return fallback
+    metros = json.loads(nat_path.read_text())["metros"]
+    shaded = [m for m in metros if not m["below_threshold"] and m.get("labor_force")]
+    shaded.sort(key=lambda m: -m["labor_force"])
+    return [m["cbsa"] for m in shaded[:n]] or fallback
+
+
+def build_panel_report(per_metro):
+    """Pure: {code:{name,mix}} -> the outliers.json report. Produces the national
+    baseline, the global diversified ranking (sectors.html), and per-metro
+    over/under (the map's click-through). No network."""
+    national = pool_national(per_metro)
+    ranked = rank_outliers(per_metro, national)
+    cells = diversify(ranked)
+    # Lead = sharpest over-representation, for the page's hero reading.
+    lead = next((c for c in cells if c["ratio"] > 1), cells[0] if cells else None)
+    by_metro = per_metro_outliers(ranked)
+    for code, m in by_metro.items():
+        m["total"] = sum(per_metro[code]["mix"].values())
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "metros_sampled": len(per_metro),
+        "national_total": sum(sum(m["mix"].values()) for m in per_metro.values()),
+        "lead": lead,
+        "basis": "Adzuna category posting counts (census per category)",
+        "method": ("Category share = category count / metro total (same radius, "
+                   "so CBSA-radius imprecision cancels). Ranked by "
+                   "log2(metro share / national share) — effect size, since "
+                   "near-census counts make a significance test meaningless. "
+                   "Sentences templated from the numbers."),
+        "national_share": [
+            {"category": l, "share": round(s, 4)}
+            for l, s in sorted(national.items(), key=lambda kv: -kv[1])],
+        "by_metro": by_metro,
+        "outliers": cells,
+    }
 
 
 def run():
@@ -154,7 +214,8 @@ def run():
     cache_path = OUT / "_mix_cache.json"
     per_metro = json.loads(cache_path.read_text()) if cache_path.exists() else {}
 
-    for code in METROS:
+    metros = select_metros()
+    for code in metros:
         if code in per_metro:
             print(f"  {code} cached"); continue
         if code not in geo.CBSA_COUNTIES:
@@ -169,31 +230,11 @@ def run():
         cache_path.write_text(json.dumps(per_metro))
         print(f"  {code} {name[:26]:26} total={sum(mix.values())}")
 
-    per_metro = {c: per_metro[c] for c in METROS if c in per_metro}
+    per_metro = {c: per_metro[c] for c in metros if c in per_metro}
     if len(per_metro) < 3:
         sys.exit(f"Only {len(per_metro)} metros — need >=3 for a national baseline.")
-    national = pool_national(per_metro)
-    ranked = rank_outliers(per_metro, national)
-    cells = diversify(ranked)
-    # Lead = sharpest over-representation, for the page's hero reading.
-    lead = next((c for c in cells if c["ratio"] > 1), cells[0] if cells else None)
-
-    report = {
-        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "metros_sampled": len(per_metro),
-        "national_total": sum(sum(m["mix"].values()) for m in per_metro.values()),
-        "lead": lead,
-        "basis": "Adzuna category posting counts (census per category)",
-        "method": ("Category share = category count / metro total (same radius, "
-                   "so CBSA-radius imprecision cancels). Ranked by "
-                   "log2(metro share / national share) — effect size, since "
-                   "near-census counts make a significance test meaningless. "
-                   "Sentences templated from the numbers."),
-        "national_share": [
-            {"category": l, "share": round(s, 4)}
-            for l, s in sorted(national.items(), key=lambda kv: -kv[1])],
-        "outliers": cells,
-    }
+    report = build_panel_report(per_metro)
+    cells = report["outliers"]
     (OUT / "outliers.json").write_text(json.dumps(report, indent=2))
     print(f"\nWrote {OUT/'outliers.json'} — {len(per_metro)} metros, "
           f"{len(cells)} diversified outliers:")
@@ -232,6 +273,12 @@ def _selftest():
             {"cbsa": "N", "category": "C", "log2_ratio": 6}]
     picked = diversify(fake, per_metro=2, per_category=2, top_n=10)
     assert [c["cbsa"] for c in picked] == ["M", "M", "N"]      # M capped at 2
+
+    # per_metro_outliers: group cells into each metro's top over/under sectors
+    by = per_metro_outliers(cells, top_n=2)
+    assert "IT Jobs" in [c["category"] for c in by["A"]["over"]]    # A over-indexes IT
+    assert "IT Jobs" in [c["category"] for c in by["V"]["under"]]   # V under-indexes IT
+    assert all(len(m["over"]) <= 2 and len(m["under"]) <= 2 for m in by.values())
     print("selftest ok")
 
 

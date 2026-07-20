@@ -15,9 +15,14 @@ Three deliverables (a static page ← a Python build script ← generated JSON):
 
 | Page (`site/`) | Built by (`pipeline/`) | Shows |
 |---|---|---|
-| `index.html` (landing) | `build_national.py` | US choropleth: postings per 1,000 workers across ~390 metros |
-| `sectors.html` | `panel.py` | Ranked list of where a metro's sector *mix* deviates from national |
+| `index.html` (landing) | `build_national.py` | US choropleth: postings per 1,000 workers across ~390 metros. **Click a metro → its over/under-indexed sectors** (from `panel.py`'s `outliers.json` `by_metro`), linking to `sectors.html?metro=<cbsa>`. |
+| `sectors.html` | `panel.py` | Ranked list of where a metro's sector *mix* deviates from national; `?metro=<cbsa>` spotlights one metro (the map's click-through target). |
 | `map.html` | `metro_map.py` | Single-metro detail (Columbus): calibrated rate + occupation mix |
+
+`panel.py` covers the ~50 largest metros by labor force (`select_metros`, read from
+`national.json` — so build `build_national.py` first) and emits both a global
+diversified ranking and per-metro `by_metro` over/under. The map's metro paths
+carry `data-cbsa` for the click handler.
 
 ## Commands
 
