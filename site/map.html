@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Single-metro detail: job-posting demand per 1,000 workers for one U.S. metro, from calibrated Adzuna counts normalized by BLS labor force.">
-<title>Single-Metro View — Metro Labor Demand</title>
+<meta name="description" content="Single-metro detail: hiring intensity (job postings per 1,000 workers) and the sector mix for any U.S. metro.">
+<title>Metro Detail — Job Maps</title>
 <link rel="icon" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css">
 <style>
@@ -13,7 +13,7 @@
   :root{
     --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
     --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
-    --over:#b4552a; --under:#2f6ea3; --under-soft:#cbdcea; --spine:#b3bfce;
+    --over:#b4552a; --under:#2f6ea3; --nodata:#c8cfd9;
     --serif:"Fraunces",Georgia,"Times New Roman",serif;
     --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -22,7 +22,7 @@
     :root{
       --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
       --faint:#6d7c91; --rule:#25303d; --hair:#1c2530;
-      --over:#e08a5c; --under:#5ea6d8; --under-soft:#1e2c3a; --spine:#38475a;
+      --over:#e08a5c; --under:#5ea6d8; --nodata:#2c3949;
     }
   }
   *{box-sizing:border-box;}
@@ -34,34 +34,45 @@
   .pagenav a{color:var(--faint);text-decoration:none;padding-bottom:3px;}
   .pagenav a.on{color:var(--ink);border-bottom:2px solid var(--ink);}
   .pagenav a:hover{color:var(--ink);}
-  header{padding:14px 0 26px;border-bottom:2px solid var(--ink);}
+  header{padding:14px 0 22px;border-bottom:2px solid var(--ink);}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
            text-transform:uppercase;color:var(--muted);}
-  h1{font-family:var(--serif);font-weight:500;font-size:clamp(32px,5.5vw,52px);
-     line-height:1.03;letter-spacing:-.015em;margin:14px 0 0;}
-  .standfirst{margin:16px 0 0;max-width:58ch;color:var(--muted);font-size:16px;}
+  h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,5.2vw,50px);
+     line-height:1.03;letter-spacing:-.015em;margin:12px 0 0;}
+  .standfirst{margin:14px 0 0;max-width:58ch;color:var(--muted);font-size:16px;}
+  .picker{margin:16px 0 0;font-family:var(--mono);font-size:11.5px;
+          letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+  .picker select{display:block;margin-top:6px;font-family:var(--sans);font-size:15px;
+                 text-transform:none;letter-spacing:0;padding:8px 11px;
+                 border:1px solid var(--rule);border-radius:8px;background:var(--panel);
+                 color:var(--ink);max-width:340px;width:100%;}
 
-  .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;padding:30px 0 20px;}
+  .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;padding:28px 0 20px;}
   .card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:18px;}
   svg{width:100%;height:auto;display:block;}
   .maparea{fill:var(--under);stroke:var(--paper);stroke-width:1.5;}
   .maplabel{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
             text-transform:uppercase;fill:var(--faint);}
 
-  .hero{padding:4px 2px;}
   .hlabel{font-family:var(--mono);font-size:11px;letter-spacing:.12em;
           text-transform:uppercase;color:var(--faint);}
-  .hnum{font-family:var(--serif);font-weight:500;font-size:clamp(52px,9vw,84px);
+  .hnum{font-family:var(--serif);font-weight:500;font-size:clamp(48px,8.5vw,80px);
         line-height:.95;letter-spacing:-.02em;margin:6px 0 2px;}
-  .hunit{font-size:15px;color:var(--muted);}
-  .range{margin-top:16px;display:flex;gap:22px;flex-wrap:wrap;}
-  .range div{font-family:var(--mono);font-size:12px;color:var(--muted);}
-  .range b{display:block;font-size:20px;color:var(--ink);font-weight:500;margin-top:2px;}
-  .rowline{display:flex;justify-content:space-between;padding:9px 0;
+  .hnum.gray{color:var(--faint);font-size:clamp(26px,5vw,40px);}
+  .hunit{font-size:13.5px;color:var(--muted);}
+  .rowline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;
            border-bottom:1px solid var(--hair);font-size:13.5px;}
   .rowline:last-child{border-bottom:0;}
   .rowline span:last-child{font-family:var(--mono);color:var(--muted);}
-  .note{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:14px;}
+  .sec-h{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+         text-transform:uppercase;margin:2px 0 5px;font-weight:600;}
+  .sec-h.later{margin-top:14px;}
+  .srow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+        padding:5px 0;border-bottom:1px solid var(--hair);font-size:13.5px;}
+  .srow:last-of-type{border-bottom:0;}
+  .srow .sv{font-family:var(--mono);font-size:12.5px;font-weight:600;white-space:nowrap;}
+  .srow.o .sv{color:var(--over);} .srow.u .sv{color:var(--under);}
+  .note{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:12px;}
   .note a{color:var(--under);}
   footer{border-top:2px solid var(--ink);padding:20px 0 56px;
          font-family:var(--mono);font-size:11px;color:var(--faint);
@@ -77,11 +88,11 @@
     <a class="on" href="map.html">Metro detail</a>
   </nav>
   <header>
-    <div class="eyebrow" id="eyebrow">Single-metro view</div>
+    <div class="eyebrow" id="eyebrow">Metro detail</div>
     <h1 id="title">—</h1>
-    <p class="standfirst">One metro's job-posting demand normalized by its labor
-    force. A single cell of the eventual choropleth — the reason the map is
-    subordinate to the index: a rate needs a comparison to mean anything.</p>
+    <p class="standfirst">Any metro's hiring intensity — job postings per 1,000
+    workers — and where its mix of open jobs departs from the national pattern.</p>
+    <div class="picker">Choose a metro<select id="picker"></select></div>
   </header>
 
   <div class="grid">
@@ -92,9 +103,9 @@
         <div class="hlabel">Postings per 1,000 workers</div>
         <div class="hnum" id="rate">—</div>
         <div class="hunit" id="ratectx"></div>
-        <div class="range" id="range"></div>
       </div>
       <div class="card" style="margin-top:16px" id="detail"></div>
+      <div class="card" style="margin-top:16px" id="sectors"></div>
     </div>
   </div>
 
@@ -103,9 +114,9 @@
 
 <script>
 // Manual equirectangular projection (longitude scaled by cos(latitude)) — a
-// single polygon does not need d3, so this page ships with no dependencies.
-function projectPaths(geo, W, H, pad){
-  const polys = geo.features.flatMap(f =>
+// single metro polygon does not need d3, so this page ships with no dependencies.
+function projectPaths(features, W, H, pad){
+  const polys = features.flatMap(f =>
     f.geometry.type === "MultiPolygon" ? f.geometry.coordinates : [f.geometry.coordinates]);
   let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
   polys.forEach(p=>p.forEach(r=>r.forEach(([lo,la])=>{
@@ -118,47 +129,84 @@ function projectPaths(geo, W, H, pad){
   return polys.map(p=>p.map(r=>"M"+r.map(([lo,la])=>X(lo).toFixed(1)+" "+Y(la).toFixed(1)).join("L")+"Z").join(" "));
 }
 const fmt = n => n==null ? "—" : n.toLocaleString();
+const sectorName = s => s.replace(/\s*Jobs$/,"");
+const metroName = full => {
+  const c = full.split(",")[0].split("-")[0].trim();
+  return c === "Washington" ? "Washington, DC" : c;   // disambiguate the city from the state
+};
+const nocache = {cache:"no-store"};
 
 Promise.all([
-  fetch("data/18140.json").then(r=>r.json()),
-  fetch("data/cbsa_18140.geojson").then(r=>r.json())
-]).then(([d, geo])=>{
-  document.getElementById("eyebrow").textContent = `Single-metro view · CBSA ${d.cbsa}`;
-  document.getElementById("title").textContent = d.name;
+  fetch("data/national.json", nocache).then(r=>r.json()),
+  fetch("data/us_metros.geojson", nocache).then(r=>r.json()),
+  fetch("data/outliers.json", nocache).then(r=>r.json()).catch(()=>({by_metro:{}})),
+]).then(([nat, metros, sect])=>{
+  const byCbsa={}; nat.metros.forEach(m=>byCbsa[m.cbsa]=m);
+  const rank={}; nat.metros.filter(m=>m.rate!=null).forEach((m,i)=>rank[m.cbsa]=i+1);
+  const shadedN = nat.metros.filter(m=>!m.below_threshold).length;
+  const byMetro = (sect && sect.by_metro) || {};
+  const featByCode={}; metros.features.forEach(f=>featByCode[f.properties.GEOID]=f);
 
-  const paths = projectPaths(geo, 560, 440, 26);
-  document.getElementById("map").innerHTML =
-    paths.map(p=>`<path class="maparea" d="${p}"/>`).join("") +
-    `<text class="maplabel" x="14" y="428">${d.name} metro boundary</text>`;
+  // picker: every metro, alphabetical
+  const sel=document.getElementById("picker");
+  sel.innerHTML = nat.metros.slice().sort((a,b)=>a.name.localeCompare(b.name))
+    .map(m=>`<option value="${m.cbsa}">${m.name}</option>`).join("");
 
-  document.getElementById("rate").textContent = d.view1_postings_per_1000 ?? "—";
-  document.getElementById("ratectx").textContent =
-    `across the ${d.name} labor market`;
-  const v = d.view1_range_per_1000;
-  document.getElementById("range").innerHTML =
-    `<div>Distinct estimate<b>${v.distinct ?? "—"}</b></div>
-     <div>Raw, with reposts<b>${v.raw_with_reposts ?? "—"}</b></div>
-     <div>Labor force<b>${fmt(d.labor_force.labor_force)}</b></div>`;
+  let code = new URLSearchParams(location.search).get("metro");
+  if(!byCbsa[code]) code = byCbsa["18140"] ? "18140" : nat.metros[0].cbsa;
 
-  const vol = d.volume;
-  document.getElementById("detail").innerHTML =
-    `<div class="rowline"><span>Calibrated posting count</span><span>${fmt(vol.count)} × f_m ${vol.f_m}</span></div>
-     <div class="rowline"><span>CBSA-bounded volume</span><span>${fmt(vol.volume)}</span></div>
-     <div class="rowline"><span>Distinct (reposts removed)</span><span>${fmt(vol.distinct_estimate)}</span></div>
-     <div class="rowline"><span>Labor force (BLS LAUS)</span><span>${fmt(d.labor_force.labor_force)} · ${d.labor_force.as_of}</span></div>
-     <div class="note">Volume is a calibrated estimate, not a census: a radius
-     count × the in-CBSA fraction of accurately-reported counties. Sector detail
-     — where this metro's mix departs from national — lives in
-     <a href="sectors.html">the sector index</a>, which uses unbiased category
-     counts instead of a rank-biased sample.</div>`;
+  function render(code){
+    const rec = byCbsa[code]; if(!rec) return;
+    sel.value = code;
+    history.replaceState(null, "", `?metro=${code}`);
+    document.getElementById("eyebrow").textContent = `Metro detail · CBSA ${code}`;
+    document.getElementById("title").textContent = rec.name;
 
-  document.getElementById("foot").textContent =
-    `${d.meta.threshold_note} Coder: ${d.meta.coder}. Generated ${d.generated_at}. ` +
-    `Job-posting demand, not employment.`;
+    const feat = featByCode[code];
+    document.getElementById("map").innerHTML = feat
+      ? projectPaths([feat],560,440,26).map(p=>`<path class="maparea" d="${p}"/>`).join("")
+        + `<text class="maplabel" x="14" y="428">${metroName(rec.name)} metro boundary</text>`
+      : `<text class="maplabel" x="50%" y="50%" text-anchor="middle">boundary unavailable</text>`;
+
+    const shaded = rec.rate!=null;
+    const rateEl = document.getElementById("rate");
+    rateEl.textContent = shaded ? rec.rate.toFixed(1) : "Not rated";
+    rateEl.className = shaded ? "hnum" : "hnum gray";
+    document.getElementById("ratectx").textContent = shaded
+      ? `#${rank[code]} of ${shadedN} metros by hiring intensity`
+      : "below the measurement threshold — radius-swamped by a larger neighbor, or no labor-force figure";
+
+    document.getElementById("detail").innerHTML =
+      `<div class="rowline"><span>Raw postings in search radius</span><span>${fmt(rec.count)}</span></div>
+       <div class="rowline"><span>Share actually in the metro (f_m)</span><span>${rec.f_m}</span></div>
+       <div class="rowline"><span>Distinct in-metro estimate</span><span>${fmt(rec.effective)}</span></div>
+       <div class="rowline"><span>Labor force (BLS LAUS)</span><span>${fmt(rec.labor_force)}</span></div>`;
+
+    const bm = byMetro[code];
+    const srow=(c,cls)=>`<div class="srow ${cls}"><span>${sectorName(c.category)}</span><span class="sv">${c.ratio.toFixed(1)}×</span></div>`;
+    document.getElementById("sectors").innerHTML = bm
+      ? `<div class="sec-h" style="color:var(--over)">Over-indexed sectors</div>
+         ${(bm.over||[]).map(c=>srow(c,"o")).join("") || '<div class="note">— none above the national mix —</div>'}
+         <div class="sec-h later" style="color:var(--under)">Under-indexed sectors</div>
+         ${(bm.under||[]).map(c=>srow(c,"u")).join("") || '<div class="note">— none below —</div>'}
+         <div class="note"><a href="sectors.html?metro=${code}">See ${metroName(rec.name)} in the sector index →</a></div>`
+      : `<div class="sec-h">Sector mix</div><div class="note">Sector detail is
+         collected on a rolling schedule and hasn't reached this metro yet.
+         <a href="sectors.html">Browse the sector index →</a></div>`;
+
+    document.getElementById("foot").textContent =
+      `Rate = distinct in-metro postings ÷ BLS labor force × 1,000. Sector × = a `
+      + `sector's local share ÷ its national share. Generated `
+      + `${nat.generated_at.replace("T"," ").replace("+00:00"," UTC")}. `
+      + `Job-posting demand, not employment.`;
+  }
+
+  sel.addEventListener("change", ()=>render(sel.value));
+  render(code);
 }).catch(e=>{
   document.getElementById("title").textContent = "Couldn't load metro data";
   document.getElementById("foot").textContent =
-    `${e}. Run python pipeline/metro_map.py, then serve this directory over HTTP.`;
+    `${e}. Run python pipeline/build_national.py (and pipeline/panel.py for sector detail), then serve this directory over HTTP.`;
 });
 </script>
 </body>

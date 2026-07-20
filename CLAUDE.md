@@ -15,14 +15,17 @@ Three deliverables (a static page ← a Python build script ← generated JSON):
 
 | Page (`site/`) | Built by (`pipeline/`) | Shows |
 |---|---|---|
-| `index.html` (landing) | `build_national.py` | US choropleth: postings per 1,000 workers across ~390 metros. **Click a metro → its over/under-indexed sectors** (from `panel.py`'s `outliers.json` `by_metro`), linking to `sectors.html?metro=<cbsa>`. |
-| `sectors.html` | `panel.py` | Ranked list of where a metro's sector *mix* deviates from national; `?metro=<cbsa>` spotlights one metro (the map's click-through target). |
-| `map.html` | `metro_map.py` | Single-metro detail (Columbus): calibrated rate + occupation mix |
+| `index.html` (landing) | `build_national.py` | US choropleth: postings per 1,000 workers across ~390 metros. **Click a metro → `map.html?metro=<cbsa>`** (Metro Detail). Paths carry `data-cbsa`. |
+| `map.html` (Metro Detail) | `build_national.py` + `panel.py` | **Any** metro (a `<select>` picker + `?metro=<cbsa>`): rate + rank, CBSA shape (from `us_metros.geojson`), and its over/under-indexed sectors (`outliers.json` `by_metro`). Purely client-side over existing data — no per-metro build. |
+| `sectors.html` | `panel.py` | **Two** charts — the sharpest over- and under-represented sector×metro cells (`over_index`/`under_index`); `?metro=<cbsa>` spotlights one metro. |
 
-`panel.py` covers the ~50 largest metros by labor force (`select_metros`, read from
-`national.json` — so build `build_national.py` first) and emits both a global
-diversified ranking and per-metro `by_metro` over/under. The map's metro paths
-carry `data-cbsa` for the click handler.
+`panel.py` collects sector data **rolling**: `stale_metros` picks the `PER_RUN`
+(default 40, override via argv) stalest metros across all *shaded* metros
+(`shaded_universe`, from `national.json` — so build `build_national.py` first),
+stamps each with `fetched_at`, and the report accumulates every metro collected
+so far. Run it repeatedly (e.g. a daily cron) to fill the country within the
+Adzuna budget. `metro_map.py` (the old Columbus-only occupation-mix detail) is
+now unused by the site — kept for the eventual LLM occupation path.
 
 ## Commands
 

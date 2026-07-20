@@ -87,22 +87,18 @@ tasks 2–3 are independent quick wins and can move around 1 and 4.
   figure appears on the site.
 - **Depends on:** task 5.
 
-## 7. Scale the sector index + map↔sector integration  ◐ CODE DONE, COVERAGE FILLING
-- **Status:** the integration is built — `panel.py` emits per-metro `by_metro`,
-  the map click-through + side panel and `sectors.html?metro=` spotlight work,
-  and `select_metros` targets the ~50 largest metros by labor force. Remaining is
-  just data: the ~40 uncached metros fill in as the resumable `panel.py` fetch
-  runs against the Adzuna free-tier budget.
-- **Goal:** more metros in the sector index, and clicking a metro on the US map
-  shows its sector deviations.
-- **Scope:** extend `pipeline/panel.py` to ~40–50 metros (write per-metro sector
-  data); in `site/index.html`, on metro click, show that metro's over/under
-  sectors from the panel output, cross-linked with `sectors.html`. Budget:
-  ~31 Adzuna category-count calls per metro (resumable via the mix cache).
-- **Done when:** clicking a metro opens its sector panel; the index covers the
-  expanded set.
-- **Depends on:** task 4 for budget/cadence; benefits from task 5 if switching
-  to SOC occupations instead of Adzuna categories.
+## 7. Scale the sector index + map↔metro integration  ◐ CODE DONE, COVERAGE FILLING
+- **Status:** built. The US map clicks through to **Metro Detail** (`map.html`,
+  a generic `?metro=<cbsa>` page with a metro picker, over existing data — works
+  for any metro). `sectors.html` now shows **two charts** (over/under). `panel.py`
+  collects sector data **rolling** (`stale_metros`, `PER_RUN`, `fetched_at`) across
+  all shaded metros. Remaining is just data: run `panel.py` daily (cron/Action)
+  to fill the country within the Adzuna budget.
+- **Left to do here:** a scheduler (fold into task 4's weekly Action, or a
+  dedicated daily cron) so the rolling collection advances automatically; decide
+  whether Metro Detail should regain an occupation-mix section once task 5 lands.
+- **Depends on:** benefits from task 5 if switching to SOC occupations instead of
+  Adzuna categories.
 
 ## 8. Later views + storage  *(park until earlier work lands / time passes)*
 - **Remote-share view** — an LLM or keyword remote flag per posting.

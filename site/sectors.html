@@ -68,6 +68,16 @@
   .readkey .o{color:var(--over);font-weight:500;}
   .readkey .u{color:var(--under);font-weight:500;}
 
+  /* ---- section split: over / under charts ---- */
+  .chart{margin-top:14px;}
+  .chart-head{padding:22px 0 2px;}
+  .chart-head h2{font-family:var(--serif);font-weight:500;font-size:clamp(21px,3.2vw,28px);
+                 letter-spacing:-.01em;margin:0;}
+  .chart.over .chart-head h2{color:var(--over);}
+  .chart.under .chart-head h2{color:var(--under);}
+  .chart-head p{margin:5px 0 0;font-size:14px;color:var(--muted);max-width:56ch;}
+  .chart-head p b{color:var(--ink);font-weight:500;}
+
   /* ---- chart header (labeled scale) ---- */
   .axis-head{display:grid;grid-template-columns:34px 1fr minmax(180px,360px) 118px;
              gap:16px;align-items:end;padding:20px 0 8px;
@@ -171,8 +181,9 @@
     <p class="standfirst">For each metro we take a job sector's share of local
     postings and compare it to that sector's share of postings <b>nationwide</b>.
     A sector that fills a bigger slice of a metro's board than it does the
-    country's is <b>over-represented</b> there; a smaller slice, under. Below are
-    the twelve sharpest gaps across ten major metros — the list does the looking.</p>
+    country's is <b>over-represented</b> there; a smaller slice, under. Below,
+    two rankings — the sharpest <b>over-</b> and <b>under-represented</b> sectors
+    across the metros measured so far. The list does the looking.</p>
   </header>
 
   <div id="app"><div class="loading">Loading the index…</div></div>
@@ -207,7 +218,10 @@ const NAT_COLORS = ["#4b7ea8","#b4552a","#5a8f6b","#8a6bb0","#c08a3e",
 const monthOf = iso => new Date(iso).toLocaleDateString("en-US",
   {month:"long",year:"numeric"});
 const cap = s => s.replace(/\b\w/g,c=>c.toUpperCase());
-const metroName = full => full.split(",")[0].split("-")[0].trim();
+const metroName = full => {
+  const c = full.split(",")[0].split("-")[0].trim();
+  return c === "Washington" ? "Washington, DC" : c;   // disambiguate the city from the state
+};
 const sectorName = s => s.replace(/\s*Jobs$/,"");
 
 fetch("data/outliers.json").then(r=>r.json()).then(d=>{
@@ -218,7 +232,7 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
   // lead — a worked example that defines the metric and points at its row
   const L = d.lead;
   const pct = x => (x*100).toFixed(0)+"%";
-  const leadRank = d.outliers.findIndex(c=>c.cbsa===L.cbsa && c.category===L.category)+1;
+  const leadRank = d.over_index.findIndex(c=>c.cbsa===L.cbsa && c.category===L.category)+1;
   const leadHTML = `<div class="lead">
       <span class="flag">Sharpest signal</span>
       <p>In ${metroName(L.metro)}, <strong>${sectorName(L.category)}</strong> accounts for
@@ -281,9 +295,15 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
       </section>`;
   }
 
-  const rows = d.outliers.map((c,i)=>rowHTML(c,i,false)).join("");
+  const chart = (cls, title, sub, cells) => `<section class="chart ${cls}">
+      <div class="chart-head"><h2>${title}</h2><p>${sub}</p></div>
+      ${head}<div class="rows">${cells.map((c,i)=>rowHTML(c,i,false)).join("")}</div>
+    </section>`;
+  const charts =
+    chart("over", "Over-represented", "Sectors that fill a <b>bigger</b> slice of a metro's job board than they do the country's.", d.over_index) +
+    chart("under", "Under-represented", "Sectors that fill a <b>smaller</b> slice locally than nationally.", d.under_index);
   document.getElementById("app").innerHTML =
-    spotlightHTML + leadHTML + readkey + head + `<div class="rows">${rows}</div>`;
+    spotlightHTML + leadHTML + readkey + charts;
 
   // staggered bar reveal
   const rowEls = [...document.querySelectorAll(".row")];

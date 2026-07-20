@@ -28,9 +28,12 @@ from pathlib import Path
 
 import geo
 
-# Diverse large metros. ~31 count calls each; the cache makes runs resumable.
+# Fallback seed set (diverse large metros) if national.json isn't built yet.
 METROS = ["35620", "31080", "16980", "19100", "26420", "12060", "41860",
           "42660", "19740", "33100"]
+PER_RUN = 40            # metros to (re)collect per run; rolls across the country
+                        # over ~ceil(universe/PER_RUN) runs. ~31 calls each, so
+                        # this is the daily Adzuna budget knob (override: argv[1])
 MIN_NAT_SHARE = 0.03    # focus on substantial sectors (>=3% of national postings)
 MIN_CAT_COUNT = 50      # metro must have >=50 postings in the category
 TOP_N = 12
@@ -146,29 +149,43 @@ def diversify(cells, per_metro=PER_METRO_CAP, per_category=PER_CATEGORY_CAP,
     return picked
 
 
-def select_metros(n=50, fallback=METROS):
-    """The n largest shaded metros by BLS labor force, read from national.json
-    (build_national's output). These are the most-clicked metros on the map, so
-    covering them maximizes the click-through hit rate. Falls back to the
-    hardcoded diverse set if national.json hasn't been built yet."""
+def shaded_universe(fallback=METROS):
+    """All measurable (shaded) metros from national.json — the coverage target
+    for the rolling sector collection. Gray metros are radius-swamped by a
+    neighbor, so their category *shares* would be the neighbor's; excluding them
+    keeps each metro's mix its own. Falls back to the seed set (minus Puerto
+    Rico) if national.json isn't built yet."""
     nat_path = Path(__file__).parent.parent / "site" / "data" / "national.json"
     if not nat_path.exists():
         return fallback
-    metros = json.loads(nat_path.read_text())["metros"]
-    shaded = [m for m in metros if not m["below_threshold"] and m.get("labor_force")]
-    shaded.sort(key=lambda m: -m["labor_force"])
-    return [m["cbsa"] for m in shaded[:n]] or fallback
+    return [m["cbsa"] for m in json.loads(nat_path.read_text())["metros"]
+            if not m["below_threshold"]]
+
+
+def stale_metros(cache, per_run=PER_RUN):
+    """The per_run metros with the stalest sector data, so a run rolls coverage
+    across the whole country within the Adzuna budget. Never-collected metros go
+    first (highest priority); already-cached metros lacking a timestamp (pre-
+    rolling data) go last so they aren't needlessly re-fetched."""
+    def age(c):
+        e = cache.get(c)
+        if e is None:
+            return ""                    # never collected -> first
+        return e.get("fetched_at") or "9999"   # cached, no timestamp -> last
+    return sorted(shaded_universe(), key=age)[:per_run]
 
 
 def build_panel_report(per_metro):
-    """Pure: {code:{name,mix}} -> the outliers.json report. Produces the national
-    baseline, the global diversified ranking (sectors.html), and per-metro
-    over/under (the map's click-through). No network."""
+    """Pure: {code:{name,mix,...}} -> the outliers.json report. Produces the
+    national baseline, the two global diversified rankings (over/under, for
+    sectors.html's two charts), and per-metro over/under (the map + metro
+    detail). No network."""
     national = pool_national(per_metro)
     ranked = rank_outliers(per_metro, national)
-    cells = diversify(ranked)
+    over = diversify([c for c in ranked if c["ratio"] >= 1])
+    under = diversify([c for c in ranked if c["ratio"] < 1])
     # Lead = sharpest over-representation, for the page's hero reading.
-    lead = next((c for c in cells if c["ratio"] > 1), cells[0] if cells else None)
+    lead = over[0] if over else (ranked[0] if ranked else None)
     by_metro = per_metro_outliers(ranked)
     for code, m in by_metro.items():
         m["total"] = sum(per_metro[code]["mix"].values())
@@ -187,11 +204,16 @@ def build_panel_report(per_metro):
             {"category": l, "share": round(s, 4)}
             for l, s in sorted(national.items(), key=lambda kv: -kv[1])],
         "by_metro": by_metro,
-        "outliers": cells,
+        "over_index": over,
+        "under_index": under,
     }
 
 
 def run():
+    # metro names and templated sentences carry non-ASCII (em dash, accents);
+    # Windows' cp1252 console/redirect would crash printing them.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     app_id, app_key = os.environ.get("ADZUNA_APP_ID"), os.environ.get("ADZUNA_APP_KEY")
     if not (app_id and app_key):
         sys.exit("Set ADZUNA_APP_ID and ADZUNA_APP_KEY.")
@@ -214,10 +236,9 @@ def run():
     cache_path = OUT / "_mix_cache.json"
     per_metro = json.loads(cache_path.read_text()) if cache_path.exists() else {}
 
-    metros = select_metros()
-    for code in metros:
-        if code in per_metro:
-            print(f"  {code} cached"); continue
+    per_run = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else PER_RUN
+    targets = stale_metros(per_metro, per_run)
+    for code in targets:
         if code not in geo.CBSA_COUNTIES:
             print(f"  skip {code}: not in crosswalk"); continue
         name = geo.CBSA_COUNTIES[code]["name"]
@@ -226,20 +247,23 @@ def run():
         except Exception as e:
             print(f"  {code} failed ({e}); writing panel from {len(per_metro)} metros")
             break
-        per_metro[code] = {"name": name, "mix": mix}
+        per_metro[code] = {"name": name, "mix": mix,
+                           "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
         cache_path.write_text(json.dumps(per_metro))
         print(f"  {code} {name[:26]:26} total={sum(mix.values())}")
 
-    per_metro = {c: per_metro[c] for c in metros if c in per_metro}
+    # Report from the full accumulated cache (all metros collected so far), not
+    # just this run's targets — coverage grows run over run.
+    per_metro = {c: v for c, v in per_metro.items() if v.get("mix")}
     if len(per_metro) < 3:
         sys.exit(f"Only {len(per_metro)} metros — need >=3 for a national baseline.")
     report = build_panel_report(per_metro)
-    cells = report["outliers"]
     (OUT / "outliers.json").write_text(json.dumps(report, indent=2))
-    print(f"\nWrote {OUT/'outliers.json'} — {len(per_metro)} metros, "
-          f"{len(cells)} diversified outliers:")
-    for c in cells:
-        print("  ", c["sentence"])
+    covered, universe = len(per_metro), len(shaded_universe())
+    print(f"\nWrote {OUT/'outliers.json'} — {covered}/{universe} shaded metros covered, "
+          f"{len(report['over_index'])} over + {len(report['under_index'])} under:")
+    for c in report["over_index"][:5]:
+        print("  over>", c["sentence"])
 
 
 def _selftest():
@@ -279,6 +303,12 @@ def _selftest():
     assert "IT Jobs" in [c["category"] for c in by["A"]["over"]]    # A over-indexes IT
     assert "IT Jobs" in [c["category"] for c in by["V"]["under"]]   # V under-indexes IT
     assert all(len(m["over"]) <= 2 and len(m["under"]) <= 2 for m in by.values())
+
+    # build_panel_report splits into two global indexes (the sectors.html charts)
+    rep = build_panel_report(per_metro)
+    assert {"over_index", "under_index", "by_metro"} <= rep.keys()
+    assert all(c["ratio"] >= 1 for c in rep["over_index"])
+    assert all(c["ratio"] < 1 for c in rep["under_index"])
     print("selftest ok")
 
 
