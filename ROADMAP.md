@@ -4,11 +4,12 @@ Next steps for Job Maps, ordered and sized so each task fits **one working
 session**. A fresh context can pick up any task cold: read `CLAUDE.md` first
 (architecture, commands, gotchas), then the task entry here.
 
-**Status:** the national map (repost-calibrated, gray-recovered — **369/387
-metros shaded**), the two-chart sector index, and the generic any-metro Metro
-Detail page all work. The front-page map now has a **category filter** (shade by
-any Adzuna category per 1,000 workers) and a **fixed color scale**. Sector data
-covers **147/369 shaded metros** and fills as `panel.py` runs. The
+**Status:** the national map (repost-calibrated, gray-recovered — **387/387
+measurable metros shaded**, i.e. every non-PR metro), the two-chart sector index,
+and the generic any-metro Metro Detail page all work. The front-page map has a
+**per-capita↔total toggle**, a **category filter** (shade by any Adzuna category
+per 1,000 workers), a **fixed color scale**, and per-metro **"Last updated"**.
+Sector data covers **147/387 shaded metros** and fills as `panel.py` runs. The
 **one-command reproducible build (`pipeline/build_all.py`) is done** (task 1).
 Still open: the site is **not deployed** (task 2), and the occupation/skills path
 is parked.
@@ -75,6 +76,16 @@ Each entry: **Goal · Scope · Done when · Depends on**.
 ---
 
 ## Done (this and prior sessions)
+- **Every measurable metro now shades (387/387).** Un-froze the last 18 grays: the
+  gray-recovery worked but `build_national` never re-measured metros already carrying
+  a `dedup_ratio`, so bleed cases sat frozen — clearing their cache entries and
+  re-measuring shaded ~11. Plus geocode fixes: strip New England "… Town"
+  (`principal_place`), a "Saint"↔"St." county alias (`_saint_alias`, recovered
+  Slidell), `_measure` now recovers a *failed* geocode via the county anchor, an
+  added 10 km recovery radius, and **CT town-level matching** (`CT_TOWN_CBSA`) for
+  Waterbury, whose Naugatuck Valley region spans three old counties.
+- **Map polish** — per-capita↔total toggle, per-metro "Last updated", one-sentence
+  method copy, higher map/background contrast, roman (not italic) heading emphasis.
 - **One-command reproducible build** (`pipeline/build_all.py`) — stdlib
   orchestrator, subprocesses the existing resumable/self-caching scripts. Verifies
   `ADZUNA_APP_ID`/`ADZUNA_APP_KEY`/`BLS_API_KEY` (names any missing), runs
@@ -88,7 +99,7 @@ Each entry: **Goal · Scope · Done when · Depends on**.
   gray-out also floors `f_m ≥ 0.10` (see CLAUDE.md).
 - **Gray-metro recovery** — `build_national._measure` retries a would-gray metro
   with a Central-county re-anchor (ambiguous geocode) **and/or** a tighter radius
-  (25/15 km, sheds a big neighbor's bleed), keeping the best f_m. Recovered
+  (25/15/10 km, sheds a big neighbor's bleed), keeping the best f_m. Recovered
   308→369 of 387 shaded. Also: CT planning-region join, LA parish / AK-HI
   non-contiguous naming, multi-state LAUS series, Puerto Rico excluded.
 - **Two-chart sector index** (`sectors.html`) — over- and under-represented charts,
@@ -99,5 +110,5 @@ Each entry: **Goal · Scope · Done when · Depends on**.
   Adzuna category per 1,000 (`total_rate × category_share`, from `panel.py`'s
   `category_shares`); robust color domain + retuned palette.
 - **Rolling sector collection** (`panel.py` `stale_metros`/`PER_RUN`/`fetched_at`) —
-  covers all shaded metros over successive runs (147/369 so far).
+  covers all shaded metros over successive runs (147/387 so far).
 - Docs: `METHODOLOGY.md` (plain-language method), `CLAUDE.md` gotchas.

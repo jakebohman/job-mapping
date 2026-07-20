@@ -128,7 +128,9 @@ feature, not a gap: the map declines to show a number it can't stand behind.
 - **Slicing hiring by sector.** The map has a dropdown to re-shade by any of
   Adzuna's ~30 categories — "IT jobs per 1,000 workers," "Travel jobs per 1,000,"
   etc. Each is the metro's total rate multiplied by that sector's share of its
-  postings, so the sectors add up to the total. A **companion view**
+  postings, so the sectors add up to the total. A **toggle** also switches the
+  whole map between this per-1,000 rate and *total* postings (raw volume, ignoring
+  metro size), for either the total or a single sector. A **companion view**
   ([sectors.html](site/sectors.html)) ranks where each metro over- and
   under-indexes on a sector versus the national mix.
 

@@ -3,11 +3,12 @@
 An analysis tool for US metro labor markets, built from job postings — **not a
 job board** (you can't click through to apply). Three views:
 
-- **US map** (`site/index.html`) — an interactive choropleth shading ~390 metros
-  by hiring *intensity*: job postings per 1,000 workers. A rate, not raw volume,
-  so a small metro can read as hot as a big one (a raw-count map just reproduces
-  the population map and teaches nothing). A **dropdown** re-shades by any sector
-  (IT jobs / 1,000, Travel jobs / 1,000, …); click a metro for its detail.
+- **US map** (`site/index.html`) — an interactive choropleth over ~390 metros. A
+  **toggle** switches between hiring *intensity* (job postings per 1,000 workers,
+  so a small metro can read as hot as a big one — a raw-count map just reproduces
+  the population map and teaches nothing) and *total* postings. A **dropdown**
+  re-shades by any sector (IT, Travel, …); hover for a metro's figures and when it
+  was last updated; click for its detail.
 - **Sector index** (`site/sectors.html`) — two rankings of where each metro's
   *mix* of postings departs from the national mix — **over-** and **under-**
   represented (SF heavy on tech, Miami on hospitality, Chicago on logistics).
@@ -23,7 +24,7 @@ job-mapping/
 ├── CLAUDE.md          full design + architecture: decisions, findings, gotchas
 ├── ROADMAP.md         ordered next steps, one work-session each
 ├── requirements.txt   one dependency (requests)
-├── .env.example       the one credential you need (a free Adzuna key)
+├── .env.example       the free API keys you need (Adzuna + BLS)
 │
 ├── pipeline/          the Python that fetches data and builds the site's JSON
 │   ├── build_national.py  ★ US map data — postings per 1,000 workers per metro
@@ -53,34 +54,39 @@ it needs no per-metro build.
 
 ## Run it
 
-The repo ships with generated data in `site/data/`, so you can **see the map
-immediately** without any keys:
+Needs **Python 3.9+** (standard library only; the sole pip dependency is
+`requests`, and only for rebuilding data).
+
+The repo ships with generated data in `site/data/`, so a fresh clone can **see
+the finished map immediately** — no keys, no build:
 
 ```sh
 cd site && python -m http.server 8000     # open http://localhost:8000
 ```
 
-To rebuild with **fresh** data you need free API keys, then run one command:
+To rebuild with **fresh** data, get free API keys (links in `.env.example`:
+Adzuna for postings, BLS for labor force), then run one command:
 
 ```sh
 pip install -r requirements.txt
-cp .env.example .env    # then fill in keys — auto-loaded by the pipeline, no export needed
-                        # ADZUNA_APP_ID/KEY (all builds) + BLS_API_KEY (national map)
+cp .env.example .env    # then fill in ADZUNA_APP_ID, ADZUNA_APP_KEY, BLS_API_KEY
+                        # geo.py auto-loads .env — no export needed
 
 python pipeline/build_all.py         # checks keys, then: geometry → national → sector (loop)
-cd site && python -m http.server 8000
+cd site && python -m http.server 8000   # (or: build_all.py --serve)
 ```
 
-`build_all.py` verifies your keys, runs `build_geometry` once (if the shapes
-aren't already there), builds the national map, then loops `panel.py` to fill
-sector data — printing coverage as it goes so you **watch the map fill.** The
-Adzuna builds are throttled to the free-tier rate limit (~25/min) and cache each
-metro as they go, so a blip or a daily cap won't lose progress. A full populate
-spans a few days on the free tier (national ~387 calls; sector ~308 metros × ~31
-calls); **one run does a budget's worth and stops gracefully — re-run to
-continue**, or use `--loop` to retry unattended across days. Add `--serve` to
-launch the local server when it's done. Until the fill finishes, un-measured
-metros render gray.
+`build_all.py` verifies your keys (naming any that are missing), skips
+`build_geometry` if the map shapes are already present, builds the national map,
+then loops `panel.py` to fill sector data — printing coverage as it goes so you
+**watch the map fill.** The Adzuna builds are throttled to the free-tier rate
+limit (~25/min) and cache each metro as they go, so a blip or a daily cap won't
+lose progress. A fresh clone re-fetches from scratch (the caches are gitignored —
+that's what makes the data *fresh*), and a full populate spans a few days on the
+free tier (national ~387 calls; sector ~387 metros × ~31 ≈ 12,000 calls): **one
+run does a budget's worth and stops gracefully — re-run to continue** (or use
+`--loop` to retry unattended across days). The committed data renders the whole
+time; only newly-added sector data is pending until the fill reaches each metro.
 
 The underlying scripts also run standalone if you want finer control:
 
@@ -118,5 +124,5 @@ see CLAUDE.md.
 - Job-posting demand, not employment; postings over-represent high-churn work.
 - Adzuna's own ~30 sector categories, not O*NET occupations (the occupation
   path needs a cleaner text source than Adzuna's 500-char snippets — NLx).
-- 10 metros in the demo, sentences are templated, storage is JSON — all easy to
-  scale up later.
+- Sector data fills on a rolling schedule, so not every metro has it yet;
+  outlier sentences are templated; storage is JSON — all easy to scale up later.

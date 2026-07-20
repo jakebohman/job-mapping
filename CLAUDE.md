@@ -160,9 +160,24 @@ rebuild is never served stale.
   crosswalk keys the 5 CT CBSAs on "…Planning Region" names, but Adzuna reports
   old CT county names ("Fairfield County", …), so every CT posting failed the
   county→CBSA join and all CT metros read f_m=0 (all gray). `geo.CT_COUNTY_CBSA`
-  aliases the old counties to their dominant CBSA. County granularity: old New
-  Haven County splits between the New Haven and Waterbury CBSAs, so it maps to
-  New Haven and Waterbury stays gray until a town-level split is worth it.
+  aliases the old counties to their dominant CBSA. **Waterbury (47930) is the
+  Naugatuck Valley Planning Region, carved from THREE old counties** (New Haven,
+  Hartford, Litchfield), so no county alias can isolate it — `geo.CT_TOWN_CBSA`
+  matches its 19 member towns by name (Adzuna reports the town in `area[3]`),
+  checked ahead of the county fallback in `cbsa_of`. Villages Adzuna names instead
+  of their parent town just fall through (slight undercount, never misattribution).
+- **Adzuna spells "Saint" where the OMB crosswalk abbreviates "St.".** A posting's
+  county then never joins — "Saint Tammany Parish" (Adzuna) vs "St. Tammany Parish"
+  (crosswalk) grayed out all of Slidell LA, whose only county is that parish.
+  `geo._saint_alias` indexes both spellings.
+- **New England "… Town" place names don't geocode on Adzuna.** "Amherst Town, MA"
+  returns nothing; `principal_place` strips the trailing " Town" (like the "Urban
+  Honolulu" case) so Amherst/Barnstable resolve.
+- **`build_national` skips any cached metro that already has `dedup_ratio`.** That
+  makes re-runs cheap, but means an improvement to `_measure`'s gray-recovery does
+  NOT reach already-cached metros — they stay frozen at their old measurement. To
+  re-measure specific metros after improving recovery, clear their entries from
+  `site/data/_national_cache.json` first (this is what un-froze the last 18 grays).
 - **Multi-state metros' LAUS series lives under ONE state.** BLS files a
   multi-state MSA's total labor-force series under the principal (first-in-title)
   state, so `geo` derives the series' state prefix from the title via
@@ -208,11 +223,11 @@ rebuild is never served stale.
 
 **`ROADMAP.md` has the ordered, one-session-each next steps** — start there.
 
-**Working now:** national intensity map (369/387 shaded, calibrated + gray-
-recovered) **with a category filter**; two-chart sector deviation index; generic
-any-metro Metro Detail (the map clicks through to it). Sector data covers 147/369
-shaded metros and fills as `panel.py` runs. Push only when the user asks (they
-push themselves).
+**Working now:** national intensity map (**387/387 measurable metros shaded** —
+every non-PR metro; calibrated + gray-recovered) **with a category filter**;
+two-chart sector deviation index; generic any-metro Metro Detail (the map clicks
+through to it). Sector data covers 147/387 shaded metros and fills as `panel.py`
+runs. Push only when the user asks (they push themselves).
 
 **Reproducible build (was ROADMAP task 1) is done:** `pipeline/build_all.py` is
 the one-command orchestrator — checks keys, then geometry → national →

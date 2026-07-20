@@ -6,7 +6,7 @@ map fill. Thin orchestrator over the existing (resumable, self-caching) scripts:
 Each underlying script caches every item to site/data/_*_cache.json and throttles
 to the Adzuna free tier, so this stays thin and every re-run is cheap/idempotent:
 it resumes where the last one stopped. On the free tier a full populate spans a
-few days (national ~387 calls; sector ~308 metros x 31 ~= 9,500 calls) — one run
+few days (national ~387 calls; sector ~387 metros x 31 ~= 12,000 calls) — one run
 does a budget's worth and stops gracefully; the committed site/data/*.json renders
 in the meantime. Caches are gitignored, so a fresh clone re-fetches (that is what
 makes the data fresh).
