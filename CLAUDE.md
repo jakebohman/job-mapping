@@ -38,7 +38,11 @@ pip install -r requirements.txt          # one dependency: requests
 # them. Needed: ADZUNA_APP_ID, ADZUNA_APP_KEY (all builds), BLS_API_KEY (national
 # map), GEMINI_API_KEY (ROADMAP task 5). This repo already has a local .env.
 
-# Build the site data (writes JSON/GeoJSON into site/data/). Order matters:
+# One command (the intended path): checks keys, then geometry -> national ->
+# panel(loop), printing coverage as it fills. Resumable; --loop / --serve flags.
+python pipeline/build_all.py
+
+# Or the same stages by hand (build_all just subprocesses these). Order matters:
 # geometry, then national (panel reads national.json to pick which metros to fill).
 python pipeline/build_geometry.py    # one-time: metro/state shapes + vendored d3-geo (no key)
 python pipeline/build_national.py    # national map data (~387 Adzuna calls; resumable, gray-recovery)
@@ -47,16 +51,12 @@ python pipeline/panel.py [N]         # sector data — rolling: refreshes the N 
 python pipeline/build_crosswalk.py   # rebuild pipeline/cbsa_counties.csv from Census (rare)
 # python pipeline/metro_map.py [CBSA]  # legacy Columbus occupation build — UNUSED by the site now
 
-# ROADMAP task 1 (the priority) is a one-command orchestrator, pipeline/build_all.py,
-# that runs geometry -> national -> panel(loop) with a key check — the intended
-# "clone, set .env, run one thing, watch the map fill" path. Not written yet.
-
 # Serve locally:
 cd site && python -m http.server 8000     # open http://localhost:8000
 
 # Tests: every module self-tests with no network and no keys. This is the whole
 # test suite — run one module's checks with:
-python pipeline/geo.py --selftest         # also: ingest, classify, bls, panel, build_national
+python pipeline/geo.py --selftest         # also: ingest, classify, bls, panel, build_national, build_all
 ```
 
 **Verifying the site renders** is hard here: the screenshot tool tends to hang.
@@ -210,19 +210,19 @@ rebuild is never served stale.
 
 **Working now:** national intensity map (369/387 shaded, calibrated + gray-
 recovered) **with a category filter**; two-chart sector deviation index; generic
-any-metro Metro Detail (the map clicks through to it). Sector data covers 147/308
+any-metro Metro Detail (the map clicks through to it). Sector data covers 147/369
 shaded metros and fills as `panel.py` runs. Push only when the user asks (they
-push themselves). **At last handover the Phase C changes were uncommitted** —
-check `git status` / `ROADMAP.md`'s uncommitted note before assuming they're in.
+push themselves).
 
-**The immediate priority is ROADMAP task 1:** `pipeline/build_all.py`, a
-one-command orchestrator so anyone can clone, set `.env`, run it, and watch the
-map fill (reproducibility). Not written yet.
+**Reproducible build (was ROADMAP task 1) is done:** `pipeline/build_all.py` is
+the one-command orchestrator — checks keys, then geometry → national →
+panel(loop), printing coverage so you watch the map fill. Resumable; `--loop`
+(retry across days) and `--serve` flags.
 
-**Not built yet:** the reproducible build (task 1); GitHub Pages deploy + a
-scheduled rebuild Action; LLM occupation/skill classification + the validation
-harness (parked — the user redirected to the counts-based map); three-month trend
-and remote-share views; Parquet/DuckDB storage.
+**Not built yet:** GitHub Pages deploy + a scheduled rebuild Action (ROADMAP
+tasks 2–3); LLM occupation/skill classification + the validation harness (parked —
+the user redirected to the counts-based map); three-month trend and remote-share
+views; Parquet/DuckDB storage.
 
 **Original design intent (aspirational, for context):** five views (postings
 per 1,000; occupation-mix deviation; skill premium; remote share; 3-month

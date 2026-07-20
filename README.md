@@ -60,32 +60,40 @@ immediately** without any keys:
 cd site && python -m http.server 8000     # open http://localhost:8000
 ```
 
-To rebuild with **fresh** data you need free API keys and the pipeline:
+To rebuild with **fresh** data you need free API keys, then run one command:
 
 ```sh
 pip install -r requirements.txt
 cp .env.example .env    # then fill in keys — auto-loaded by the pipeline, no export needed
                         # ADZUNA_APP_ID/KEY (all builds) + BLS_API_KEY (national map)
 
-python pipeline/build_geometry.py    # one-time: map shapes + d3-geo (no API key)
-python pipeline/build_national.py    # US map data (~387 Adzuna calls, resumable)
-python pipeline/panel.py             # sector data — rolling; re-run until coverage is full
+python pipeline/build_all.py         # checks keys, then: geometry → national → sector (loop)
 cd site && python -m http.server 8000
 ```
 
-The Adzuna builds are throttled to the free-tier rate limit (~25/min) and cache
-each metro as they go, so a blip or a daily cap won't lose progress — **re-run to
-resume.** A full populate spans a few days on the free tier (national ~387 calls;
-sector ~308 metros × ~31 calls); until it finishes, un-measured metros render gray.
+`build_all.py` verifies your keys, runs `build_geometry` once (if the shapes
+aren't already there), builds the national map, then loops `panel.py` to fill
+sector data — printing coverage as it goes so you **watch the map fill.** The
+Adzuna builds are throttled to the free-tier rate limit (~25/min) and cache each
+metro as they go, so a blip or a daily cap won't lose progress. A full populate
+spans a few days on the free tier (national ~387 calls; sector ~308 metros × ~31
+calls); **one run does a budget's worth and stops gracefully — re-run to
+continue**, or use `--loop` to retry unattended across days. Add `--serve` to
+launch the local server when it's done. Until the fill finishes, un-measured
+metros render gray.
 
-> **Coming (ROADMAP task 1):** `pipeline/build_all.py` will wrap all of the above
-> in one resumable, key-checking command — the intended "clone, set `.env`, run
-> one thing, watch the map fill" path.
+The underlying scripts also run standalone if you want finer control:
+
+```sh
+python pipeline/build_geometry.py    # one-time: map shapes + d3-geo (no API key)
+python pipeline/build_national.py    # US map data (~387 Adzuna calls, resumable)
+python pipeline/panel.py [N]         # sector data — rolling; re-run until coverage is full
+```
 
 Every module is self-testing (no network, no keys):
 
 ```sh
-python pipeline/geo.py --selftest     # likewise: ingest, classify, bls, panel, build_national
+python pipeline/geo.py --selftest     # likewise: ingest, classify, bls, panel, build_national, build_all
 ```
 
 ## How the number is built

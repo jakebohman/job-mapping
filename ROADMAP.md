@@ -8,15 +8,10 @@ session**. A fresh context can pick up any task cold: read `CLAUDE.md` first
 metros shaded**), the two-chart sector index, and the generic any-metro Metro
 Detail page all work. The front-page map now has a **category filter** (shade by
 any Adzuna category per 1,000 workers) and a **fixed color scale**. Sector data
-covers **147/308 shaded metros** and fills as `panel.py` runs. Still open: there
-is **no one-command reproducible build** (task 1 — the current priority), the
-site is **not deployed**, and the occupation/skills path is parked.
-
-> **⚠ Uncommitted at handover:** the Phase C changes — category filter + color
-> scale (`site/index.html`), `category_shares` (`pipeline/panel.py`), and the
-> gray-recovery + recovery-unify fix (`pipeline/build_national.py`), plus the
-> regenerated `site/data/national.json` (369 shaded) and `outliers.json` — are in
-> the working tree, **not yet committed**. Selftests pass. Commit these first.
+covers **147/369 shaded metros** and fills as `panel.py` runs. The
+**one-command reproducible build (`pipeline/build_all.py`) is done** (task 1).
+Still open: the site is **not deployed** (task 2), and the occupation/skills path
+is parked.
 
 **Keys are secrets.** `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `BLS_API_KEY`, and
 `GEMINI_API_KEY` live in GitHub Actions repository secrets and local env vars
@@ -26,36 +21,14 @@ Each entry: **Goal · Scope · Done when · Depends on**.
 
 ---
 
-## 1. One-command reproducible build — `pipeline/build_all.py`  *(THE priority)*
-- **Goal:** anyone can **clone the repo, put keys in `.env`, run one command, and
-  watch the map fill with fresh data.** Reproducibility is the whole point.
-- **Scope:** a stdlib Python orchestrator (`pipeline/build_all.py`; cross-platform,
-  the repo runs on Windows) that:
-  1. verifies the required keys are set (`ADZUNA_APP_ID`, `ADZUNA_APP_KEY`,
-     `BLS_API_KEY`) and exits with a clear message naming any missing one;
-  2. runs `build_geometry.py` if the geometry outputs are absent (one-time, keyless);
-  3. runs `build_national.py` (resumable) — the national map;
-  4. runs `panel.py` repeatedly until every shaded metro has sector data, **or**
-     until the Adzuna daily cap / a network error stops it (`stale_metros` rolls
-     coverage forward each pass);
-  5. prints a coverage summary (`X/Y shaded`, `N/M metros with sector data`) and,
-     if incomplete, a "re-run to continue" line.
-  Subprocess the existing scripts (each already caches to `site/data/_*_cache.json`
-  and resumes, so the orchestrator stays thin and re-runs are cheap/idempotent).
-  Optional: a `--loop` flag (sleep + retry across days) for unattended runs, and a
-  `--serve` convenience that launches `python -m http.server` in `site/` when done.
-- **Reality to encode in output + docs:** on the Adzuna free tier a full populate
-  spans **a few days** (national ~387 calls; sector ~308 metros × 31 ≈ 9,500
-  calls). One run does a budget's worth and stops gracefully; the committed
-  `site/data/*.json` renders immediately in the meantime. Caches are gitignored,
-  so a fresh clone re-fetches from scratch (that is what makes the data *fresh*).
-- **Done when:** from a fresh clone with keys, running the script (re-run until it
-  reports complete) yields `site/` rendering the fully-shaded map + sector/category
-  data; a second run with warm caches is a fast no-op refresh. Update `README.md`
-  to make this the primary "Run it" path.
-- **Depends on:** nothing. (Commit the uncommitted Phase C changes first.)
+## 1. One-command reproducible build — `pipeline/build_all.py`  *(✅ DONE)*
+- Shipped: checks the three required keys, runs `build_geometry` (if absent) →
+  `build_national` (resumable) → `panel.py` looped until every shaded metro has
+  sector data or the Adzuna cap stops it, then prints a coverage summary +
+  "re-run to continue". `--loop` (sleep + retry across days) and `--serve` flags.
+  README's "Run it" now leads with it. See the Done section for the shipped notes.
 
-## 2. Deploy the static site to GitHub Pages  *(ship it)*
+## 2. Deploy the static site to GitHub Pages  *(ship it — now the priority)*
 - **Goal:** the current `site/` is live at a public URL.
 - **Scope:** add `.github/workflows/pages.yml` using `actions/upload-pages-artifact`
   (path: `site/`) + `actions/deploy-pages`; enable Pages in repo settings. It
@@ -102,6 +75,15 @@ Each entry: **Goal · Scope · Done when · Depends on**.
 ---
 
 ## Done (this and prior sessions)
+- **One-command reproducible build** (`pipeline/build_all.py`) — stdlib
+  orchestrator, subprocesses the existing resumable/self-caching scripts. Verifies
+  `ADZUNA_APP_ID`/`ADZUNA_APP_KEY`/`BLS_API_KEY` (names any missing), runs
+  `build_geometry` only if its outputs are absent, `build_national` once
+  (resumable), then loops `panel.py` (PER_RUN stalest metros/pass) until sector
+  coverage == shaded universe or a pass stalls (non-zero exit or no new metros =
+  Adzuna cap) → prints `X/Y` + "re-run to continue". `--loop` retries across days;
+  `--serve` launches `http.server` in `site/` when done. Selftest covers the
+  key-check + coverage logic (no network).
 - **Repost calibration** — `effective = count × f_m × dedup_ratio`; the small-cell
   gray-out also floors `f_m ≥ 0.10` (see CLAUDE.md).
 - **Gray-metro recovery** — `build_national._measure` retries a would-gray metro
@@ -117,5 +99,5 @@ Each entry: **Goal · Scope · Done when · Depends on**.
   Adzuna category per 1,000 (`total_rate × category_share`, from `panel.py`'s
   `category_shares`); robust color domain + retuned palette.
 - **Rolling sector collection** (`panel.py` `stale_metros`/`PER_RUN`/`fetched_at`) —
-  covers all shaded metros over successive runs (147/308 so far).
+  covers all shaded metros over successive runs (147/369 so far).
 - Docs: `METHODOLOGY.md` (plain-language method), `CLAUDE.md` gotchas.
