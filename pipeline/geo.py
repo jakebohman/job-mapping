@@ -46,9 +46,24 @@ CT_COUNTY_CBSA = {
     "Hartford County": "25540",     # Hartford
     "Middlesex County": "25540",    # Hartford (Lower CT River Valley PR)
     "Tolland County": "25540",      # Hartford (Capitol PR)
-    "New Haven County": "35300",    # New Haven (dominant; Waterbury part lost)
+    "New Haven County": "35300",    # New Haven (dominant; Waterbury towns split off below)
     "New London County": "35980",   # Norwich-New London
 }
+
+# The Waterbury-Shelton CBSA (47930) IS the Naugatuck Valley Planning Region, which
+# is carved from THREE old counties (New Haven, Hartford, Litchfield), so no
+# old-county alias can isolate it — it grayed out entirely. Adzuna reports the town
+# in area[3], so match the region's 19 member municipalities by town instead, ahead
+# of the old-county fallback. Source: US Census 2022 CT planning-region delineation
+# (Naugatuck Valley Planning Region, FIPS 09110). Villages Adzuna names instead of
+# their parent town (e.g. "Oakville" for Watertown) simply fall through — undercounts
+# Waterbury slightly but never misattributes another metro's postings to it.
+CT_TOWN_CBSA = {t: "47930" for t in (
+    "Ansonia", "Bristol", "Derby", "Shelton", "Waterbury",        # cities
+    "Beacon Falls", "Bethlehem", "Cheshire", "Middlebury", "Naugatuck",
+    "Oxford", "Plymouth", "Prospect", "Seymour", "Southbury",
+    "Thomaston", "Watertown", "Wolcott", "Woodbury",              # towns
+)}
 
 # BLS files a multi-state metro's total LAUS labor-force series under ONE state —
 # the principal city's, i.e. the first state in the CBSA title ("Chicago-...,
@@ -85,8 +100,22 @@ def principal_place(cbsa_title):
     city_part, _, state_part = cbsa_title.partition(",")
     city = re.split(r"[-/]", city_part)[0].strip()
     city = re.sub(r"^Urban\s+", "", city)   # "Urban Honolulu" -> "Honolulu" (won't geocode otherwise)
+    city = re.sub(r"\s+Town$", "", city)    # New England "Amherst Town"/"Barnstable Town" -> bare city
     state = re.split(r"[-/]", state_part)[0].strip()
     return f"{city}, {state}" if state else city
+
+
+def _saint_alias(county_name):
+    """Adzuna spells out "Saint" where the OMB crosswalk abbreviates "St." (and
+    vice versa), so a posting's county never joins ("St. Tammany Parish" in the
+    crosswalk vs "Saint Tammany Parish" from Adzuna grayed out all of Slidell LA,
+    whose only county is that parish). Return the opposite spelling to alias, or
+    None."""
+    if county_name.startswith("St. "):
+        return "Saint " + county_name[4:]
+    if county_name.startswith("Saint "):
+        return "St. " + county_name[6:]
+    return None
 
 
 def _bare_county(county_name, state_name):
@@ -128,6 +157,9 @@ def _load(path=CROSSWALK):
             bare = _bare_county(r["county_name"], r["state_name"])
             if bare:
                 index[(r["state_name"], bare)] = code
+            saint = _saint_alias(r["county_name"])   # "St." <-> "Saint" (Adzuna vs OMB)
+            if saint:
+                index[(r["state_name"], saint)] = code
     for code, c in cbsas.items():
         # LAUS series prefix = the principal (first-in-title) state; keep the
         # other constituent states as fallbacks (BLS occasionally files the total
@@ -163,6 +195,13 @@ def county_of(adzuna_result):
 
 def cbsa_of(adzuna_result):
     """CBSA code for a posting, or None if its county is in no MSA."""
+    area = (adzuna_result.get("location") or {}).get("area") or []
+    # CT: Adzuna reports OLD county names, which can't distinguish a planning region
+    # carved from several old counties (Naugatuck Valley/Waterbury). Match town first.
+    if len(area) >= 4 and area[1] == "Connecticut":
+        code = CT_TOWN_CBSA.get(area[3])
+        if code:
+            return code
     key = county_of(adzuna_result)
     return _COUNTY_TO_CBSA.get(key) if key else None
 
@@ -199,14 +238,26 @@ def _selftest():
     # planning regions, so the CT alias must map them to their CBSA (else f_m=0).
     assert cbsa_of(res("US", "Connecticut", "Fairfield County", "Stamford")) == "14860"
     assert cbsa_of(res("US", "Connecticut", "New Haven County", "New Haven")) == "35300"
+    # Naugatuck Valley (Waterbury 47930) is matched by TOWN, since its member towns
+    # carry three different old-county tags from Adzuna; non-member towns are unchanged.
+    assert len(CT_TOWN_CBSA) == 19 and set(CT_TOWN_CBSA.values()) == {"47930"}
+    assert cbsa_of(res("US", "Connecticut", "New Haven County", "Waterbury")) == "47930"
+    assert cbsa_of(res("US", "Connecticut", "Hartford County", "Bristol")) == "47930"    # old Hartford Co town
+    assert cbsa_of(res("US", "Connecticut", "Fairfield County", "Shelton")) == "47930"   # old Fairfield Co town
+    assert cbsa_of(res("US", "Connecticut", "New Haven County", "Wallingford")) == "35300"  # non-member -> New Haven
     # a representative Central county is exposed for the mis-geocode retry
     assert CBSA_COUNTIES["18140"]["central_county"] in CBSA_COUNTIES["18140"]["counties"]
 
     # Louisiana parishes (and AK boroughs) must join like counties, else f_m=0
     assert cbsa_of(res("US", "Louisiana", "Orleans Parish", "New Orleans")) == "35380"
+    # Adzuna spells "Saint" where OMB abbreviates "St." — alias both (grayed Slidell)
+    assert cbsa_of(res("US", "Louisiana", "Saint Tammany Parish", "Slidell")) == "43640"
     # Non-contiguous metros: Adzuna drops the suffix (bare "Honolulu"); the bare
     # alias + area[2] fallback recover them, and "Urban Honolulu" must geocode.
     assert principal_place("Urban Honolulu, HI") == "Honolulu, HI"
+    # New England "... Town" places don't geocode on Adzuna; strip the suffix
+    assert principal_place("Amherst Town-Northampton, MA") == "Amherst, MA"
+    assert principal_place("Barnstable Town, MA") == "Barnstable, MA"
     assert cbsa_of(res("US", "Hawaii", "Honolulu", "Honolulu")) == "46520"
 
     # multi-state metro's LAUS series uses the principal (first-in-title) state,

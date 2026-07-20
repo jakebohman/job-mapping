@@ -83,29 +83,35 @@ def _wrong_state(js, code):
     return bool(expected) and modal != expected
 
 
-SMALLER_RADII = (25, 15)   # km, tried in turn to shed a big neighbor's radius bleed
+SMALLER_RADII = (25, 15, 10)   # km, tried in turn to shed a big neighbor's radius bleed
 
 
 def _measure(app_id, app_key, code):
     """One Adzuna call → {count, f_m, dedup_ratio}. A metro that would otherwise
     gray on f_m gets second-chance measurements, tried in order and the best f_m
-    kept (stopping once one clears the floor): first a re-anchor on a Central
-    county (fixes an ambiguous geocode) when the sample landed in the wrong
-    state, then tighter radii (shed a bigger neighbor's bleed). Both are tried —
-    a cross-border-swallowed metro can need the re-anchor to fail and the tighter
-    radius to succeed."""
+    kept (stopping once one clears the floor):
+      - if the base geocode returned postings but f_m is low (radius bleed), tighter
+        radii shed a bigger neighbor's postings (e.g. Allentown next to Philadelphia);
+      - if the base geocode returned nothing (a place Adzuna can't resolve, like
+        "Coeur d'Alene") or the sample landed in the wrong state (an ambiguous name,
+        like "Corvallis, OR" resolving to Corvallis, MT), re-anchor on a Central
+        county — at the full radius and tighter.
+    A genuinely small metro (few postings but a *working* geocode) is left to gray;
+    only a failed/ambiguous geocode or radius bleed triggers the extra calls."""
     d = geo.CBSA_COUNTIES[code]
     where, radius = d["adzuna_where"], d["radius_km"]
+    county, state = d.get("central_county"), d.get("central_state")
     js = _fetch(app_id, app_key, where, radius)
     m = _metrics(js, code)
-    if m["count"] < MIN_COUNT or m["f_m"] >= MIN_FM:
-        return m                                        # measured fine, or nothing to recover
+    if m["f_m"] >= MIN_FM:
+        return m                                        # measured fine
+    if m["count"] < MIN_COUNT and js.get("results"):
+        return m                                        # geocode worked; genuinely small -> gray
     retries = []
-    if _wrong_state(js, code):                          # ambiguous geocode -> re-anchor on a county
-        county, state = d.get("central_county"), d.get("central_state")
-        if county and state:
-            retries.append((f"{county}, {state}", radius))
-    retries += [(where, r) for r in SMALLER_RADII if r < radius]   # tighten to shed a neighbor
+    if js.get("results"):                               # geocode worked -> tighten to shed a neighbor
+        retries += [(where, r) for r in SMALLER_RADII if r < radius]
+    if county and state and (not js.get("results") or _wrong_state(js, code)):
+        retries += [(f"{county}, {state}", r) for r in (radius, *SMALLER_RADII)]  # fix a bad geocode
     for alt_where, alt_radius in retries:
         alt = _metrics(_fetch(app_id, app_key, alt_where, alt_radius), code)
         if alt["f_m"] > m["f_m"]:
@@ -148,15 +154,10 @@ def build_report(measures, labor, names):
     rates.sort()
     return {
         "metric": "Postings per 1,000 workers",
-        "method": ("One Adzuna count per metro, corrected to CBSA geography by "
-                   "the in-sample in-CBSA fraction (f_m) and down-corrected for "
-                   "reposts by the in-sample distinct fraction (title+employer "
-                   "dedup), divided by the metro's BLS LAUS labor force, x1000. "
-                   "Dedup collapses genuine multi-site openings too, so this is a "
-                   "lower bound on distinct demand. Metros with fewer than 50 "
-                   "effective in-CBSA postings, an in-CBSA sample fraction below "
-                   "10% (too little of the radius sample lands in the metro to "
-                   "trust the rate), or no labor force are shown gray."),
+        "method": ("Live job postings from Adzuna, corrected to each metro's real "
+                   "boundary and divided by its local workforce — hiring intensity, "
+                   "not raw size; it measures posting demand, not hires. "
+                   "Full method in METHODOLOGY.md."),
         "caveats": [
             "Job-posting demand, not employment.",
             "Repost-corrected via the in-sample distinct fraction; a lower bound "
@@ -290,6 +291,21 @@ def _selftest():
     rec2 = _measure("x", "x", "18140")
     _fetch = saved2
     assert rec2["f_m"] == 0.8   # re-anchor failed; the tighter-radius fallback recovered it
+
+    # geocode failure: the city name returns NO results (e.g. "Coeur d'Alene"), so
+    # tighter radii can't help — recovery must fall back to the Central-county anchor.
+    saved3 = _fetch
+    inca = {"location": {"area": ["US", "Ohio", "Franklin County", "X"]},
+            "title": "T", "company": {"display_name": "C"}}
+    def _stub3(ai, ak, w, r, tries=4):                   # noqa: E306 (test stub)
+        if "County" in w:                                # county anchor resolves -> mostly in-CBSA
+            return {"count": 800, "results": [inca] * 45
+                    + [{"location": {"area": ["US", "Ohio", "Knox County", "Y"]}}] * 5}
+        return {"count": 0, "results": []}               # city geocode fails outright
+    _fetch = _stub3
+    rec3 = _measure("x", "x", "18140")
+    _fetch = saved3
+    assert rec3["f_m"] >= MIN_FM   # a failed city geocode is recovered via the county anchor
     print("selftest ok")
 
 
