@@ -12,7 +12,7 @@
   :root{
     --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
     --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
-    --base:#e4e9f0; --base-line:#ccd4df; --nodata:#b7bfca; --hi:#131b26;
+    --base:#ccd3dc; --base-line:#bcc5d1; --nodata:#a9b2be; --hi:#131b26;
     --metro-line:#8b9aab;
     --serif:"Fraunces",Georgia,"Times New Roman",serif;
     --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
@@ -40,7 +40,7 @@
   header{padding:20px 0 8px;border-bottom:2px solid var(--ink);}
   h1{font-family:var(--serif);font-weight:500;font-size:clamp(32px,5.6vw,56px);
      line-height:1.02;letter-spacing:-.015em;margin:8px 0 0;}
-  h1 em{font-style:italic;font-weight:400;color:#1f6397;}
+  h1 em{font-style:normal;font-weight:600;color:#1f6397;}
   @media (prefers-color-scheme:dark){h1 em{color:#7cbde6;}}
   .standfirst{margin:16px 0 0;max-width:62ch;color:var(--muted);font-size:16px;}
   .standfirst b{color:var(--ink);font-weight:500;}
@@ -51,6 +51,13 @@
                    text-transform:none;letter-spacing:0;padding:6px 10px;
                    border:1px solid var(--rule);border-radius:8px;
                    background:var(--panel);color:var(--ink);}
+  .controls .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:6px;}
+  .seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;
+       margin-left:8px;background:var(--panel);}
+  .seg button{font-family:var(--sans);font-size:14px;text-transform:none;letter-spacing:0;
+              padding:6px 12px;border:0;background:transparent;color:var(--muted);cursor:pointer;}
+  .seg button + button{border-left:1px solid var(--rule);}
+  .seg button.on{background:var(--ink);color:var(--paper);}
   .maparea{position:relative;margin:10px 0 0;}
   svg{width:100%;height:auto;display:block;}
   .state{fill:var(--base);stroke:var(--base-line);stroke-width:.5;}
@@ -93,13 +100,19 @@
   </nav>
   <header>
     <h1>Where the <em>hiring</em> is</h1>
-    <p class="standfirst">Job postings per 1,000 workers across ~390 US metro
-    areas — a measure of hiring <b>intensity</b>, not size, so a small metro can
-    run as hot as a big one. Darker means more open jobs relative to the local
-    workforce. Hover a metro for its rate; click one to open its full detail.</p>
+    <p class="standfirst">Live job postings across ~390 US metro areas. Show
+    hiring <b>intensity</b> (postings per 1,000 workers, so a small metro can run
+    as hot as a big one) or switch to <b>total postings</b>. Darker means more.
+    Hover a metro for its figures; click one to open its full detail.</p>
   </header>
 
-  <div class="controls">Shade the map by <select id="metric"></select></div>
+  <div class="controls">
+    <div class="row">Measure <span class="seg" id="mode">
+        <button data-mode="rate" class="on">Per 1,000 workers</button
+        ><button data-mode="total">Total postings</button>
+      </span></div>
+    <div class="row">Shade the map by <select id="metric"></select></div>
+  </div>
 
   <div class="maparea">
     <svg id="map" viewBox="0 0 960 600" role="img" aria-label="US metro hiring-intensity choropleth"></svg>
@@ -139,7 +152,10 @@ function ramp(t){
 }
 
 const sectorName = s => s.replace(/\s*Jobs$/,"");
-const fmtVal = v => v==null ? "" : (v<10 ? v.toFixed(1) : v.toFixed(0));
+const fmtVal = v => v==null ? "" : (v<10 ? v.toFixed(1) : v.toFixed(0));   // rates
+const fmtCompact = v => v==null ? "" :                                     // totals
+  v>=1e6 ? (v/1e6).toFixed(1)+"M" : v>=1e4 ? Math.round(v/1e3)+"k" :
+  v>=1e3 ? (v/1e3).toFixed(1)+"k" : String(Math.round(v));
 const nocache = {cache: "no-store"};   // data is rebuilt regularly; never serve stale
 Promise.all([
   fetch("data/national.json", nocache).then(r=>r.json()),
@@ -152,16 +168,27 @@ Promise.all([
   const shadedN = nat.metros.filter(m=>!m.below_threshold).length;
   const shares = (sect && sect.category_shares) || {};
   const categories = (sect && sect.categories) || [];
+  const byMetroSect = (sect && sect.by_metro) || {};
 
-  // metric: null = total jobs/1,000; else a category label. A category's value is
-  // the metro's total rate x that category's share of its postings. The color
-  // domain is recomputed per metric so each has its own low..high spread.
-  let metric = null, d0 = null, d1 = null, hiClip = false;
+  // "Last updated" for a metro = the later of the national build and this metro's
+  // rolling sector fetch (ISO-8601 UTC strings compare lexicographically).
+  const updatedOf = code => {
+    const f = byMetroSect[code] && byMetroSect[code].fetched_at;
+    return ((f && f > nat.generated_at) ? f : nat.generated_at).slice(0,10);
+  };
+
+  // mode: "rate" = per 1,000 workers (size-independent intensity); "total" = the
+  // metro's distinct in-metro postings, ignoring its size. metric: null = all
+  // jobs, else a category label (value scaled by that category's local share).
+  // The color domain is recomputed per mode+metric so each has its own spread.
+  let mode = "rate", metric = null, d0 = null, d1 = null, hiClip = false;
   const valueOf = rec => {
-    if(!rec || rec.below_threshold || rec.rate==null) return null;
-    if(metric===null) return rec.rate;
+    if(!rec || rec.below_threshold) return null;
+    const base = mode==="total" ? rec.effective : rec.rate;
+    if(base==null) return null;
+    if(metric===null) return base;
     const sh = shares[rec.cbsa];
-    return (sh && sh[metric]!=null) ? rec.rate * sh[metric] : null;
+    return (sh && sh[metric]!=null) ? base * sh[metric] : null;
   };
   function computeDomain(){
     const vals = nat.metros.map(valueOf).filter(v=>v!=null).sort((a,b)=>a-b);
@@ -195,18 +222,22 @@ Promise.all([
 
   const tip=document.getElementById("tip");
   function tipHTML(rec, name){
+    const code = rec && rec.cbsa;
     const v = valueOf(rec);
     if(v==null){
       const why = metric===null ? "below threshold" : "no "+sectorName(metric)+" data";
       return `<div class="m">${name}</div><div class="sub">${why} · click for detail →</div>`;
     }
-    const unit = metric===null ? "postings" : sectorName(metric)+" jobs";
-    const sub = metric===null
-      ? `#${rank[rec.cbsa]} of ${shadedN}`
-      : `${(shares[rec.cbsa][metric]*100).toFixed(1)}% of its hiring`;
+    const unit = (metric===null ? "postings" : sectorName(metric)+" jobs")
+               + (mode==="rate" ? " / 1,000 workers" : "");
+    const num = mode==="rate" ? v.toFixed(metric===null?1:2) : Math.round(v).toLocaleString();
+    const sub = metric!==null ? `${(shares[code][metric]*100).toFixed(1)}% of its hiring`
+              : mode==="rate" ? `#${rank[code]} of ${shadedN} by intensity`
+              : `distinct in-metro postings`;
     return `<div class="m">${name}</div>
-      <div class="r"><b>${v.toFixed(metric===null?1:2)}</b> ${unit} / 1,000 workers</div>
-      <div class="sub">${sub} · click for detail →</div>`;
+      <div class="r"><b>${num}</b> ${unit}</div>
+      <div class="sub">${sub}</div>
+      <div class="sub">updated ${updatedOf(code)} · click for detail →</div>`;
   }
 
   const pathByCode={};
@@ -232,10 +263,12 @@ Promise.all([
   function render(){
     computeDomain();
     for(const code in pathByCode) pathByCode[code].setAttribute("fill", fillFor(byCbsa[code]));
-    document.getElementById("tlo").textContent = fmtVal(d0);
-    document.getElementById("thi").textContent = fmtVal(d1) + (hiClip ? "+" : "");
+    const ftick = mode==="rate" ? fmtVal : fmtCompact;
+    document.getElementById("tlo").textContent = ftick(d0);
+    document.getElementById("thi").textContent = ftick(d1) + (hiClip ? "+" : "");
     document.getElementById("metricLabel").textContent =
-      (metric===null ? "postings" : sectorName(metric)+" jobs") + " / 1,000 workers";
+      (metric===null ? "postings" : sectorName(metric)+" jobs")
+      + (mode==="rate" ? " / 1,000 workers" : "");
   }
 
   // category filter — "Total jobs" (default) plus each Adzuna category
@@ -244,13 +277,21 @@ Promise.all([
     categories.map(c=>`<option value="${c}">${sectorName(c)} jobs</option>`).join("");
   sel.addEventListener("change", ()=>{ metric = sel.value || null; render(); });
 
+  // per-capita <-> total toggle
+  const modeSeg = document.getElementById("mode");
+  modeSeg.addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    mode = b.dataset.mode;
+    modeSeg.querySelectorAll("button").forEach(x=>x.classList.toggle("on", x===b));
+    render();
+  });
+
   render();
 
   document.getElementById("method").textContent = nat.method;
   document.getElementById("stamp").textContent =
     `${nat.metros_covered}/${nat.metros_total} metros measured · ${shadedN} shaded · `+
-    `generated ${nat.generated_at.replace("T"," ").replace("+00:00"," UTC")}. `+
-    nat.caveats.join(" ");
+    `updated ${nat.generated_at.slice(0,10)}.`;
 }).catch(e=>{
   document.getElementById("method").textContent =
     `Couldn't load map data (${e}). Run python pipeline/build_geometry.py and pipeline/build_national.py, then serve this directory.`;

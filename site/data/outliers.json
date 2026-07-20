@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-20T20:59:46+00:00",
+  "generated_at": "2026-07-20T22:38:00+00:00",
   "metros_sampled": 147,
   "national_total": 5775829,
   "lead": {
@@ -199,7 +199,8 @@
           "sentence": "In Asheville, NC, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 28117
+      "total": 28117,
+      "fetched_at": "2026-07-20T14:41:27+00:00"
     },
     "23540": {
       "name": "Gainesville, FL",
@@ -295,7 +296,8 @@
           "sentence": "In Gainesville, FL, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 14945
+      "total": 14945,
+      "fetched_at": "2026-07-20T13:15:26+00:00"
     },
     "11500": {
       "name": "Anniston-Oxford, AL",
@@ -391,7 +393,8 @@
           "sentence": "In Anniston-Oxford, AL, Accounting & Finance Jobs is 3% of postings vs 4% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 13700
+      "total": 13700,
+      "fetched_at": "2026-07-20T13:06:04+00:00"
     },
     "27900": {
       "name": "Joplin, MO-KS",
@@ -487,7 +490,8 @@
           "sentence": "In Joplin, MO-KS, Accounting & Finance Jobs is 3% of postings vs 4% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 8184
+      "total": 8184,
+      "fetched_at": "2026-07-20T14:28:47+00:00"
     },
     "13900": {
       "name": "Bismarck, ND",
@@ -572,7 +576,8 @@
           "sentence": "In Bismarck, ND, Hospitality & Catering Jobs is 3% of postings vs 7% nationally \u2014 0.4x national, under-represented."
         }
       ],
-      "total": 9526
+      "total": 9526,
+      "fetched_at": "2026-07-20T12:29:40+00:00"
     },
     "15260": {
       "name": "Brunswick-St. Simons, GA",
@@ -668,7 +673,8 @@
           "sentence": "In Brunswick-St. Simons, GA, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 5988
+      "total": 5988,
+      "fetched_at": "2026-07-20T13:10:44+00:00"
     },
     "17020": {
       "name": "Chico, CA",
@@ -742,7 +748,8 @@
           "sentence": "In Chico, CA, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 7869
+      "total": 7869,
+      "fetched_at": "2026-07-20T15:18:56+00:00"
     },
     "37620": {
       "name": "Parkersburg-Vienna, WV",
@@ -838,7 +845,8 @@
           "sentence": "In Parkersburg-Vienna, WV, Engineering Jobs is 4% of postings vs 8% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 7019
+      "total": 7019,
+      "fetched_at": "2026-07-20T12:59:25+00:00"
     },
     "48140": {
       "name": "Wausau, WI",
@@ -934,7 +942,8 @@
           "sentence": "In Wausau, WI, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 11080
+      "total": 11080,
+      "fetched_at": "2026-07-20T14:03:36+00:00"
     },
     "36100": {
       "name": "Ocala, FL",
@@ -1030,7 +1039,8 @@
           "sentence": "In Ocala, FL, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 22222
+      "total": 22222,
+      "fetched_at": "2026-07-20T15:58:26+00:00"
     },
     "33220": {
       "name": "Midland, MI",
@@ -1126,7 +1136,8 @@
           "sentence": "In Midland, MI, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 9974
+      "total": 9974,
+      "fetched_at": "2026-07-20T12:17:14+00:00"
     },
     "41740": {
       "name": "San Diego-Chula Vista-Carlsbad, CA",
@@ -1222,7 +1233,8 @@
           "sentence": "In San Diego-Chula Vista-Carlsbad, CA, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 35349
+      "total": 35349,
+      "fetched_at": null
     },
     "40580": {
       "name": "Rocky Mount, NC",
@@ -1318,7 +1330,8 @@
           "sentence": "In Rocky Mount, NC, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 19637
+      "total": 19637,
+      "fetched_at": "2026-07-20T15:11:02+00:00"
     },
     "31860": {
       "name": "Mankato, MN",
@@ -1414,7 +1427,8 @@
           "sentence": "In Mankato, MN, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 10640
+      "total": 10640,
+      "fetched_at": "2026-07-20T15:34:49+00:00"
     },
     "24220": {
       "name": "Grand Forks, ND-MN",
@@ -1499,7 +1513,8 @@
           "sentence": "In Grand Forks, ND-MN, Accounting & Finance Jobs is 2% of postings vs 4% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 5470
+      "total": 5470,
+      "fetched_at": "2026-07-20T15:33:07+00:00"
     },
     "41860": {
       "name": "San Francisco-Oakland-Fremont, CA",
@@ -1595,7 +1610,8 @@
           "sentence": "In San Francisco-Oakland-Fremont, CA, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 122582
+      "total": 122582,
+      "fetched_at": null
     },
     "10780": {
       "name": "Alexandria, LA",
@@ -1691,7 +1707,8 @@
           "sentence": "In Alexandria, LA, Engineering Jobs is 4% of postings vs 8% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 6008
+      "total": 6008,
+      "fetched_at": "2026-07-20T15:12:38+00:00"
     },
     "43580": {
       "name": "Sioux City, IA-NE-SD",
@@ -1776,7 +1793,8 @@
           "sentence": "In Sioux City, IA-NE-SD, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 7941
+      "total": 7941,
+      "fetched_at": "2026-07-20T15:53:44+00:00"
     },
     "13020": {
       "name": "Bay City, MI",
@@ -1872,7 +1890,8 @@
           "sentence": "In Bay City, MI, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 12778
+      "total": 12778,
+      "fetched_at": "2026-07-20T15:56:53+00:00"
     },
     "14540": {
       "name": "Bowling Green, KY",
@@ -1968,7 +1987,8 @@
           "sentence": "In Bowling Green, KY, Engineering Jobs is 4% of postings vs 8% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 12636
+      "total": 12636,
+      "fetched_at": "2026-07-20T15:09:27+00:00"
     },
     "21500": {
       "name": "Erie, PA",
@@ -2064,7 +2084,8 @@
           "sentence": "In Erie, PA, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 9045
+      "total": 9045,
+      "fetched_at": "2026-07-20T15:45:51+00:00"
     },
     "37900": {
       "name": "Peoria, IL",
@@ -2160,7 +2181,8 @@
           "sentence": "In Peoria, IL, Engineering Jobs is 5% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 18348
+      "total": 18348,
+      "fetched_at": "2026-07-20T16:00:00+00:00"
     },
     "34060": {
       "name": "Morgantown, WV",
@@ -2256,7 +2278,8 @@
           "sentence": "In Morgantown, WV, Sales Jobs is 2% of postings vs 5% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 23326
+      "total": 23326,
+      "fetched_at": "2026-07-20T15:55:17+00:00"
     },
     "42340": {
       "name": "Savannah, GA",
@@ -2352,7 +2375,8 @@
           "sentence": "In Savannah, GA, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 18901
+      "total": 18901,
+      "fetched_at": "2026-07-20T15:14:12+00:00"
     },
     "35840": {
       "name": "North Port-Bradenton-Sarasota, FL",
@@ -2448,7 +2472,8 @@
           "sentence": "In North Port-Bradenton-Sarasota, FL, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 25233
+      "total": 25233,
+      "fetched_at": "2026-07-20T14:39:50+00:00"
     },
     "43780": {
       "name": "South Bend-Mishawaka, IN-MI",
@@ -2544,7 +2569,8 @@
           "sentence": "In South Bend-Mishawaka, IN-MI, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 21876
+      "total": 21876,
+      "fetched_at": "2026-07-20T13:55:28+00:00"
     },
     "21780": {
       "name": "Evansville, IN",
@@ -2640,7 +2666,8 @@
           "sentence": "In Evansville, IN, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 14066
+      "total": 14066,
+      "fetched_at": "2026-07-20T14:05:11+00:00"
     },
     "28740": {
       "name": "Kingston, NY",
@@ -2736,7 +2763,8 @@
           "sentence": "In Kingston, NY, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 25013
+      "total": 25013,
+      "fetched_at": "2026-07-20T15:44:13+00:00"
     },
     "25940": {
       "name": "Hilton Head Island-Bluffton-Port Royal, SC",
@@ -2832,7 +2860,8 @@
           "sentence": "In Hilton Head Island-Bluffton-Port Royal, SC, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 17520
+      "total": 17520,
+      "fetched_at": "2026-07-20T12:40:41+00:00"
     },
     "48060": {
       "name": "Watertown-Fort Drum, NY",
@@ -2917,7 +2946,8 @@
           "sentence": "In Watertown-Fort Drum, NY, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 3389
+      "total": 3389,
+      "fetched_at": "2026-07-20T15:28:18+00:00"
     },
     "16860": {
       "name": "Chattanooga, TN-GA",
@@ -3013,7 +3043,8 @@
           "sentence": "In Chattanooga, TN-GA, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 16689
+      "total": 16689,
+      "fetched_at": "2026-07-20T14:08:20+00:00"
     },
     "42020": {
       "name": "San Luis Obispo-Paso Robles, CA",
@@ -3087,7 +3118,8 @@
           "sentence": "In San Luis Obispo-Paso Robles, CA, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 7478
+      "total": 7478,
+      "fetched_at": "2026-07-20T14:31:58+00:00"
     },
     "39460": {
       "name": "Punta Gorda, FL",
@@ -3183,7 +3215,8 @@
           "sentence": "In Punta Gorda, FL, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 24609
+      "total": 24609,
+      "fetched_at": "2026-07-20T12:23:27+00:00"
     },
     "10180": {
       "name": "Abilene, TX",
@@ -3279,7 +3312,8 @@
           "sentence": "In Abilene, TX, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 5395
+      "total": 5395,
+      "fetched_at": "2026-07-20T14:19:21+00:00"
     },
     "30300": {
       "name": "Lewiston, ID-WA",
@@ -3364,7 +3398,8 @@
           "sentence": "In Lewiston, ID-WA, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 4148
+      "total": 4148,
+      "fetched_at": "2026-07-20T13:52:20+00:00"
     },
     "22500": {
       "name": "Florence, SC",
@@ -3460,7 +3495,8 @@
           "sentence": "In Florence, SC, Accounting & Finance Jobs is 3% of postings vs 4% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 11758
+      "total": 11758,
+      "fetched_at": "2026-07-20T12:34:27+00:00"
     },
     "30020": {
       "name": "Lawton, OK",
@@ -3556,7 +3592,8 @@
           "sentence": "In Lawton, OK, Accounting & Finance Jobs is 3% of postings vs 4% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 6647
+      "total": 6647,
+      "fetched_at": "2026-07-20T14:13:03+00:00"
     },
     "44180": {
       "name": "Springfield, MO",
@@ -3652,7 +3689,8 @@
           "sentence": "In Springfield, MO, Engineering Jobs is 5% of postings vs 8% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 12956
+      "total": 12956,
+      "fetched_at": "2026-07-20T15:39:31+00:00"
     },
     "15940": {
       "name": "Canton-Massillon, OH",
@@ -3748,7 +3786,8 @@
           "sentence": "In Canton-Massillon, OH, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 45589
+      "total": 45589,
+      "fetched_at": "2026-07-20T14:30:23+00:00"
     },
     "11020": {
       "name": "Altoona, PA",
@@ -3844,7 +3883,8 @@
           "sentence": "In Altoona, PA, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 18280
+      "total": 18280,
+      "fetched_at": "2026-07-20T12:21:54+00:00"
     },
     "25740": {
       "name": "Helena, MT",
@@ -3929,7 +3969,8 @@
           "sentence": "In Helena, MT, Hospitality & Catering Jobs is 3% of postings vs 7% nationally \u2014 0.4x national, under-represented."
         }
       ],
-      "total": 7167
+      "total": 7167,
+      "fetched_at": "2026-07-20T12:25:01+00:00"
     },
     "43620": {
       "name": "Sioux Falls, SD-MN",
@@ -4014,7 +4055,8 @@
           "sentence": "In Sioux Falls, SD-MN, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 14546
+      "total": 14546,
+      "fetched_at": "2026-07-20T14:11:27+00:00"
     },
     "13220": {
       "name": "Beckley, WV",
@@ -4110,7 +4152,8 @@
           "sentence": "In Beckley, WV, Healthcare & Nursing Jobs is 25% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 13598
+      "total": 13598,
+      "fetched_at": "2026-07-20T12:39:08+00:00"
     },
     "11540": {
       "name": "Appleton, WI",
@@ -4206,7 +4249,8 @@
           "sentence": "In Appleton, WI, Healthcare & Nursing Jobs is 20% of postings vs 27% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 19016
+      "total": 19016,
+      "fetched_at": "2026-07-20T14:52:45+00:00"
     },
     "24260": {
       "name": "Grand Island, NE",
@@ -4291,7 +4335,8 @@
           "sentence": "In Grand Island, NE, Engineering Jobs is 5% of postings vs 8% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 6747
+      "total": 6747,
+      "fetched_at": "2026-07-20T14:25:39+00:00"
     },
     "20220": {
       "name": "Dubuque, IA",
@@ -4387,7 +4432,8 @@
           "sentence": "In Dubuque, IA, Engineering Jobs is 4% of postings vs 8% nationally \u2014 0.5x national, under-represented."
         }
       ],
-      "total": 7775
+      "total": 7775,
+      "fetched_at": "2026-07-20T13:13:51+00:00"
     },
     "26140": {
       "name": "Homosassa Springs, FL",
@@ -4483,7 +4529,8 @@
           "sentence": "In Homosassa Springs, FL, Logistics & Warehouse Jobs is 4% of postings vs 6% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 22431
+      "total": 22431,
+      "fetched_at": "2026-07-20T12:32:54+00:00"
     },
     "48620": {
       "name": "Wichita, KS",
@@ -4546,7 +4593,8 @@
           "sentence": "In Wichita, KS, Logistics & Warehouse Jobs is 5% of postings vs 6% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 16937
+      "total": 16937,
+      "fetched_at": "2026-07-20T14:24:05+00:00"
     },
     "46660": {
       "name": "Valdosta, GA",
@@ -4642,7 +4690,8 @@
           "sentence": "In Valdosta, GA, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 6697
+      "total": 6697,
+      "fetched_at": "2026-07-20T14:27:13+00:00"
     },
     "37460": {
       "name": "Panama City-Panama City Beach, FL",
@@ -4738,7 +4787,8 @@
           "sentence": "In Panama City-Panama City Beach, FL, Travel Jobs is 5% of postings vs 7% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 6551
+      "total": 6551,
+      "fetched_at": "2026-07-20T15:07:53+00:00"
     },
     "44300": {
       "name": "State College, PA",
@@ -4834,7 +4884,8 @@
           "sentence": "In State College, PA, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 12627
+      "total": 12627,
+      "fetched_at": "2026-07-20T12:57:51+00:00"
     },
     "16620": {
       "name": "Charleston, WV",
@@ -4930,7 +4981,8 @@
           "sentence": "In Charleston, WV, Healthcare & Nursing Jobs is 25% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 15459
+      "total": 15459,
+      "fetched_at": "2026-07-20T13:04:25+00:00"
     },
     "22020": {
       "name": "Fargo, ND-MN",
@@ -5015,7 +5067,8 @@
           "sentence": "In Fargo, ND-MN, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 8921
+      "total": 8921,
+      "fetched_at": "2026-07-20T15:31:34+00:00"
     },
     "45500": {
       "name": "Texarkana, TX-AR",
@@ -5111,7 +5164,8 @@
           "sentence": "In Texarkana, TX-AR, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 7693
+      "total": 7693,
+      "fetched_at": "2026-07-20T14:20:55+00:00"
     },
     "12020": {
       "name": "Athens-Clarke County, GA",
@@ -5207,7 +5261,8 @@
           "sentence": "In Athens-Clarke County, GA, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 31772
+      "total": 31772,
+      "fetched_at": "2026-07-20T13:09:10+00:00"
     },
     "11260": {
       "name": "Anchorage, AK",
@@ -5281,7 +5336,8 @@
           "sentence": "In Anchorage, AK, Logistics & Warehouse Jobs is 4% of postings vs 6% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 8048
+      "total": 8048,
+      "fetched_at": "2026-07-20T14:57:26+00:00"
     },
     "41780": {
       "name": "Sandusky, OH",
@@ -5377,7 +5433,8 @@
           "sentence": "In Sandusky, OH, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 29033
+      "total": 29033,
+      "fetched_at": "2026-07-20T12:37:33+00:00"
     },
     "31900": {
       "name": "Mansfield, OH",
@@ -5473,7 +5530,8 @@
           "sentence": "In Mansfield, OH, Teaching Jobs is 2% of postings vs 3% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 26553
+      "total": 26553,
+      "fetched_at": "2026-07-20T12:43:47+00:00"
     },
     "19340": {
       "name": "Davenport-Moline-Rock Island, IA-IL",
@@ -5558,7 +5616,8 @@
           "sentence": "In Davenport-Moline-Rock Island, IA-IL, Engineering Jobs is 5% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 16563
+      "total": 16563,
+      "fetched_at": "2026-07-20T14:51:11+00:00"
     },
     "16220": {
       "name": "Casper, WY",
@@ -5643,7 +5702,8 @@
           "sentence": "In Casper, WY, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 2286
+      "total": 2286,
+      "fetched_at": "2026-07-20T13:50:46+00:00"
     },
     "12260": {
       "name": "Augusta-Richmond County, GA-SC",
@@ -5739,7 +5799,8 @@
           "sentence": "In Augusta-Richmond County, GA-SC, Engineering Jobs is 7% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 15467
+      "total": 15467,
+      "fetched_at": "2026-07-20T15:26:45+00:00"
     },
     "24500": {
       "name": "Great Falls, MT",
@@ -5824,7 +5885,8 @@
           "sentence": "In Great Falls, MT, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 2373
+      "total": 2373,
+      "fetched_at": "2026-07-20T13:07:38+00:00"
     },
     "19460": {
       "name": "Decatur, AL",
@@ -5920,7 +5982,8 @@
           "sentence": "In Decatur, AL, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 23385
+      "total": 23385,
+      "fetched_at": "2026-07-20T15:25:11+00:00"
     },
     "47900": {
       "name": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
@@ -6016,7 +6079,8 @@
           "sentence": "In Washington-Arlington-Alexandria, DC-VA-MD-WV, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 221142
+      "total": 221142,
+      "fetched_at": null
     },
     "39660": {
       "name": "Rapid City, SD",
@@ -6101,7 +6165,8 @@
           "sentence": "In Rapid City, SD, Engineering Jobs is 4% of postings vs 8% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 5429
+      "total": 5429,
+      "fetched_at": "2026-07-20T12:50:02+00:00"
     },
     "26620": {
       "name": "Huntsville, AL",
@@ -6197,7 +6262,8 @@
           "sentence": "In Huntsville, AL, Travel Jobs is 5% of postings vs 7% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 23920
+      "total": 23920,
+      "fetched_at": "2026-07-20T14:59:00+00:00"
     },
     "12580": {
       "name": "Baltimore-Columbia-Towson, MD",
@@ -6271,7 +6337,8 @@
           "sentence": "In Baltimore-Columbia-Towson, MD, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 204139
+      "total": 204139,
+      "fetched_at": null
     },
     "38300": {
       "name": "Pittsburgh, PA",
@@ -6356,7 +6423,8 @@
           "sentence": "In Pittsburgh, PA, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 65760
+      "total": 65760,
+      "fetched_at": "2026-07-20T14:43:02+00:00"
     },
     "31080": {
       "name": "Los Angeles-Long Beach-Anaheim, CA",
@@ -6452,7 +6520,8 @@
           "sentence": "In Los Angeles-Long Beach-Anaheim, CA, Healthcare & Nursing Jobs is 22% of postings vs 27% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 152212
+      "total": 152212,
+      "fetched_at": null
     },
     "19740": {
       "name": "Denver-Aurora-Centennial, CO",
@@ -6548,7 +6617,8 @@
           "sentence": "In Denver-Aurora-Centennial, CO, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 87340
+      "total": 87340,
+      "fetched_at": null
     },
     "45220": {
       "name": "Tallahassee, FL",
@@ -6644,7 +6714,8 @@
           "sentence": "In Tallahassee, FL, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 13967
+      "total": 13967,
+      "fetched_at": "2026-07-20T13:57:01+00:00"
     },
     "14580": {
       "name": "Bozeman, MT",
@@ -6740,7 +6811,8 @@
           "sentence": "In Bozeman, MT, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 3868
+      "total": 3868,
+      "fetched_at": "2026-07-20T15:52:10+00:00"
     },
     "39820": {
       "name": "Redding, CA",
@@ -6814,7 +6886,8 @@
           "sentence": "In Redding, CA, Hospitality & Catering Jobs is 4% of postings vs 7% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 4274
+      "total": 4274,
+      "fetched_at": "2026-07-20T14:49:37+00:00"
     },
     "29740": {
       "name": "Las Cruces, NM",
@@ -6899,7 +6972,8 @@
           "sentence": "In Las Cruces, NM, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 11202
+      "total": 11202,
+      "fetched_at": "2026-07-20T14:14:38+00:00"
     },
     "39900": {
       "name": "Reno, NV",
@@ -6995,7 +7069,8 @@
           "sentence": "In Reno, NV, Travel Jobs is 6% of postings vs 7% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 15931
+      "total": 15931,
+      "fetched_at": "2026-07-20T14:44:50+00:00"
     },
     "13740": {
       "name": "Billings, MT",
@@ -7091,7 +7166,8 @@
           "sentence": "In Billings, MT, Travel Jobs is 6% of postings vs 7% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 4226
+      "total": 4226,
+      "fetched_at": "2026-07-20T15:17:21+00:00"
     },
     "14260": {
       "name": "Boise City, ID",
@@ -7187,7 +7263,8 @@
           "sentence": "In Boise City, ID, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 17342
+      "total": 17342,
+      "fetched_at": "2026-07-20T15:49:00+00:00"
     },
     "49020": {
       "name": "Winchester, VA-WV",
@@ -7272,7 +7349,8 @@
           "sentence": "In Winchester, VA-WV, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 52514
+      "total": 52514,
+      "fetched_at": "2026-07-20T12:36:00+00:00"
     },
     "47940": {
       "name": "Waterloo-Cedar Falls, IA",
@@ -7368,7 +7446,8 @@
           "sentence": "In Waterloo-Cedar Falls, IA, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 13334
+      "total": 13334,
+      "fetched_at": "2026-07-20T14:06:46+00:00"
     },
     "22140": {
       "name": "Farmington, NM",
@@ -7453,7 +7532,8 @@
           "sentence": "In Farmington, NM, Travel Jobs is 6% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 3698
+      "total": 3698,
+      "fetched_at": "2026-07-20T14:22:29+00:00"
     },
     "16300": {
       "name": "Cedar Rapids, IA",
@@ -7549,7 +7629,8 @@
           "sentence": "In Cedar Rapids, IA, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 16027
+      "total": 16027,
+      "fetched_at": "2026-07-20T14:35:07+00:00"
     },
     "33540": {
       "name": "Missoula, MT",
@@ -7634,7 +7715,8 @@
           "sentence": "In Missoula, MT, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 3881
+      "total": 3881,
+      "fetched_at": "2026-07-20T15:42:39+00:00"
     },
     "33340": {
       "name": "Milwaukee-Waukesha, WI",
@@ -7730,7 +7812,8 @@
           "sentence": "In Milwaukee-Waukesha, WI, Travel Jobs is 7% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 51328
+      "total": 51328,
+      "fetched_at": "2026-07-20T15:36:23+00:00"
     },
     "22900": {
       "name": "Fort Smith, AR-OK",
@@ -7826,7 +7909,8 @@
           "sentence": "In Fort Smith, AR-OK, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 8002
+      "total": 8002,
+      "fetched_at": "2026-07-20T13:01:11+00:00"
     },
     "16020": {
       "name": "Cape Girardeau, MO-IL",
@@ -7922,7 +8006,8 @@
           "sentence": "In Cape Girardeau, MO-IL, Sales Jobs is 3% of postings vs 5% nationally \u2014 0.6x national, under-represented."
         }
       ],
-      "total": 9533
+      "total": 9533,
+      "fetched_at": "2026-07-20T12:20:21+00:00"
     },
     "19100": {
       "name": "Dallas-Fort Worth-Arlington, TX",
@@ -8018,7 +8103,8 @@
           "sentence": "In Dallas-Fort Worth-Arlington, TX, Healthcare & Nursing Jobs is 25% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 126861
+      "total": 126861,
+      "fetched_at": null
     },
     "26980": {
       "name": "Iowa City, IA",
@@ -8114,7 +8200,8 @@
           "sentence": "In Iowa City, IA, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 15667
+      "total": 15667,
+      "fetched_at": "2026-07-20T12:56:18+00:00"
     },
     "27340": {
       "name": "Jacksonville, NC",
@@ -8210,7 +8297,8 @@
           "sentence": "In Jacksonville, NC, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 13719
+      "total": 13719,
+      "fetched_at": "2026-07-20T15:02:57+00:00"
     },
     "24660": {
       "name": "Greensboro-High Point, NC",
@@ -8306,7 +8394,8 @@
           "sentence": "In Greensboro-High Point, NC, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 41962
+      "total": 41962,
+      "fetched_at": "2026-07-20T15:20:30+00:00"
     },
     "16700": {
       "name": "Charleston-North Charleston, SC",
@@ -8402,7 +8491,8 @@
           "sentence": "In Charleston-North Charleston, SC, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 24528
+      "total": 24528,
+      "fetched_at": "2026-07-20T15:41:05+00:00"
     },
     "42660": {
       "name": "Seattle-Tacoma-Bellevue, WA",
@@ -8498,7 +8588,8 @@
           "sentence": "In Seattle-Tacoma-Bellevue, WA, Logistics & Warehouse Jobs is 5% of postings vs 6% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 80141
+      "total": 80141,
+      "fetched_at": null
     },
     "18880": {
       "name": "Crestview-Fort Walton Beach-Destin, FL",
@@ -8594,7 +8685,8 @@
           "sentence": "In Crestview-Fort Walton Beach-Destin, FL, Accounting & Finance Jobs is 3% of postings vs 4% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 14250
+      "total": 14250,
+      "fetched_at": "2026-07-20T13:53:54+00:00"
     },
     "34740": {
       "name": "Muskegon-Norton Shores, MI",
@@ -8690,7 +8782,8 @@
           "sentence": "In Muskegon-Norton Shores, MI, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 18901
+      "total": 18901,
+      "fetched_at": "2026-07-20T14:36:41+00:00"
     },
     "21820": {
       "name": "Fairbanks-College, AK",
@@ -8786,7 +8879,8 @@
           "sentence": "In Fairbanks-College, AK, Hospitality & Catering Jobs is 6% of postings vs 7% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 1969
+      "total": 1969,
+      "fetched_at": "2026-07-20T15:06:19+00:00"
     },
     "31740": {
       "name": "Manhattan, KS",
@@ -8882,7 +8976,8 @@
           "sentence": "In Manhattan, KS, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 10290
+      "total": 10290,
+      "fetched_at": "2026-07-20T13:17:00+00:00"
     },
     "16940": {
       "name": "Cheyenne, WY",
@@ -8978,7 +9073,8 @@
           "sentence": "In Cheyenne, WY, Hospitality & Catering Jobs is 5% of postings vs 7% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 11239
+      "total": 11239,
+      "fetched_at": "2026-07-20T15:00:56+00:00"
     },
     "28140": {
       "name": "Kansas City, MO-KS",
@@ -9074,7 +9170,8 @@
           "sentence": "In Kansas City, MO-KS, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 54802
+      "total": 54802,
+      "fetched_at": "2026-07-20T15:29:52+00:00"
     },
     "48680": {
       "name": "Wildwood-The Villages, FL",
@@ -9170,7 +9267,8 @@
           "sentence": "In Wildwood-The Villages, FL, Logistics & Warehouse Jobs is 5% of postings vs 6% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 49164
+      "total": 49164,
+      "fetched_at": "2026-07-20T12:15:41+00:00"
     },
     "48540": {
       "name": "Wheeling, WV-OH",
@@ -9266,7 +9364,8 @@
           "sentence": "In Wheeling, WV-OH, Accounting & Finance Jobs is 3% of postings vs 4% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 44600
+      "total": 44600,
+      "fetched_at": "2026-07-20T13:02:50+00:00"
     },
     "36740": {
       "name": "Orlando-Kissimmee-Sanford, FL",
@@ -9362,7 +9461,8 @@
           "sentence": "In Orlando-Kissimmee-Sanford, FL, Logistics & Warehouse Jobs is 6% of postings vs 6% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 54029
+      "total": 54029,
+      "fetched_at": null
     },
     "40140": {
       "name": "Riverside-San Bernardino-Ontario, CA",
@@ -9447,7 +9547,8 @@
           "sentence": "In Riverside-San Bernardino-Ontario, CA, Healthcare & Nursing Jobs is 23% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 100651
+      "total": 100651,
+      "fetched_at": null
     },
     "30500": {
       "name": "Lexington Park, MD",
@@ -9543,7 +9644,8 @@
           "sentence": "In Lexington Park, MD, Hospitality & Catering Jobs is 6% of postings vs 7% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 33924
+      "total": 33924,
+      "fetched_at": "2026-07-20T12:54:44+00:00"
     },
     "14460": {
       "name": "Boston-Cambridge-Newton, MA-NH",
@@ -9639,7 +9741,8 @@
           "sentence": "In Boston-Cambridge-Newton, MA-NH, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 154597
+      "total": 154597,
+      "fetched_at": null
     },
     "13780": {
       "name": "Binghamton, NY",
@@ -9735,7 +9838,8 @@
           "sentence": "In Binghamton, NY, Healthcare & Nursing Jobs is 26% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 19067
+      "total": 19067,
+      "fetched_at": "2026-07-20T14:38:16+00:00"
     },
     "39150": {
       "name": "Prescott Valley-Prescott, AZ",
@@ -9831,7 +9935,8 @@
           "sentence": "In Prescott Valley-Prescott, AZ, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 4895
+      "total": 4895,
+      "fetched_at": "2026-07-20T15:15:48+00:00"
     },
     "22660": {
       "name": "Fort Collins-Loveland, CO",
@@ -9927,7 +10032,8 @@
           "sentence": "In Fort Collins-Loveland, CO, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 28575
+      "total": 28575,
+      "fetched_at": "2026-07-20T14:16:12+00:00"
     },
     "12420": {
       "name": "Austin-Round Rock-San Marcos, TX",
@@ -10023,7 +10129,8 @@
           "sentence": "In Austin-Round Rock-San Marcos, TX, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 50771
+      "total": 50771,
+      "fetched_at": null
     },
     "25860": {
       "name": "Hickory-Lenoir-Morganton, NC",
@@ -10119,7 +10226,8 @@
           "sentence": "In Hickory-Lenoir-Morganton, NC, IT Jobs is 7% of postings vs 8% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 51280
+      "total": 51280,
+      "fetched_at": "2026-07-20T12:18:47+00:00"
     },
     "35620": {
       "name": "New York-Newark-Jersey City, NY-NJ",
@@ -10215,7 +10323,8 @@
           "sentence": "In New York-Newark-Jersey City, NY-NJ, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 258346
+      "total": 258346,
+      "fetched_at": null
     },
     "42140": {
       "name": "Santa Fe, NM",
@@ -10311,7 +10420,8 @@
           "sentence": "In Santa Fe, NM, Retail Jobs is 3% of postings vs 4% nationally \u2014 0.7x national, under-represented."
         }
       ],
-      "total": 11818
+      "total": 11818,
+      "fetched_at": "2026-07-20T14:09:54+00:00"
     },
     "26420": {
       "name": "Houston-Pasadena-The Woodlands, TX",
@@ -10407,7 +10517,8 @@
           "sentence": "In Houston-Pasadena-The Woodlands, TX, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 87219
+      "total": 87219,
+      "fetched_at": null
     },
     "28880": {
       "name": "Kiryas Joel-Poughkeepsie-Newburgh, NY",
@@ -10503,7 +10614,8 @@
           "sentence": "In Kiryas Joel-Poughkeepsie-Newburgh, NY, Hospitality & Catering Jobs is 7% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 182599
+      "total": 182599,
+      "fetched_at": "2026-07-20T12:42:14+00:00"
     },
     "16740": {
       "name": "Charlotte-Concord-Gastonia, NC-SC",
@@ -10599,7 +10711,8 @@
           "sentence": "In Charlotte-Concord-Gastonia, NC-SC, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 58273
+      "total": 58273,
+      "fetched_at": null
     },
     "16980": {
       "name": "Chicago-Naperville-Elgin, IL-IN",
@@ -10684,7 +10797,8 @@
           "sentence": "In Chicago-Naperville-Elgin, IL-IN, Engineering Jobs is 7% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 153174
+      "total": 153174,
+      "fetched_at": null
     },
     "38060": {
       "name": "Phoenix-Mesa-Chandler, AZ",
@@ -10780,7 +10894,8 @@
           "sentence": "In Phoenix-Mesa-Chandler, AZ, Healthcare & Nursing Jobs is 26% of postings vs 27% nationally \u2014 1.0x national, under-represented."
         }
       ],
-      "total": 79031
+      "total": 79031,
+      "fetched_at": null
     },
     "37980": {
       "name": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
@@ -10865,7 +10980,8 @@
           "sentence": "In Philadelphia-Camden-Wilmington, PA-NJ-DE-MD, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 142245
+      "total": 142245,
+      "fetched_at": null
     },
     "33100": {
       "name": "Miami-Fort Lauderdale-West Palm Beach, FL",
@@ -10961,7 +11077,8 @@
           "sentence": "In Miami-Fort Lauderdale-West Palm Beach, FL, Logistics & Warehouse Jobs is 5% of postings vs 6% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 59076
+      "total": 59076,
+      "fetched_at": null
     },
     "41180": {
       "name": "St. Louis, MO-IL",
@@ -11057,7 +11174,8 @@
           "sentence": "In St. Louis, MO-IL, Engineering Jobs is 6% of postings vs 8% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 59156
+      "total": 59156,
+      "fetched_at": null
     },
     "41140": {
       "name": "St. Joseph, MO-KS",
@@ -11153,7 +11271,8 @@
           "sentence": "In St. Joseph, MO-KS, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 26945
+      "total": 26945,
+      "fetched_at": "2026-07-20T12:28:07+00:00"
     },
     "26900": {
       "name": "Indianapolis-Carmel-Greenwood, IN",
@@ -11249,7 +11368,8 @@
           "sentence": "In Indianapolis-Carmel-Greenwood, IN, Healthcare & Nursing Jobs is 24% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 61152
+      "total": 61152,
+      "fetched_at": "2026-07-20T15:22:04+00:00"
     },
     "33460": {
       "name": "Minneapolis-St. Paul-Bloomington, MN-WI",
@@ -11345,7 +11465,8 @@
           "sentence": "In Minneapolis-St. Paul-Bloomington, MN-WI, Hospitality & Catering Jobs is 7% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 63605
+      "total": 63605,
+      "fetched_at": null
     },
     "12060": {
       "name": "Atlanta-Sandy Springs-Roswell, GA",
@@ -11441,7 +11562,8 @@
           "sentence": "In Atlanta-Sandy Springs-Roswell, GA, Retail Jobs is 4% of postings vs 4% nationally \u2014 1.0x national, under-represented."
         }
       ],
-      "total": 122371
+      "total": 122371,
+      "fetched_at": null
     },
     "25420": {
       "name": "Harrisburg-Carlisle, PA",
@@ -11526,7 +11648,8 @@
           "sentence": "In Harrisburg-Carlisle, PA, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 49050
+      "total": 49050,
+      "fetched_at": "2026-07-20T14:02:02+00:00"
     },
     "36420": {
       "name": "Oklahoma City, OK",
@@ -11622,7 +11745,8 @@
           "sentence": "In Oklahoma City, OK, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 32015
+      "total": 32015,
+      "fetched_at": "2026-07-20T14:55:52+00:00"
     },
     "19820": {
       "name": "Detroit-Warren-Dearborn, MI",
@@ -11718,7 +11842,8 @@
           "sentence": "In Detroit-Warren-Dearborn, MI, Healthcare & Nursing Jobs is 23% of postings vs 27% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 63951
+      "total": 63951,
+      "fetched_at": null
     },
     "19500": {
       "name": "Decatur, IL",
@@ -11814,7 +11939,8 @@
           "sentence": "In Decatur, IL, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 28191
+      "total": 28191,
+      "fetched_at": "2026-07-20T12:26:34+00:00"
     },
     "49340": {
       "name": "Worcester, MA",
@@ -11910,7 +12036,8 @@
           "sentence": "In Worcester, MA, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 159918
+      "total": 159918,
+      "fetched_at": "2026-07-20T12:45:21+00:00"
     },
     "12220": {
       "name": "Auburn-Opelika, AL",
@@ -12006,7 +12133,8 @@
           "sentence": "In Auburn-Opelika, AL, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 16395
+      "total": 16395,
+      "fetched_at": "2026-07-20T14:54:19+00:00"
     },
     "27620": {
       "name": "Jefferson City, MO",
@@ -12102,7 +12230,8 @@
           "sentence": "In Jefferson City, MO, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 15759
+      "total": 15759,
+      "fetched_at": "2026-07-20T12:31:21+00:00"
     },
     "25540": {
       "name": "Hartford-West Hartford-East Hartford, CT",
@@ -12198,7 +12327,8 @@
           "sentence": "In Hartford-West Hartford-East Hartford, CT, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 75615
+      "total": 75615,
+      "fetched_at": "2026-07-20T15:47:26+00:00"
     },
     "45300": {
       "name": "Tampa-St. Petersburg-Clearwater, FL",
@@ -12294,7 +12424,8 @@
           "sentence": "In Tampa-St. Petersburg-Clearwater, FL, Engineering Jobs is 7% of postings vs 8% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 66263
+      "total": 66263,
+      "fetched_at": null
     },
     "14860": {
       "name": "Bridgeport-Stamford-Danbury, CT",
@@ -12390,7 +12521,8 @@
           "sentence": "In Bridgeport-Stamford-Danbury, CT, Hospitality & Catering Jobs is 7% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 141098
+      "total": 141098,
+      "fetched_at": "2026-07-20T15:37:57+00:00"
     },
     "39300": {
       "name": "Providence-Warwick, RI-MA",
@@ -12486,7 +12618,8 @@
           "sentence": "In Providence-Warwick, RI-MA, Hospitality & Catering Jobs is 6% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 132788
+      "total": 132788,
+      "fetched_at": "2026-07-20T15:23:38+00:00"
     },
     "34980": {
       "name": "Nashville-Davidson--Murfreesboro--Franklin, TN",
@@ -12582,7 +12715,8 @@
           "sentence": "In Nashville-Davidson--Murfreesboro--Franklin, TN, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 59892
+      "total": 59892,
+      "fetched_at": "2026-07-20T14:46:28+00:00"
     },
     "38900": {
       "name": "Portland-Vancouver-Hillsboro, OR-WA",
@@ -12667,7 +12801,8 @@
           "sentence": "In Portland-Vancouver-Hillsboro, OR-WA, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 45152
+      "total": 45152,
+      "fetched_at": null
     },
     "27500": {
       "name": "Janesville-Beloit, WI",
@@ -12763,7 +12898,8 @@
           "sentence": "In Janesville-Beloit, WI, Hospitality & Catering Jobs is 7% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 43934
+      "total": 43934,
+      "fetched_at": "2026-07-20T14:00:21+00:00"
     },
     "11460": {
       "name": "Ann Arbor, MI",
@@ -12859,7 +12995,8 @@
           "sentence": "In Ann Arbor, MI, Healthcare & Nursing Jobs is 23% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 82714
+      "total": 82714,
+      "fetched_at": "2026-07-20T12:53:10+00:00"
     },
     "39380": {
       "name": "Pueblo, CO",
@@ -12955,7 +13092,8 @@
           "sentence": "In Pueblo, CO, Sales Jobs is 4% of postings vs 5% nationally \u2014 0.8x national, under-represented."
         }
       ],
-      "total": 19170
+      "total": 19170,
+      "fetched_at": "2026-07-20T15:50:36+00:00"
     },
     "49620": {
       "name": "York-Hanover, PA",
@@ -13051,7 +13189,8 @@
           "sentence": "In York-Hanover, PA, Teaching Jobs is 3% of postings vs 3% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 60756
+      "total": 60756,
+      "fetched_at": "2026-07-20T14:48:02+00:00"
     },
     "35300": {
       "name": "New Haven, CT",
@@ -13147,7 +13286,8 @@
           "sentence": "In New Haven, CT, Hospitality & Catering Jobs is 6% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 94684
+      "total": 94684,
+      "fetched_at": "2026-07-20T15:04:38+00:00"
     },
     "11180": {
       "name": "Ames, IA",
@@ -13243,7 +13383,8 @@
           "sentence": "In Ames, IA, Retail Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 25568
+      "total": 25568,
+      "fetched_at": "2026-07-20T12:48:28+00:00"
     },
     "10540": {
       "name": "Albany, OR",
@@ -13339,7 +13480,8 @@
           "sentence": "In Albany, OR, Engineering Jobs is 7% of postings vs 8% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 33091
+      "total": 33091,
+      "fetched_at": "2026-07-20T14:33:33+00:00"
     },
     "12980": {
       "name": "Battle Creek, MI",
@@ -13435,7 +13577,8 @@
           "sentence": "In Battle Creek, MI, Accounting & Finance Jobs is 4% of postings vs 4% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 27034
+      "total": 27034,
+      "fetched_at": "2026-07-20T13:12:18+00:00"
     },
     "45820": {
       "name": "Topeka, KS",
@@ -13531,7 +13674,8 @@
           "sentence": "In Topeka, KS, Engineering Jobs is 7% of postings vs 8% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 23012
+      "total": 23012,
+      "fetched_at": "2026-07-20T13:58:35+00:00"
     },
     "45060": {
       "name": "Syracuse, NY",
@@ -13627,7 +13771,8 @@
           "sentence": "In Syracuse, NY, Healthcare & Nursing Jobs is 25% of postings vs 27% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 29875
+      "total": 29875,
+      "fetched_at": "2026-07-20T14:17:46+00:00"
     },
     "25220": {
       "name": "Hammond, LA",
@@ -13723,7 +13868,8 @@
           "sentence": "In Hammond, LA, IT Jobs is 8% of postings vs 8% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 36319
+      "total": 36319,
+      "fetched_at": "2026-07-20T12:51:36+00:00"
     },
     "27060": {
       "name": "Ithaca, NY",
@@ -13819,7 +13965,8 @@
           "sentence": "In Ithaca, NY, Travel Jobs is 6% of postings vs 7% nationally \u2014 0.9x national, under-represented."
         }
       ],
-      "total": 30048
+      "total": 30048,
+      "fetched_at": "2026-07-20T12:46:54+00:00"
     }
   },
   "over_index": [

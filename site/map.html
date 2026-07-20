@@ -103,6 +103,7 @@
         <div class="hlabel">Postings per 1,000 workers</div>
         <div class="hnum" id="rate">—</div>
         <div class="hunit" id="ratectx"></div>
+        <div class="hunit" id="updated" style="margin-top:6px;color:var(--faint)"></div>
       </div>
       <div class="card" style="margin-top:16px" id="detail"></div>
       <div class="card" style="margin-top:16px" id="sectors"></div>
@@ -184,6 +185,12 @@ Promise.all([
        <div class="rowline"><span>Labor force (BLS LAUS)</span><span>${fmt(rec.labor_force)}</span></div>`;
 
     const bm = byMetro[code];
+    // "Last updated" = later of the national build and this metro's rolling sector
+    // fetch (ISO-8601 UTC strings compare lexicographically).
+    const upIso = (bm && bm.fetched_at && bm.fetched_at > nat.generated_at)
+      ? bm.fetched_at : nat.generated_at;
+    document.getElementById("updated").textContent = "Last updated " + upIso.slice(0,10);
+
     const srow=(c,cls)=>`<div class="srow ${cls}"><span>${sectorName(c.category)}</span><span class="sv">${c.ratio.toFixed(1)}×</span></div>`;
     document.getElementById("sectors").innerHTML = bm
       ? `<div class="sec-h" style="color:var(--over)">Over-indexed sectors</div>
@@ -196,10 +203,9 @@ Promise.all([
          <a href="sectors.html">Browse the sector index →</a></div>`;
 
     document.getElementById("foot").textContent =
-      `Rate = distinct in-metro postings ÷ BLS labor force × 1,000. Sector × = a `
-      + `sector's local share ÷ its national share. Generated `
-      + `${nat.generated_at.replace("T"," ").replace("+00:00"," UTC")}. `
-      + `Job-posting demand, not employment.`;
+      `Live job postings in the metro ÷ its workforce × 1,000. Sector × = a `
+      + `sector's local share of postings vs its national share. `
+      + `Posting demand, not hires.`;
   }
 
   sel.addEventListener("change", ()=>render(sel.value));

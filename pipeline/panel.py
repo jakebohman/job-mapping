@@ -194,6 +194,7 @@ def build_panel_report(per_metro):
     for code, v in per_metro.items():
         m = by_metro.setdefault(code, {"name": v["name"], "over": [], "under": []})
         m["total"] = sum(v["mix"].values())
+        m["fetched_at"] = v.get("fetched_at")   # rolling collection date -> "Last updated" on the site
 
     # Per-metro category shares — the front-page map's category filter multiplies
     # these by each metro's total rate (from national.json) to shade by e.g. IT
@@ -327,9 +328,11 @@ def _selftest():
     assert all(c["ratio"] < 1 for c in rep["under_index"])
 
     # a collected metro with no cell above the floors is still seeded (not "pending")
-    pm2 = dict(per_metro, Z={"name": "Metro Z", "mix": {"IT Jobs": 10}})   # tiny -> no cells
+    pm2 = dict(per_metro, Z={"name": "Metro Z", "mix": {"IT Jobs": 10},
+                            "fetched_at": "2026-07-20T00:00:00+00:00"})   # tiny -> no cells
     zb = build_panel_report(pm2)["by_metro"]
-    assert zb["Z"] == {"name": "Metro Z", "over": [], "under": [], "total": 10}
+    assert zb["Z"] == {"name": "Metro Z", "over": [], "under": [], "total": 10,
+                       "fetched_at": "2026-07-20T00:00:00+00:00"}   # timestamp carried through
 
     # category_shares: per-metro category counts / total, summing to ~1 (the map's
     # category filter multiplies these by each metro's total rate)
