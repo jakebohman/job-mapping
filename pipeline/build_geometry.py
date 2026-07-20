@@ -6,8 +6,8 @@ map geometry and vendor the mapping library, so the site has no external deps.
   site/vendor/d3-array.min.js   d3-geo's dependency (load first)
   site/vendor/d3-geo.min.js     geoAlbersUsa + geoPath for the choropleth
 
-Geometry comes from Census TIGERweb (same service metro_map.fetch_geometry uses),
-server-simplified via ArcGIS `maxAllowableOffset` so the files stay tiny.
+Geometry comes from Census TIGERweb, server-simplified via ArcGIS
+`maxAllowableOffset` so the files stay tiny.
 
     python pipeline/build_geometry.py
 """

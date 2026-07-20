@@ -24,8 +24,7 @@ Three deliverables (a static page ← a Python build script ← generated JSON):
 (`shaded_universe`, from `national.json` — so build `build_national.py` first),
 stamps each with `fetched_at`, and the report accumulates every metro collected
 so far. Run it repeatedly (e.g. a daily cron) to fill the country within the
-Adzuna budget. `metro_map.py` (the old Columbus-only occupation-mix detail) is
-now unused by the site — kept for the eventual LLM occupation path.
+Adzuna budget.
 
 ## Commands
 
@@ -49,14 +48,13 @@ python pipeline/build_national.py    # national map data (~387 Adzuna calls; res
 python pipeline/panel.py [N]         # sector data — rolling: refreshes the N stalest shaded metros
                                      #   (default PER_RUN=40). Re-run until coverage is full.
 python pipeline/build_crosswalk.py   # rebuild pipeline/cbsa_counties.csv from Census (rare)
-# python pipeline/metro_map.py [CBSA]  # legacy Columbus occupation build — UNUSED by the site now
 
 # Serve locally:
 cd site && python -m http.server 8000     # open http://localhost:8000
 
 # Tests: every module self-tests with no network and no keys. This is the whole
 # test suite — run one module's checks with:
-python pipeline/geo.py --selftest         # also: ingest, classify, bls, panel, build_national, build_all
+python pipeline/geo.py --selftest         # also: ingest, bls, panel, build_national, build_all
 ```
 
 **Verifying the site renders** is hard here: the screenshot tool tends to hang.
@@ -107,10 +105,11 @@ resumes on the next run instead of re-spending calls. Labor force is cached
 separately because it's stable month-to-month and its keyless quota is tiny.
 
 **Shared frontend.** All three pages use one design system: `site/fonts.css`
-(Fraunces + IBM Plex, embedded woff2 — no CDN), CSS custom-property tokens with
-light/dark variants, and a mono cross-nav. `d3-geo` is vendored in
-`site/vendor/` (not a CDN). Pages `fetch(..., {cache:'no-store'})` so a data
-rebuild is never served stale.
+(Fraunces + IBM Plex embedded woff2 — no CDN) also holds the **shared** CSS
+custom-property tokens (light/dark); each page's inline `<style>` — loaded after
+`fonts.css`, so it wins — adds only its page-specific tokens (`--over`/`--under`,
+`--base`/`--metro-line`/`--nodata`). `d3-geo` is vendored in `site/vendor/` (not a
+CDN). Pages `fetch(..., {cache:'no-store'})` so a data rebuild is never served stale.
 
 ## Non-obvious decisions and invariants
 
@@ -124,11 +123,12 @@ rebuild is never served stale.
   off a single in-sample posting until this floor was added); below 10% the
   measurement is radius bleed, not the metro.
 - **Interim substitutions**, each with an isolated swap-in point:
-  - Occupation coding uses the free, keyless **NIOSH NIOCCS autocoder**
-    (`classify.py`) in place of an LLM (no LLM key yet). NIOCCS leaves ~21%
-    uncoded and is title-only; an LLM reading the description will replace it.
   - Outlier sentences are **templated** from the numbers, not LLM-written.
   - Storage is **JSON**, not the Parquet/DuckDB the long-term design calls for.
+  - Occupation coding (an LLM behind a NIOCCS validator) is **not built** — the
+    interim NIOCCS scaffold (`classify.py`, `metro_map.py`) was removed when the
+    project committed to the counts-based map; recover it from git if ROADMAP
+    task 4 resumes.
 - **The national rate is repost-calibrated, per metro.** Adzuna is
   repost-saturated (~58% of a raw sample were near-duplicates). The national
   `count` field can't itself be de-duped, so `build_national._measure` derives a
@@ -214,7 +214,6 @@ rebuild is never served stale.
 |---|---|---|
 | Adzuna API (free) | Posting counts + category counts; sampled details | ~25/min + daily cap. Descriptions hard-truncated at 500 chars. `where` is radius, not CBSA (→ `f_m`). Advertiser-ranked. Don't republish posting text. |
 | BLS LAUS | Labor force per CBSA (view-1 denominator) | Monthly, ~2-month lag. Keyless 25/day → needs `BLS_API_KEY`. |
-| NIOSH NIOCCS | Interim occupation (SOC) coding | Keyless. Title-only, ~21% uncoded. Meant as validator, used as interim coder. |
 | Census TIGERweb | MSA + state polygons (server-simplified) | Esri/RFC-7946 winding → must rewind for d3. |
 | CareerOneStop Jobs API | (intended fuller text) — **not accessible** | Self-serve token is 401 on `jobsearch`; gated. Points to NLx. |
 | NLx Research Hub | Intended real text source for skills | Requires a data-request application; not available day one. |

@@ -9,19 +9,13 @@
 <link rel="icon" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css">
 <style>
+  /* page-specific tokens; shared ones (--paper/--ink/--rule/fonts…) come from fonts.css */
   :root{
-    --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
-    --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
     --base:#ccd3dc; --base-line:#bcc5d1; --nodata:#a9b2be; --hi:#131b26;
     --metro-line:#8b9aab;
-    --serif:"Fraunces",Georgia,"Times New Roman",serif;
-    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   }
   @media (prefers-color-scheme:dark){
     :root{
-      --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
-      --faint:#6d7c91; --rule:#25303d; --hair:#1c2530;
       --base:#1a2430; --base-line:#26313f; --nodata:#39424e; --hi:#eef4fb;
       --metro-line:#465a70;
     }

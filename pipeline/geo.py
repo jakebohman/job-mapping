@@ -206,19 +206,6 @@ def cbsa_of(adzuna_result):
     return _COUNTY_TO_CBSA.get(key) if key else None
 
 
-def bucket_by_cbsa(results):
-    """{cbsa_code: [results]} plus a dropped list for postings outside every
-    MSA (the geography filter)."""
-    kept, dropped = {}, []
-    for r in results:
-        code = cbsa_of(r)
-        if code is None:
-            dropped.append(r)
-        else:
-            kept.setdefault(code, []).append(r)
-    return kept, dropped
-
-
 def _selftest():
     def res(*area):
         return {"location": {"area": list(area)}}

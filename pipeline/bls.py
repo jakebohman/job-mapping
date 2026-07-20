@@ -31,23 +31,6 @@ def _cfg():
     return (API_V2, 50, {"registrationkey": key}) if key else (API_V1, 25, {})
 
 
-def labor_force(cbsa_code, start_year, end_year):
-    """Latest published LAUS labor force for the CBSA. Network."""
-    import requests
-    url, _, extra = _cfg()
-    sid = geo.CBSA_COUNTIES[cbsa_code]["laus_lf_series"]
-    r = requests.post(url, json={"seriesid": [sid], "startyear": str(start_year),
-                                 "endyear": str(end_year), **extra},
-                      headers={"Content-Type": "application/json"}, timeout=30)
-    r.raise_for_status()
-    js = r.json()
-    if js.get("status") != "REQUEST_SUCCEEDED":
-        raise RuntimeError(f"BLS: {js.get('status')} {js.get('message')}")
-    series = js["Results"]["series"]
-    value, label = latest_value(series[0]["data"] if series else [])
-    return {"labor_force": value, "as_of": label, "series": sid}
-
-
 def _parse_batch(resp_series, series_to_code):
     """Map a BLS batch response back to {cbsa_code: {labor_force, as_of, series}}."""
     out = {}
@@ -151,4 +134,4 @@ if __name__ == "__main__":
     if "--selftest" in sys.argv:
         _selftest()
     else:
-        print(labor_force("18140", 2024, 2025))
+        sys.exit("bls.py has no live entrypoint; run via the pipeline.")

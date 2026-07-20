@@ -58,12 +58,14 @@ Each entry: **Goal · Scope · Done when · Depends on**.
   it toward the counts-based map (category filter, gray recovery). The counts path
   is bias-immune; occupation classification reintroduces Adzuna's advertiser-ranking
   bias and needs a hand-labeled error rate. Revisit only if there's appetite.
-- **Scope (if resumed):** a Gemini coder behind `classify.code_title`'s swap point
-  (title + 500-char description → SOC major/detailed + skills), NIOCCS kept as the
-  independent validator; then a local CLI to hand-label ~300 postings and report a
+- **Scope (if resumed):** a Gemini coder (title + 500-char description → SOC
+  major/detailed + skills) with the NIOSH NIOCCS autocoder as an independent
+  validator; then a local CLI to hand-label ~300 postings and report a
   Wilson-95%-CI major-group accuracy + LLM↔NIOCCS agreement on the site footer.
-  `GEMINI_API_KEY` is available. `pipeline/metro_map.py` (the old Columbus-only
-  occupation build, now unused by the site) is the starting point.
+  `GEMINI_API_KEY` is available. The old interim scaffold (`classify.py` NIOCCS
+  coder + `metro_map.py` single-metro occupation build) was **removed** once the
+  project committed to the counts map — recover it from git history (last present
+  at commit `8977548`) as a starting point.
 - **Depends on:** nothing hard; the error rate is human-gated (someone labels 300).
 
 ## 5. Later views + storage  *(park until earlier work lands / time passes)*

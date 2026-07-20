@@ -9,19 +9,13 @@
 <link rel="icon" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css"><!-- self-hosted, embedded woff2 (no external deps) -->
 <style>
+  /* page-specific tokens; shared ones (--paper/--ink/--rule/fonts…) come from fonts.css */
   :root{
-    --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
-    --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
     --over:#b4552a; --over-soft:#e7d3c7; --under:#2f6ea3; --under-soft:#cbdcea;
     --spine:#98a6b8; --grid:#e6eaf1;
-    --serif:"Fraunces",Georgia,"Times New Roman",serif;
-    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   }
   @media (prefers-color-scheme:dark){
     :root{
-      --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
-      --faint:#6d7c91; --rule:#25303d; --hair:#1c2530;
       --over:#e08a5c; --over-soft:#3a2a20; --under:#5ea6d8; --under-soft:#1e2c3a;
       --spine:#4a5a6e; --grid:#202a37;
     }

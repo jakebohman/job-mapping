@@ -27,12 +27,11 @@ job-mapping/
 ├── .env.example       the free API keys you need (Adzuna + BLS)
 │
 ├── pipeline/          the Python that fetches data and builds the site's JSON
+│   ├── build_all.py       ★ one command: checks keys, runs the whole pipeline
 │   ├── build_national.py  ★ US map data — postings per 1,000 workers per metro
 │   ├── build_geometry.py  one-time: metro/state map shapes + vendored d3-geo
 │   ├── panel.py           sector data (deviation + per-metro shares; rolling)
-│   ├── metro_map.py       legacy Columbus occupation build (unused by the site)
-│   ├── ingest.py          pull job postings from Adzuna
-│   ├── classify.py        occupation coding (NIOCCS, interim)
+│   ├── ingest.py          Adzuna request + repost-dedup helpers
 │   ├── geo.py             county ↔ metro (CBSA) lookup
 │   ├── bls.py             metro labor-force numbers (BLS)
 │   ├── build_crosswalk.py one-time: builds cbsa_counties.csv
@@ -99,7 +98,7 @@ python pipeline/panel.py [N]         # sector data — rolling; re-run until cov
 Every module is self-testing (no network, no keys):
 
 ```sh
-python pipeline/geo.py --selftest     # likewise: ingest, classify, bls, panel, build_national, build_all
+python pipeline/geo.py --selftest     # likewise: ingest, bls, panel, build_national, build_all
 ```
 
 ## How the number is built
