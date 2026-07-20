@@ -5,9 +5,9 @@ session**. A fresh context can pick up any task cold: read `CLAUDE.md` first
 (architecture, commands, gotchas), then the task entry here.
 
 **Status:** the national map, sector index, and single-metro page work and are
-committed on `main`, but the site is **not deployed**, the national rate is
-uncalibrated for reposts, occupation coding is the interim NIOCCS, and some
-metros gray out from mis-geocoding.
+committed on `main`. The national rate is now **repost-calibrated** (task 2) and
+**mis-geocoded/CT metros are recovered** (task 3, see CLAUDE.md gotchas). Still
+open: the site is **not deployed**, and occupation coding is the interim NIOCCS.
 
 **Keys are secrets.** `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `BLS_API_KEY`, and
 `GEMINI_API_KEY` live in GitHub Actions repository secrets and local env vars
@@ -29,7 +29,7 @@ tasks 2–3 are independent quick wins and can move around 1 and 4.
   just work).
 - **Depends on:** nothing.
 
-## 2. Repost-calibrate the national rate  *(quick quality win)*
+## 2. Repost-calibrate the national rate  ✅ DONE
 - **Goal:** absolute rates read realistically instead of inflated by reposts.
 - **Scope:** in `pipeline/build_national.py` `_measure`, dedupe the 50 postings
   already fetched (reuse `ingest.dedupe_semantic` + `ingest.cap_per_employer`)
@@ -41,7 +41,7 @@ tasks 2–3 are independent quick wins and can move around 1 and 4.
   sane, and the map still renders.
 - **Depends on:** nothing.
 
-## 3. Recover mis-geocoded metros
+## 3. Recover mis-geocoded metros  ✅ DONE
 - **Goal:** metros graying because their name is ambiguous on Adzuna
   (e.g. "Albany, OR" → Albany NY, so `f_m ≈ 0`) show correctly.
 - **Scope:** detect high-`count`/near-zero-`f_m` metros and retry `ingest._get`

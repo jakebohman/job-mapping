@@ -100,6 +100,33 @@ def labor_force_batch(codes, start_year, end_year, pause=0.5):
                     time.sleep(2 ** attempt)
         if pause and i + chunk < len(sids):
             time.sleep(pause)
+
+    # Fallback for multi-state metros BLS files under a non-principal state
+    # (Davenport IA-IL -> IL): retry the other constituent states' series for
+    # any metro still without a labor force.
+    alt_to_code = {}
+    for c in codes:
+        if c in geo.CBSA_COUNTIES and not (out.get(c) or {}).get("labor_force"):
+            for sid in geo.CBSA_COUNTIES[c].get("laus_lf_series_alts", []):
+                alt_to_code[sid] = c
+    alt_sids = list(alt_to_code)
+    for i in range(0, len(alt_sids), chunk):
+        batch = alt_sids[i:i + chunk]
+        try:
+            r = requests.post(url, json={"seriesid": batch, "startyear": str(start_year),
+                                         "endyear": str(end_year), **extra},
+                              headers={"Content-Type": "application/json"}, timeout=30)
+            r.raise_for_status()
+            js = r.json()
+            if js.get("status") != "REQUEST_SUCCEEDED":
+                continue
+            for code, rec in _parse_batch(js["Results"]["series"], alt_to_code).items():
+                if rec.get("labor_force") is not None:      # only fill real hits
+                    out[code] = rec
+        except Exception:
+            pass                                            # best-effort fallback
+        if pause and i + chunk < len(alt_sids):
+            time.sleep(pause)
     return out
 
 

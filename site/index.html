@@ -139,7 +139,7 @@ Promise.all([
   const byCbsa={}; nat.metros.forEach(m=>byCbsa[m.cbsa]=m);
   const rank={}; nat.metros.filter(m=>m.rate!=null).forEach((m,i)=>rank[m.cbsa]=i+1);
   const shadedN = nat.metros.filter(m=>!m.below_threshold).length;
-  const [d0,d1] = nat.domain;
+  const [d0,d1] = nat.rate_range;   // scale spans the true lowest..highest metro rate
 
   const proj = d3.geoAlbersUsa().fitSize([960,600], states);
   const path = d3.geoPath(proj);
@@ -156,7 +156,9 @@ Promise.all([
   const tip=document.getElementById("tip");
   function fillFor(rec){
     if(!rec || rec.below_threshold || rec.rate==null) return "var(--nodata)";
-    return ramp((rec.rate-d0)/(d1-d0||1));
+    // sqrt (perceptual) so the mid-range bulk stays distinguishable and a lone
+    // high outlier (e.g. The Villages) doesn't wash the rest of the map pale
+    return ramp(Math.sqrt(Math.max(0,(rec.rate-d0)/(d1-d0||1))));
   }
   metros.features.forEach(f=>{
     const d=path(f); if(!d) return;
@@ -183,7 +185,7 @@ Promise.all([
   document.getElementById("rampbar").style.background =
     `linear-gradient(90deg, ${RAMP.join(",")})`;
   document.getElementById("tlo").textContent = d0!=null? d0.toFixed(0) : "";
-  document.getElementById("thi").textContent = d1!=null? d1.toFixed(0)+"+" : "";
+  document.getElementById("thi").textContent = d1!=null? d1.toFixed(0) : "";
 
   document.getElementById("method").textContent = nat.method;
   document.getElementById("stamp").textContent =

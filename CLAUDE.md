@@ -102,19 +102,26 @@ rebuild is never served stale.
 
 - **CBSA (metro) is the primary key everywhere.** County↔CBSA comes only from
   `cbsa_counties.csv` (OMB July 2023). Don't introduce fuzzy name matching.
-- **Small-cell threshold: n ≥ 50.** Metros with fewer than 50 in-CBSA postings
-  (or no labor force) gray out — disclosed on the page. (Poisson CV ≤ 15%.)
+- **Small-cell threshold: n ≥ 50 effective postings AND f_m ≥ 0.10.** Metros
+  with fewer than 50 effective in-CBSA postings, no labor force, or an in-CBSA
+  sample fraction below 10% gray out — disclosed on the page. (Poisson CV ≤ 15%.)
+  The f_m floor matters because `effective = count × f_m × dedup_ratio` and a
+  huge radius `count` can clear 50 on a ~1-posting f_m (Columbus IN read a rate
+  off a single in-sample posting until this floor was added); below 10% the
+  measurement is radius bleed, not the metro.
 - **Interim substitutions**, each with an isolated swap-in point:
   - Occupation coding uses the free, keyless **NIOSH NIOCCS autocoder**
     (`classify.py`) in place of an LLM (no LLM key yet). NIOCCS leaves ~21%
     uncoded and is title-only; an LLM reading the description will replace it.
   - Outlier sentences are **templated** from the numbers, not LLM-written.
   - Storage is **JSON**, not the Parquet/DuckDB the long-term design calls for.
-- **The rate is uncalibrated for reposts.** Adzuna is repost-saturated (~58% of
-  a raw sample were near-duplicates). `ingest.dedupe_semantic` and
-  `cap_per_employer` handle the sample path, but the national `count` field
-  can't be de-duped — so the map is honest only about *relative* intensity;
-  absolute numbers run high and this is disclosed.
+- **The national rate is repost-calibrated, per metro.** Adzuna is
+  repost-saturated (~58% of a raw sample were near-duplicates). The national
+  `count` field can't itself be de-duped, so `build_national._measure` derives a
+  per-metro `dedup_ratio` from the 50 sampled postings (`ingest.dedupe_semantic`
+  over the in-CBSA subset) and folds it into `effective = count × f_m ×
+  dedup_ratio`. It's a *lower* bound on distinct demand (dedup can merge genuine
+  multi-site openings), and disclosed as such.
 
 ## Gotchas that will bite
 
@@ -130,7 +137,41 @@ rebuild is never served stale.
   Use PowerShell: `Get-CimInstance Win32_Process | Where CommandLine -match ... | Stop-Process`.
   (Two build processes once raced and corrupted a cache because `pkill` missed them.)
 - **Ambiguous metro names geocode wrong on Adzuna** ("Albany, OR" → Albany NY).
-  These self-gray via `f_m ≈ 0`, so they're wrong-but-not-shown, not silently bad.
+  These self-gray via `f_m ≈ 0`. `build_national._measure` retries such metros
+  (high `count`, `f_m < 0.05`, and the sample's modal state ≠ the CBSA's) with a
+  `where` anchored on a Central county ("Jackson County, Oregon") and keeps it
+  only if f_m improves — this recovers e.g. Medford OR. Same-state radius bleed
+  (Columbus IN → Indianapolis) fails the wrong-state test and correctly stays gray.
+- **Connecticut uses planning regions; Adzuna uses old counties.** The OMB 2023
+  crosswalk keys the 5 CT CBSAs on "…Planning Region" names, but Adzuna reports
+  old CT county names ("Fairfield County", …), so every CT posting failed the
+  county→CBSA join and all CT metros read f_m=0 (all gray). `geo.CT_COUNTY_CBSA`
+  aliases the old counties to their dominant CBSA. County granularity: old New
+  Haven County splits between the New Haven and Waterbury CBSAs, so it maps to
+  New Haven and Waterbury stays gray until a town-level split is worth it.
+- **Multi-state metros' LAUS series lives under ONE state.** BLS files a
+  multi-state MSA's total labor-force series under the principal (first-in-title)
+  state, so `geo` derives the series' state prefix from the title via
+  `STATE_ABBR_FIPS` ("Chicago-…, IL-IN" → IL), not from an arbitrary constituent
+  county — otherwise the series 404s and the metro grays for want of a
+  denominator (this had silently grayed DC, Chicago, Philadelphia, Boston,
+  Portland). A few metros BLS files under the *second* state (Davenport IA-IL →
+  IL); `geo` keeps `laus_lf_series_alts` and `bls.labor_force_batch` retries them.
+- **Adzuna's county-equivalent naming is inconsistent.** Louisiana reports
+  *parishes*, Alaska *boroughs/census areas/municipalities*, and non-contiguous
+  places (HI, AK) drop the suffix entirely ("Honolulu" not "Honolulu County").
+  `geo.county_of` matches `COUNTY_SUFFIXES` and falls back to the `area[2]` slot;
+  `geo._bare_county` adds suffix-stripped aliases to the reverse index (the plain
+  "County" strip is limited to Hawaii to avoid the VA "Richmond city" vs
+  "Richmond County" collision). Also "Urban Honolulu" won't geocode — stripped to
+  "Honolulu" in `principal_place`. These recovered New Orleans, Honolulu,
+  Anchorage, etc. Puerto Rico is excluded entirely
+  (`build_national.EXCLUDED_STATES = {"72"}`): Adzuna returns unreliable (often
+  Florida) locations for PR searches, so those 6 metros aren't measurable.
+- **The map's color scale is perceptual (sqrt).** `index.html` spans the true
+  min→max rate (`nat.rate_range`) but maps color through `Math.sqrt` so one
+  extreme metro (The Villages, FL ~268/1,000) doesn't wash the mid-range pale.
+  `build_national` still emits a robust 5–95 pct `domain`, now unused by the page.
 
 ## Data sources and their limits
 
@@ -154,9 +195,9 @@ push only when the user asks (they push themselves).
 **Not built yet:** LLM occupation classification + skill extraction (needs a
 Groq/Gemini key and, for skills, NLx's fuller text); the validation harness
 (300 hand labels, NIOCCS-agreement, a disclosed error rate — a hard requirement
-in the original design); repost calibration of the national rate; three-month
-trend and remote-share views; Parquet/DuckDB storage; a GitHub Action to rebuild
-weekly and deploy to Pages.
+in the original design); three-month trend and remote-share views;
+Parquet/DuckDB storage; a GitHub Action to rebuild weekly and deploy to Pages.
+(Repost calibration of the national rate and mis-geocode recovery are **done**.)
 
 **Original design intent (aspirational, for context):** five views (postings
 per 1,000; occupation-mix deviation; skill premium; remote share; 3-month

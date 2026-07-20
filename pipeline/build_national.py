@@ -30,26 +30,74 @@ import ingest
 
 OUT = Path(__file__).parent.parent / "site" / "data"
 MIN_COUNT = 50          # CLAUDE.md small-cell threshold (in-CBSA postings)
+MIN_FM = 0.10           # the whole rate rests on f_m; below ~5 of the 50 sampled
+                        # postings falling in-CBSA it is too noisy to trust (a
+                        # huge radius count x a 1-posting f_m still clears
+                        # MIN_COUNT), so gray out — this is radius bleed, not a
+                        # measured metro (e.g. Columbus IN measuring Indianapolis)
 CALL_INTERVAL = 2.6     # Adzuna free tier ~25/min
+EXCLUDED_STATES = {"72"}   # Puerto Rico: Adzuna returns unreliable locations for
+                           # PR searches (often Florida), so it isn't measurable
 
 
-def _measure(app_id, app_key, code, tries=4):
-    """One Adzuna call → {count, f_m}: total match count plus the share of the
-    returned 50 postings whose reported county lies in this CBSA."""
-    d = geo.CBSA_COUNTIES[code]
+def _fetch(app_id, app_key, where, distance, tries=4):
     for attempt in range(tries):
         try:
-            js = ingest._get(app_id, app_key, 1, d["adzuna_where"],
-                             distance=d["radius_km"], rpp=50)
-            break
+            return ingest._get(app_id, app_key, 1, where, distance=distance, rpp=50)
         except Exception:
             if attempt == tries - 1:
                 raise
             time.sleep(2 ** attempt)
+
+
+def _metrics(js, code):
+    """Adzuna response → {count, f_m, dedup_ratio} for CBSA `code`.
+    f_m = share of the returned 50 postings whose reported county lies in this
+    CBSA; dedup_ratio = distinct share of those in-CBSA postings after collapsing
+    reposts by title+employer (reuses ingest.dedupe_semantic — the count field
+    itself can't be de-duped, so this per-metro ratio calibrates it down)."""
     results = js.get("results", [])
-    in_cbsa = sum(1 for r in results if geo.cbsa_of(r) == code)
-    return {"count": js.get("count", 0),
-            "f_m": round(in_cbsa / len(results), 3) if results else 0.0}
+    in_cbsa = [r for r in results if geo.cbsa_of(r) == code]
+    distinct = ingest.dedupe_semantic(in_cbsa)
+    return {
+        "count": js.get("count", 0),
+        "f_m": round(len(in_cbsa) / len(results), 3) if results else 0.0,
+        "dedup_ratio": round(len(distinct) / len(in_cbsa), 3) if in_cbsa else 1.0,
+    }
+
+
+def _wrong_state(js, code):
+    """True if the sample's modal state differs from the metro's Central-county
+    state — the fingerprint of an ambiguous geocode (Adzuna picked the wrong
+    same-named city), as opposed to radius bleed into a same-state neighbor
+    (Columbus IN's radius measuring Indianapolis), which correctly stays gray."""
+    states = {}
+    for r in js.get("results", []):
+        cc = geo.county_of(r)
+        if cc:
+            states[cc[0]] = states.get(cc[0], 0) + 1
+    if not states:
+        return False
+    modal = max(states, key=states.get)
+    expected = geo.CBSA_COUNTIES[code].get("central_state")
+    return bool(expected) and modal != expected
+
+
+def _measure(app_id, app_key, code):
+    """One Adzuna call → {count, f_m, dedup_ratio}. If the metro reads f_m≈0
+    despite a real count *and* the sample landed in the wrong state (ambiguous
+    geocode), retry anchored on a Central county and keep it only if f_m rises."""
+    d = geo.CBSA_COUNTIES[code]
+    js = _fetch(app_id, app_key, d["adzuna_where"], d["radius_km"])
+    m = _metrics(js, code)
+    if m["count"] >= MIN_COUNT and m["f_m"] < 0.05 and _wrong_state(js, code):
+        county, state = d.get("central_county"), d.get("central_state")
+        if county and state:
+            alt = f"{county}, {state}"                  # e.g. "Linn County, Oregon"
+            m2 = _metrics(_fetch(app_id, app_key, alt, d["radius_km"]), code)
+            if m2["f_m"] > m["f_m"]:
+                return m2
+    return m
 
 
 def _percentile(sorted_vals, p):
@@ -60,34 +108,44 @@ def _percentile(sorted_vals, p):
 
 
 def build_report(measures, labor, names):
-    """Pure: {code:{count,f_m}}, {code:{labor_force}}, {code:name} -> report.
-    effective in-CBSA postings = count*f_m; rate = 1000*effective/labor_force;
-    below threshold if effective<50 or no labor force."""
+    """Pure: {code:{count,f_m,dedup_ratio}}, {code:{labor_force}}, {code:name} ->
+    report. effective in-CBSA postings = count*f_m*dedup_ratio (dedup_ratio
+    corrects for reposts; a pre-calibration entry lacking it is left uncorrected
+    at 1.0); rate = 1000*effective/labor_force; below threshold if effective<50
+    or no labor force."""
     metros, rates = [], []
     for code, mz in measures.items():
+        if geo.CBSA_COUNTIES.get(code, {}).get("state_fips") in EXCLUDED_STATES:
+            continue                              # excluded (PR): unreliable source
         count, f_m = mz["count"], mz["f_m"]
-        effective = round(count * f_m)
+        dedup = mz.get("dedup_ratio", 1.0)      # pre-calibration entries: no correction
+        effective = round(count * f_m * dedup)
         lf = (labor.get(code) or {}).get("labor_force")
-        below = effective < MIN_COUNT or not lf
+        below = effective < MIN_COUNT or not lf or f_m < MIN_FM
         rate = None if below else round(1000 * effective / lf, 2)
         if rate is not None:
             rates.append(rate)
         metros.append({"cbsa": code, "name": names.get(code, code),
-                       "count": count, "f_m": f_m, "effective": effective,
-                       "labor_force": lf, "rate": rate, "below_threshold": below})
+                       "count": count, "f_m": f_m, "dedup_ratio": dedup,
+                       "effective": effective, "labor_force": lf, "rate": rate,
+                       "below_threshold": below})
     metros.sort(key=lambda m: (m["rate"] is None, -(m["rate"] or 0)))
     rates.sort()
     return {
         "metric": "Postings per 1,000 workers",
         "method": ("One Adzuna count per metro, corrected to CBSA geography by "
-                   "the in-sample in-CBSA fraction (f_m), divided by the metro's "
-                   "BLS LAUS labor force, x1000. Not repost-corrected, so read "
-                   "the map for relative intensity — absolute values run high. "
-                   "Metros with fewer than 50 in-CBSA postings or no labor force "
-                   "are shown gray."),
+                   "the in-sample in-CBSA fraction (f_m) and down-corrected for "
+                   "reposts by the in-sample distinct fraction (title+employer "
+                   "dedup), divided by the metro's BLS LAUS labor force, x1000. "
+                   "Dedup collapses genuine multi-site openings too, so this is a "
+                   "lower bound on distinct demand. Metros with fewer than 50 "
+                   "effective in-CBSA postings, an in-CBSA sample fraction below "
+                   "10% (too little of the radius sample lands in the metro to "
+                   "trust the rate), or no labor force are shown gray."),
         "caveats": [
             "Job-posting demand, not employment.",
-            "Not repost-corrected; relative shading is the signal, not the number.",
+            "Repost-corrected via the in-sample distinct fraction; a lower bound "
+            "on distinct demand (multi-site openings can collapse together).",
             f"{sum(m['below_threshold'] for m in metros)} of {len(metros)} "
             "measured metros are below threshold (gray).",
         ],
@@ -106,10 +164,12 @@ def run():
     cache_path = OUT / "_national_cache.json"
     measures = json.loads(cache_path.read_text()) if cache_path.exists() else {}
 
-    codes = sorted(geo.CBSA_COUNTIES)
+    codes = [c for c in sorted(geo.CBSA_COUNTIES)
+             if geo.CBSA_COUNTIES[c]["state_fips"] not in EXCLUDED_STATES]
+    measures = {c: m for c, m in measures.items() if c in set(codes)}   # drop excluded
     for n, code in enumerate(codes):
-        if code in measures:
-            continue
+        if code in measures and "dedup_ratio" in measures[code]:
+            continue      # backfill entries measured before repost calibration
         try:
             measures[code] = _measure(app_id, app_key, code)
         except Exception as e:
@@ -149,18 +209,40 @@ def run():
 
 def _selftest():
     assert _percentile([1, 2, 3, 4, 5], 0) == 1 and _percentile([1, 2, 3, 4, 5], 100) == 5
-    # A: 1000 count x f_m 1.0 = 1000 eff / 100k LF -> 10.0
-    # B: 1000 x 0.02 = 20 eff -> below threshold (radius mostly outside CBSA)
-    # C: 500 x 1.0 = 500 eff / 200k -> 2.5
-    measures = {"A": {"count": 1000, "f_m": 1.0}, "B": {"count": 1000, "f_m": 0.02},
-                "C": {"count": 500, "f_m": 1.0}}
+
+    # _metrics: f_m = in-CBSA share; dedup_ratio = distinct share of in-CBSA.
+    fr = {"location": {"area": ["US", "Ohio", "Franklin County", "X"]},
+          "title": "Nurse", "company": {"display_name": "Acme"}}
+    repost = dict(fr)                                   # same title+employer -> repost
+    out = {"location": {"area": ["US", "Indiana", "Marion County", "Y"]}}  # not 18140
+    m = _metrics({"count": 900, "results": [fr, repost, out]}, "18140")
+    assert m["count"] == 900 and m["f_m"] == round(2 / 3, 3) and m["dedup_ratio"] == 0.5
+
+    # _wrong_state: modal state != the metro's Central-county state (ambiguous
+    # geocode) is True; same-state radius bleed is False.
+    ind = {"location": {"area": ["US", "Indiana", "Marion County", "Y"]}}
+    oh = {"location": {"area": ["US", "Ohio", "Franklin County", "X"]}}
+    assert _wrong_state({"results": [ind, ind, oh]}, "18140") is True
+    assert _wrong_state({"results": [oh, oh, ind]}, "18140") is False
+
+    # build_report: effective = count * f_m * dedup_ratio.
+    # A: 1000 x 1.0 x 0.5 = 500 eff / 100k LF -> 5.0
+    # B: 1000 x 0.02 x 0.5 = 10 eff -> below threshold (radius mostly outside CBSA)
+    # C: 500 x 1.0, no dedup_ratio (pre-calibration entry -> 1.0) -> 500 / 200k -> 2.5
+    # D: 5000 x 0.04 = 200 eff (clears MIN_COUNT) but f_m 0.04 < MIN_FM -> gray
+    #    (the 1-posting-f_m case: a huge radius count can't rescue a thin sample)
+    measures = {"A": {"count": 1000, "f_m": 1.0, "dedup_ratio": 0.5},
+                "B": {"count": 1000, "f_m": 0.02, "dedup_ratio": 0.5},
+                "C": {"count": 500, "f_m": 1.0},
+                "D": {"count": 5000, "f_m": 0.04, "dedup_ratio": 1.0}}
     labor = {"A": {"labor_force": 100000}, "B": {"labor_force": 50000},
-             "C": {"labor_force": 200000}}
-    rep = build_report(measures, labor, {"A": "A", "B": "B", "C": "C"})
+             "C": {"labor_force": 200000}, "D": {"labor_force": 100000}}
+    rep = build_report(measures, labor, {"A": "A", "B": "B", "C": "C", "D": "D"})
     by = {m["cbsa"]: m for m in rep["metros"]}
-    assert by["A"]["rate"] == 10.0 and by["C"]["rate"] == 2.5
+    assert by["A"]["rate"] == 5.0 and by["C"]["rate"] == 2.5   # C exercises dedup default 1.0
     assert by["B"]["below_threshold"] and by["B"]["rate"] is None   # f_m corrects the bleed
-    assert rep["metros"][0]["cbsa"] == "A" and rep["metros"][-1]["cbsa"] == "B"
+    assert by["D"]["effective"] == 200 and by["D"]["below_threshold"]  # MIN_FM floor
+    assert rep["metros"][0]["cbsa"] == "A"                       # highest rate first
     print("selftest ok")
 
 
