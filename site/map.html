@@ -131,8 +131,9 @@ function projectPaths(features, W, H, pad){
 const fmt = n => n==null ? "—" : n.toLocaleString();
 const sectorName = s => s.replace(/\s*Jobs$/,"");
 const metroName = full => {
-  const c = full.split(",")[0].split("-")[0].trim();
-  return c === "Washington" ? "Washington, DC" : c;   // disambiguate the city from the state
+  const city = full.split(",")[0].split("-")[0].trim();
+  const st = (full.split(",")[1] || "").trim().split(/[-/]/)[0].trim();  // first state
+  return st ? `${city}, ${st}` : city;                 // "Baltimore, MD"; "Washington, DC"
 };
 const nocache = {cache:"no-store"};
 

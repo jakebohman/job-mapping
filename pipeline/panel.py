@@ -116,11 +116,12 @@ def rank_outliers(per_metro, national_share):
 
 
 def per_metro_outliers(cells, top_n=4):
-    """Group ranked cells by metro → {cbsa: {name, total, over, under}}, each
-    metro's top-N over- and under-represented sectors (by |log2_ratio|). Feeds
-    the national map's click-through side panel; reuses the cell dicts as-is.
+    """Group ranked cells by metro → {cbsa: {name, over, under}}, each metro's
+    top-N over- and under-represented sectors (by |log2_ratio|). Feeds Metro
+    Detail (map.html) and the sector-page spotlight; reuses the cell dicts as-is.
     `cells` must be sorted by |log2_ratio| descending (as rank_outliers returns),
-    so the first over/under per metro are already its strongest."""
+    so the first over/under per metro are already its strongest. Metros with no
+    cell above the floors are absent here — build_panel_report seeds those."""
     by = {}
     for c in cells:
         m = by.setdefault(c["cbsa"], {"name": c["metro"], "over": [], "under": []})
@@ -187,8 +188,12 @@ def build_panel_report(per_metro):
     # Lead = sharpest over-representation, for the page's hero reading.
     lead = over[0] if over else (ranked[0] if ranked else None)
     by_metro = per_metro_outliers(ranked)
-    for code, m in by_metro.items():
-        m["total"] = sum(per_metro[code]["mix"].values())
+    # Seed every collected metro (even one with no cell above the floors) so Metro
+    # Detail can tell "collected, nothing notable" from "not yet collected" —
+    # otherwise a low-volume metro would read as pending forever.
+    for code, v in per_metro.items():
+        m = by_metro.setdefault(code, {"name": v["name"], "over": [], "under": []})
+        m["total"] = sum(v["mix"].values())
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "metros_sampled": len(per_metro),
@@ -309,6 +314,11 @@ def _selftest():
     assert {"over_index", "under_index", "by_metro"} <= rep.keys()
     assert all(c["ratio"] >= 1 for c in rep["over_index"])
     assert all(c["ratio"] < 1 for c in rep["under_index"])
+
+    # a collected metro with no cell above the floors is still seeded (not "pending")
+    pm2 = dict(per_metro, Z={"name": "Metro Z", "mix": {"IT Jobs": 10}})   # tiny -> no cells
+    zb = build_panel_report(pm2)["by_metro"]
+    assert zb["Z"] == {"name": "Metro Z", "over": [], "under": [], "total": 10}
     print("selftest ok")
 
 
