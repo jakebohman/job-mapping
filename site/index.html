@@ -12,7 +12,7 @@
   :root{
     --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
     --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
-    --base:#e4e9f0; --base-line:#ccd4df; --nodata:#c8cfd9; --hi:#131b26;
+    --base:#e4e9f0; --base-line:#ccd4df; --nodata:#b7bfca; --hi:#131b26;
     --metro-line:#8b9aab;
     --serif:"Fraunces",Georgia,"Times New Roman",serif;
     --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
@@ -22,7 +22,7 @@
     :root{
       --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
       --faint:#6d7c91; --rule:#25303d; --hair:#1c2530;
-      --base:#1a2430; --base-line:#26313f; --nodata:#2c3949; --hi:#eef4fb;
+      --base:#1a2430; --base-line:#26313f; --nodata:#39424e; --hi:#eef4fb;
       --metro-line:#465a70;
     }
   }
@@ -45,7 +45,13 @@
   .standfirst{margin:16px 0 0;max-width:62ch;color:var(--muted);font-size:16px;}
   .standfirst b{color:var(--ink);font-weight:500;}
 
-  .maparea{position:relative;margin:14px 0 0;}
+  .controls{margin:16px 0 0;font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+            text-transform:uppercase;color:var(--faint);}
+  .controls select{margin-left:8px;font-family:var(--sans);font-size:14px;
+                   text-transform:none;letter-spacing:0;padding:6px 10px;
+                   border:1px solid var(--rule);border-radius:8px;
+                   background:var(--panel);color:var(--ink);}
+  .maparea{position:relative;margin:10px 0 0;}
   svg{width:100%;height:auto;display:block;}
   .state{fill:var(--base);stroke:var(--base-line);stroke-width:.5;}
   .metro{stroke:var(--metro-line);stroke-width:.5;stroke-linejoin:round;cursor:pointer;}
@@ -93,6 +99,8 @@
     workforce. Hover a metro for its rate; click one to open its full detail.</p>
   </header>
 
+  <div class="controls">Shade the map by <select id="metric"></select></div>
+
   <div class="maparea">
     <svg id="map" viewBox="0 0 960 600" role="img" aria-label="US metro hiring-intensity choropleth"></svg>
     <div class="tip" id="tip"></div>
@@ -101,7 +109,7 @@
   <div class="legend">
     <div class="ramp">
       <div class="bar" id="rampbar"></div>
-      <div class="ticks"><span id="tlo"></span><span class="label">postings / 1,000 workers</span><span id="thi"></span></div>
+      <div class="ticks"><span id="tlo"></span><span class="label" id="metricLabel">postings / 1,000 workers</span><span id="thi"></span></div>
     </div>
     <div class="label"><span class="sw"></span>below 50 postings / no data</div>
   </div>
@@ -118,8 +126,8 @@
 <script src="vendor/d3-geo.min.js"></script>
 <script>
 const RAMP = matchMedia('(prefers-color-scheme: dark)').matches
-  ? ["#2b4a63","#356a90","#4b93c0","#6fb4e2","#9fd2f4","#cdeaff"]
-  : ["#cfe1f2","#9fc4e4","#6ba0d0","#3f7cb5","#215d94","#0c3c63"];
+  ? ["#24425e","#316a97","#4d92c8","#77b8e8","#a9d6f6","#d8f0ff"]
+  : ["#e5effb","#b4d3f0","#82b0df","#5389c8","#2d66a4","#123f66"];
 
 const lerp=(a,b,t)=>Math.round(a+(b-a)*t);
 const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
@@ -130,16 +138,48 @@ function ramp(t){
   return `rgb(${lerp(a[0],b[0],f)},${lerp(a[1],b[1],f)},${lerp(a[2],b[2],f)})`;
 }
 
+const sectorName = s => s.replace(/\s*Jobs$/,"");
+const fmtVal = v => v==null ? "" : (v<10 ? v.toFixed(1) : v.toFixed(0));
 const nocache = {cache: "no-store"};   // data is rebuilt regularly; never serve stale
 Promise.all([
   fetch("data/national.json", nocache).then(r=>r.json()),
   fetch("data/us_states.geojson", nocache).then(r=>r.json()),
   fetch("data/us_metros.geojson", nocache).then(r=>r.json()),
-]).then(([nat, states, metros])=>{
+  fetch("data/outliers.json", nocache).then(r=>r.json()).catch(()=>({})),
+]).then(([nat, states, metros, sect])=>{
   const byCbsa={}; nat.metros.forEach(m=>byCbsa[m.cbsa]=m);
   const rank={}; nat.metros.filter(m=>m.rate!=null).forEach((m,i)=>rank[m.cbsa]=i+1);
   const shadedN = nat.metros.filter(m=>!m.below_threshold).length;
-  const [d0,d1] = nat.rate_range;   // scale spans the true lowest..highest metro rate
+  const shares = (sect && sect.category_shares) || {};
+  const categories = (sect && sect.categories) || [];
+
+  // metric: null = total jobs/1,000; else a category label. A category's value is
+  // the metro's total rate x that category's share of its postings. The color
+  // domain is recomputed per metric so each has its own low..high spread.
+  let metric = null, d0 = null, d1 = null, hiClip = false;
+  const valueOf = rec => {
+    if(!rec || rec.below_threshold || rec.rate==null) return null;
+    if(metric===null) return rec.rate;
+    const sh = shares[rec.cbsa];
+    return (sh && sh[metric]!=null) ? rec.rate * sh[metric] : null;
+  };
+  function computeDomain(){
+    const vals = nat.metros.map(valueOf).filter(v=>v!=null).sort((a,b)=>a-b);
+    if(!vals.length){ d0=d1=null; hiClip=false; return; }
+    d0 = vals[0];
+    // robust top (95th pct) so a lone extreme metro (e.g. The Villages, 268)
+    // doesn't compress everyone else into the lightest shades; the handful above
+    // it clamp to the darkest color (legend marks this with a "+").
+    d1 = vals[Math.floor(0.95*(vals.length-1))];
+    hiClip = vals[vals.length-1] > d1;
+  }
+  function fillFor(rec){
+    const v = valueOf(rec);
+    if(v==null) return "var(--nodata)";
+    // linear on the robust domain: the lowest rate maps to the lightest shade,
+    // and low/medium/high stay clearly separated
+    return ramp((v-d0)/((d1-d0)||1));
+  }
 
   const proj = d3.geoAlbersUsa().fitSize([960,600], states);
   const path = d3.geoPath(proj);
@@ -154,40 +194,57 @@ Promise.all([
   });
 
   const tip=document.getElementById("tip");
-  function fillFor(rec){
-    if(!rec || rec.below_threshold || rec.rate==null) return "var(--nodata)";
-    // sqrt (perceptual) so the mid-range bulk stays distinguishable and a lone
-    // high outlier (e.g. The Villages) doesn't wash the rest of the map pale
-    return ramp(Math.sqrt(Math.max(0,(rec.rate-d0)/(d1-d0||1))));
+  function tipHTML(rec, name){
+    const v = valueOf(rec);
+    if(v==null){
+      const why = metric===null ? "below threshold" : "no "+sectorName(metric)+" data";
+      return `<div class="m">${name}</div><div class="sub">${why} · click for detail →</div>`;
+    }
+    const unit = metric===null ? "postings" : sectorName(metric)+" jobs";
+    const sub = metric===null
+      ? `#${rank[rec.cbsa]} of ${shadedN}`
+      : `${(shares[rec.cbsa][metric]*100).toFixed(1)}% of its hiring`;
+    return `<div class="m">${name}</div>
+      <div class="r"><b>${v.toFixed(metric===null?1:2)}</b> ${unit} / 1,000 workers</div>
+      <div class="sub">${sub} · click for detail →</div>`;
   }
+
+  const pathByCode={};
   metros.features.forEach(f=>{
     const d=path(f); if(!d) return;
     const code=f.properties.GEOID, rec=byCbsa[code];
     const p=document.createElementNS(NS,"path");
-    p.setAttribute("d",d); p.setAttribute("class","metro"); p.setAttribute("fill",fillFor(rec));
+    p.setAttribute("d",d); p.setAttribute("class","metro"); p.setAttribute("fill","var(--nodata)");
     p.setAttribute("data-cbsa",code);
+    pathByCode[code]=p;
     p.addEventListener("mousemove",e=>{
       tip.style.opacity=1; tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY+14)+"px";
-      const name=(rec&&rec.name)||f.properties.NAME;
-      if(rec&&rec.rate!=null){
-        tip.innerHTML=`<div class="m">${name}</div>
-          <div class="r"><b>${rec.rate.toFixed(1)}</b> postings / 1,000 workers</div>
-          <div class="sub">#${rank[code]} of ${shadedN} · click for detail →</div>`;
-      } else {
-        tip.innerHTML=`<div class="m">${name}</div>
-          <div class="sub">below threshold · click for detail →</div>`;
-      }
+      tip.innerHTML = tipHTML(rec, (rec&&rec.name)||f.properties.NAME);
     });
     p.addEventListener("mouseleave",()=>tip.style.opacity=0);
     p.addEventListener("click",()=>{ location.href = "map.html?metro=" + code; });
     metroG.appendChild(p);
   });
 
-  // legend
   document.getElementById("rampbar").style.background =
     `linear-gradient(90deg, ${RAMP.join(",")})`;
-  document.getElementById("tlo").textContent = d0!=null? d0.toFixed(0) : "";
-  document.getElementById("thi").textContent = d1!=null? d1.toFixed(0) : "";
+
+  function render(){
+    computeDomain();
+    for(const code in pathByCode) pathByCode[code].setAttribute("fill", fillFor(byCbsa[code]));
+    document.getElementById("tlo").textContent = fmtVal(d0);
+    document.getElementById("thi").textContent = fmtVal(d1) + (hiClip ? "+" : "");
+    document.getElementById("metricLabel").textContent =
+      (metric===null ? "postings" : sectorName(metric)+" jobs") + " / 1,000 workers";
+  }
+
+  // category filter — "Total jobs" (default) plus each Adzuna category
+  const sel = document.getElementById("metric");
+  sel.innerHTML = `<option value="">Total jobs</option>` +
+    categories.map(c=>`<option value="${c}">${sectorName(c)} jobs</option>`).join("");
+  sel.addEventListener("change", ()=>{ metric = sel.value || null; render(); });
+
+  render();
 
   document.getElementById("method").textContent = nat.method;
   document.getElementById("stamp").textContent =

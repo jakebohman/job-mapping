@@ -4,105 +4,118 @@ Next steps for Job Maps, ordered and sized so each task fits **one working
 session**. A fresh context can pick up any task cold: read `CLAUDE.md` first
 (architecture, commands, gotchas), then the task entry here.
 
-**Status:** the national map, sector index, and single-metro page work and are
-committed on `main`. The national rate is now **repost-calibrated** (task 2) and
-**mis-geocoded/CT metros are recovered** (task 3, see CLAUDE.md gotchas). Still
-open: the site is **not deployed**, and occupation coding is the interim NIOCCS.
+**Status:** the national map (repost-calibrated, gray-recovered — **369/387
+metros shaded**), the two-chart sector index, and the generic any-metro Metro
+Detail page all work. The front-page map now has a **category filter** (shade by
+any Adzuna category per 1,000 workers) and a **fixed color scale**. Sector data
+covers **147/308 shaded metros** and fills as `panel.py` runs. Still open: there
+is **no one-command reproducible build** (task 1 — the current priority), the
+site is **not deployed**, and the occupation/skills path is parked.
+
+> **⚠ Uncommitted at handover:** the Phase C changes — category filter + color
+> scale (`site/index.html`), `category_shares` (`pipeline/panel.py`), and the
+> gray-recovery + recovery-unify fix (`pipeline/build_national.py`), plus the
+> regenerated `site/data/national.json` (369 shaded) and `outliers.json` — are in
+> the working tree, **not yet committed**. Selftests pass. Commit these first.
 
 **Keys are secrets.** `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `BLS_API_KEY`, and
 `GEMINI_API_KEY` live in GitHub Actions repository secrets and local env vars
 only — never in the repo. `.env` is gitignored; `.env.example` lists names.
 
-Each entry: **Goal · Scope · Done when · Depends on**. Order is a recommendation;
-tasks 2–3 are independent quick wins and can move around 1 and 4.
+Each entry: **Goal · Scope · Done when · Depends on**.
 
 ---
 
-## 1. Deploy the static site to GitHub Pages  *(ship it — do first)*
+## 1. One-command reproducible build — `pipeline/build_all.py`  *(THE priority)*
+- **Goal:** anyone can **clone the repo, put keys in `.env`, run one command, and
+  watch the map fill with fresh data.** Reproducibility is the whole point.
+- **Scope:** a stdlib Python orchestrator (`pipeline/build_all.py`; cross-platform,
+  the repo runs on Windows) that:
+  1. verifies the required keys are set (`ADZUNA_APP_ID`, `ADZUNA_APP_KEY`,
+     `BLS_API_KEY`) and exits with a clear message naming any missing one;
+  2. runs `build_geometry.py` if the geometry outputs are absent (one-time, keyless);
+  3. runs `build_national.py` (resumable) — the national map;
+  4. runs `panel.py` repeatedly until every shaded metro has sector data, **or**
+     until the Adzuna daily cap / a network error stops it (`stale_metros` rolls
+     coverage forward each pass);
+  5. prints a coverage summary (`X/Y shaded`, `N/M metros with sector data`) and,
+     if incomplete, a "re-run to continue" line.
+  Subprocess the existing scripts (each already caches to `site/data/_*_cache.json`
+  and resumes, so the orchestrator stays thin and re-runs are cheap/idempotent).
+  Optional: a `--loop` flag (sleep + retry across days) for unattended runs, and a
+  `--serve` convenience that launches `python -m http.server` in `site/` when done.
+- **Reality to encode in output + docs:** on the Adzuna free tier a full populate
+  spans **a few days** (national ~387 calls; sector ~308 metros × 31 ≈ 9,500
+  calls). One run does a budget's worth and stops gracefully; the committed
+  `site/data/*.json` renders immediately in the meantime. Caches are gitignored,
+  so a fresh clone re-fetches from scratch (that is what makes the data *fresh*).
+- **Done when:** from a fresh clone with keys, running the script (re-run until it
+  reports complete) yields `site/` rendering the fully-shaded map + sector/category
+  data; a second run with warm caches is a fast no-op refresh. Update `README.md`
+  to make this the primary "Run it" path.
+- **Depends on:** nothing. (Commit the uncommitted Phase C changes first.)
+
+## 2. Deploy the static site to GitHub Pages  *(ship it)*
 - **Goal:** the current `site/` is live at a public URL.
 - **Scope:** add `.github/workflows/pages.yml` using `actions/upload-pages-artifact`
   (path: `site/`) + `actions/deploy-pages`; enable Pages in repo settings. It
   publishes the already-committed `site/data/*`, so the map works on first deploy.
-- **Done when:** the Pages URL renders the map (metros shaded, hover works);
-  confirm the vendored `site/vendor/d3-geo`, `site/fonts.css`, and the pages'
-  `{cache:'no-store'}` data fetches all load over Pages (all same-origin — should
-  just work).
+- **Done when:** the Pages URL renders the map (metros shaded, hover works,
+  category filter works); the vendored `site/vendor/d3-geo`, `site/fonts.css`, and
+  the `{cache:'no-store'}` data fetches all load over Pages (all same-origin).
 - **Depends on:** nothing.
 
-## 2. Repost-calibrate the national rate  ✅ DONE
-- **Goal:** absolute rates read realistically instead of inflated by reposts.
-- **Scope:** in `pipeline/build_national.py` `_measure`, dedupe the 50 postings
-  already fetched (reuse `ingest.dedupe_semantic` + `ingest.cap_per_employer`)
-  to a per-metro dedup ratio and fold it into `effective`
-  (`count × f_m × dedup`). Update the `method`/`caveats` strings; rebuild
-  `national.json` (`python pipeline/build_national.py` — counts are cached, so
-  this is cheap).
-- **Done when:** shaded rates land roughly 15–40/1,000, the color domain looks
-  sane, and the map still renders.
-- **Depends on:** nothing.
+## 3. Weekly auto-rebuild GitHub Action  *(completes "ship it live"; needs task 1 & 2)*
+- **Goal:** data refreshes on a schedule and redeploys automatically — this is
+  also the **scheduler** for the rolling sector fill (see Done §e).
+- **Scope:** `.github/workflows/rebuild.yml` on a cron (+ `workflow_dispatch`) that
+  runs the orchestrator from task 1 (or `build_national.py` + `panel.py` directly)
+  with repo secrets, commits the regenerated `site/data`, and triggers the Pages
+  deploy. Persist `site/data/_*_cache.json` across runs via `actions/cache`
+  (labor force especially — stable, saves BLS quota; the mix cache lets the rolling
+  fill advance run-over-run instead of restarting). If a run hits Adzuna's daily
+  cap, commit partial data and let the next run continue.
+- **Done when:** a manual `workflow_dispatch` run updates `site/data` and the live
+  map reflects the change; consecutive scheduled runs visibly grow sector coverage.
+- **Depends on:** tasks 1 and 2.
 
-## 3. Recover mis-geocoded metros  ✅ DONE
-- **Goal:** metros graying because their name is ambiguous on Adzuna
-  (e.g. "Albany, OR" → Albany NY, so `f_m ≈ 0`) show correctly.
-- **Scope:** detect high-`count`/near-zero-`f_m` metros and retry `ingest._get`
-  with a disambiguating `where` — append a central county name, or project the
-  CBSA centroid from `site/data/us_metros.geojson` and use Adzuna's lat/long +
-  small distance. Reuse `geo`.
-- **Done when:** the gray count drops; spot-check that Albany OR and a few other
-  ambiguous metros now shade.
-- **Depends on:** nothing (same `_measure` path as task 2 — consider doing them
-  together).
+## 4. Occupations & skills (Gemini) + validation harness  *(PARKED — deprioritized)*
+- **Context:** the original-design centerpiece, but the user redirected away from
+  it toward the counts-based map (category filter, gray recovery). The counts path
+  is bias-immune; occupation classification reintroduces Adzuna's advertiser-ranking
+  bias and needs a hand-labeled error rate. Revisit only if there's appetite.
+- **Scope (if resumed):** a Gemini coder behind `classify.code_title`'s swap point
+  (title + 500-char description → SOC major/detailed + skills), NIOCCS kept as the
+  independent validator; then a local CLI to hand-label ~300 postings and report a
+  Wilson-95%-CI major-group accuracy + LLM↔NIOCCS agreement on the site footer.
+  `GEMINI_API_KEY` is available. `pipeline/metro_map.py` (the old Columbus-only
+  occupation build, now unused by the site) is the starting point.
+- **Depends on:** nothing hard; the error rate is human-gated (someone labels 300).
 
-## 4. Weekly auto-rebuild GitHub Action  *(completes "ship it live")*
-- **Goal:** data refreshes weekly and redeploys automatically.
-- **Scope:** `.github/workflows/rebuild.yml` on a weekly cron (+ `workflow_dispatch`):
-  run `pipeline/build_national.py` and `pipeline/panel.py` with the repo secrets,
-  commit the regenerated `site/data`, and trigger the Pages deploy. Persist
-  `site/data/_lf_cache.json` across runs via `actions/cache` (labor force is
-  stable — saves BLS quota); let Adzuna counts refresh fresh each week. If the
-  run hits Adzuna's daily cap partway, commit partial data (the rest grays) and
-  let the next run continue.
-- **Done when:** a manual `workflow_dispatch` run updates `site/data` and the
-  live map reflects the change.
-- **Depends on:** task 1; best after 2–3 so it ships calibrated data.
+## 5. Later views + storage  *(park until earlier work lands / time passes)*
+- **Remote-share view** — a counts-based "remote postings ÷ total" per metro if
+  Adzuna exposes a usable remote signal (verify first); fits the map's category
+  filter naturally.
+- **Three-month trend** — needs ~13 weekly snapshots from task 3, so gated on time.
+- **Parquet/DuckDB storage** — only if data volume outgrows the current static JSON.
 
-## 5. LLM occupation classification (Gemini)  *(key available)*
-- **Goal:** replace NIOCCS's title-only coding with title + 500-char description
-  → SOC major (+ detailed) + extracted skills.
-- **Scope:** add a Gemini backend behind a provider-neutral function mirroring
-  `classify.code_title`; reuse `classify_sample`'s title cache and
-  `SOC_MAJOR_TITLES`. Make the LLM the primary coder and keep NIOCCS as the
-  independent validator. Reads `GEMINI_API_KEY` from the env.
-- **Done when:** a Columbus sample codes with skills; LLM↔NIOCCS agreement is
-  reported; the uncoded rate drops well below NIOCCS's ~21%.
-- **Depends on:** nothing hard; pairs with task 6.
+---
 
-## 6. Validation harness + disclosed error rate  *(design hard-requirement)*
-- **Goal:** a measured classification accuracy, shown on the site.
-- **Scope:** a small local CLI to hand-label ~300 postings (stratified by SOC
-  major and metro-size tercile); compute major-group accuracy with a Wilson 95%
-  CI and LLM↔NIOCCS agreement; render the number in the page footer; keep a
-  ~50-item golden set for regression. Reuse `classify.py`.
-- **Done when:** the labeling flow runs, the accuracy + CI compute, and the
-  figure appears on the site.
-- **Depends on:** task 5.
-
-## 7. Scale the sector index + map↔metro integration  ◐ CODE DONE, COVERAGE FILLING
-- **Status:** built. The US map clicks through to **Metro Detail** (`map.html`,
-  a generic `?metro=<cbsa>` page with a metro picker, over existing data — works
-  for any metro). `sectors.html` now shows **two charts** (over/under). `panel.py`
-  collects sector data **rolling** (`stale_metros`, `PER_RUN`, `fetched_at`) across
-  all shaded metros. Remaining is just data: run `panel.py` daily (cron/Action)
-  to fill the country within the Adzuna budget.
-- **Left to do here:** a scheduler (fold into task 4's weekly Action, or a
-  dedicated daily cron) so the rolling collection advances automatically; decide
-  whether Metro Detail should regain an occupation-mix section once task 5 lands.
-- **Depends on:** benefits from task 5 if switching to SOC occupations instead of
-  Adzuna categories.
-
-## 8. Later views + storage  *(park until earlier work lands / time passes)*
-- **Remote-share view** — an LLM or keyword remote flag per posting.
-- **Three-month trend** — needs ~13 weekly snapshots from task 4, so gated on
-  time.
-- **Parquet/DuckDB storage** — only if data volume outgrows the current static
-  JSON.
+## Done (this and prior sessions)
+- **Repost calibration** — `effective = count × f_m × dedup_ratio`; the small-cell
+  gray-out also floors `f_m ≥ 0.10` (see CLAUDE.md).
+- **Gray-metro recovery** — `build_national._measure` retries a would-gray metro
+  with a Central-county re-anchor (ambiguous geocode) **and/or** a tighter radius
+  (25/15 km, sheds a big neighbor's bleed), keeping the best f_m. Recovered
+  308→369 of 387 shaded. Also: CT planning-region join, LA parish / AK-HI
+  non-contiguous naming, multi-state LAUS series, Puerto Rico excluded.
+- **Two-chart sector index** (`sectors.html`) — over- and under-represented charts,
+  `?metro=` spotlight.
+- **Metro Detail** (`map.html`) — generic, selectable to any metro (`?metro=<cbsa>`
+  + picker), from existing data; the US map clicks through to it.
+- **Front-page category filter + color scale** (`site/index.html`) — shade by any
+  Adzuna category per 1,000 (`total_rate × category_share`, from `panel.py`'s
+  `category_shares`); robust color domain + retuned palette.
+- **Rolling sector collection** (`panel.py` `stale_metros`/`PER_RUN`/`fetched_at`) —
+  covers all shaded metros over successive runs (147/308 so far).
+- Docs: `METHODOLOGY.md` (plain-language method), `CLAUDE.md` gotchas.

@@ -38,12 +38,18 @@ pip install -r requirements.txt          # one dependency: requests
 # them. Needed: ADZUNA_APP_ID, ADZUNA_APP_KEY (all builds), BLS_API_KEY (national
 # map), GEMINI_API_KEY (ROADMAP task 5). This repo already has a local .env.
 
-# Build the site data (writes JSON/GeoJSON into site/data/):
+# Build the site data (writes JSON/GeoJSON into site/data/). Order matters:
+# geometry, then national (panel reads national.json to pick which metros to fill).
 python pipeline/build_geometry.py    # one-time: metro/state shapes + vendored d3-geo (no key)
-python pipeline/build_national.py    # national map data (~390 Adzuna calls; resumable)
-python pipeline/panel.py             # sector index (~10 metros; resumable)
-python pipeline/metro_map.py [CBSA]  # single-metro detail JSON (default 18140 = Columbus)
+python pipeline/build_national.py    # national map data (~387 Adzuna calls; resumable, gray-recovery)
+python pipeline/panel.py [N]         # sector data — rolling: refreshes the N stalest shaded metros
+                                     #   (default PER_RUN=40). Re-run until coverage is full.
 python pipeline/build_crosswalk.py   # rebuild pipeline/cbsa_counties.csv from Census (rare)
+# python pipeline/metro_map.py [CBSA]  # legacy Columbus occupation build — UNUSED by the site now
+
+# ROADMAP task 1 (the priority) is a one-command orchestrator, pipeline/build_all.py,
+# that runs geometry -> national -> panel(loop) with a key check — the intended
+# "clone, set .env, run one thing, watch the map fill" path. Not written yet.
 
 # Serve locally:
 cd site && python -m http.server 8000     # open http://localhost:8000
@@ -176,10 +182,16 @@ rebuild is never served stale.
   Anchorage, etc. Puerto Rico is excluded entirely
   (`build_national.EXCLUDED_STATES = {"72"}`): Adzuna returns unreliable (often
   Florida) locations for PR searches, so those 6 metros aren't measurable.
-- **The map's color scale is perceptual (sqrt).** `index.html` spans the true
-  min→max rate (`nat.rate_range`) but maps color through `Math.sqrt` so one
-  extreme metro (The Villages, FL ~268/1,000) doesn't wash the mid-range pale.
-  `build_national` still emits a robust 5–95 pct `domain`, now unused by the page.
+- **The map's color scale is linear on a robust domain, recomputed per metric.**
+  `index.html`'s `computeDomain` sets `[min, 95th-pct]` for the *currently selected
+  metric* and shades linearly (lowest rate = lightest; the handful above P95 clamp
+  darkest, legend shows a "+"). Palette: pale **blue** low end, kept distinct from
+  the `--nodata` **gray** (a low-rate metro must not read as no-data). `rate_range`
+  and the pipeline's `domain` field are no longer used by the page.
+- **The front-page map has a category filter.** A `<select>` re-shades by any
+  Adzuna category's jobs-per-1,000 = `metro rate × category share`, where the
+  shares come from `outliers.json`'s `category_shares` (`panel.py`). Metros without
+  sector data yet render gray for a category. `metric===null` is the "Total" mode.
 
 ## Data sources and their limits
 
@@ -196,16 +208,21 @@ rebuild is never served stale.
 
 **`ROADMAP.md` has the ordered, one-session-each next steps** — start there.
 
-**Working now:** national intensity map (view 1), sector deviation index (a
-category-based realization of view 2), single-metro detail. Committed on `main`;
-push only when the user asks (they push themselves).
+**Working now:** national intensity map (369/387 shaded, calibrated + gray-
+recovered) **with a category filter**; two-chart sector deviation index; generic
+any-metro Metro Detail (the map clicks through to it). Sector data covers 147/308
+shaded metros and fills as `panel.py` runs. Push only when the user asks (they
+push themselves). **At last handover the Phase C changes were uncommitted** —
+check `git status` / `ROADMAP.md`'s uncommitted note before assuming they're in.
 
-**Not built yet:** LLM occupation classification + skill extraction (needs a
-Groq/Gemini key and, for skills, NLx's fuller text); the validation harness
-(300 hand labels, NIOCCS-agreement, a disclosed error rate — a hard requirement
-in the original design); three-month trend and remote-share views;
-Parquet/DuckDB storage; a GitHub Action to rebuild weekly and deploy to Pages.
-(Repost calibration of the national rate and mis-geocode recovery are **done**.)
+**The immediate priority is ROADMAP task 1:** `pipeline/build_all.py`, a
+one-command orchestrator so anyone can clone, set `.env`, run it, and watch the
+map fill (reproducibility). Not written yet.
+
+**Not built yet:** the reproducible build (task 1); GitHub Pages deploy + a
+scheduled rebuild Action; LLM occupation/skill classification + the validation
+harness (parked — the user redirected to the counts-based map); three-month trend
+and remote-share views; Parquet/DuckDB storage.
 
 **Original design intent (aspirational, for context):** five views (postings
 per 1,000; occupation-mix deviation; skill premium; remote share; 3-month

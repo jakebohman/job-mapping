@@ -107,14 +107,15 @@ reasons:
   small a signal to trust.
 - **Too little of the search sample landed inside the metro** (under 10%). This
   happens to a *small metro sitting next to a much larger one* — its search
-  circle is dominated by the big neighbor, so we can't cleanly separate them.
-  Examples currently gray for this reason: Akron (next to Cleveland), Allentown
-  (between Philadelphia and New York), Oxnard (next to Los Angeles). Showing a
-  number here would be guessing.
+  circle is dominated by the big neighbor. We retry these with a tighter search
+  circle, which rescues most; the ones that stay gray are wedged between two
+  giants (e.g. Trenton and Allentown, both in the New York–Philadelphia corridor)
+  and can't be cleanly separated. Showing a number there would be guessing.
 - **No official workforce figure available** for the metro.
 
-Today **310 of 393 metros are shaded** and 83 are gray. Graying these is a
+Today **369 of 387 metros are shaded** and 18 are gray. Graying these is a
 feature, not a gap: the map declines to show a number it can't stand behind.
+(Puerto Rico is excluded — the data provider returns unreliable locations for it.)
 
 ## What this is good for (real-world uses)
 
@@ -124,9 +125,12 @@ feature, not a gap: the map declines to show a number it can't stand behind.
   or economic-development office comparing Boise to Boston).
 - **Tracking change over time** if rebuilt regularly — a rising rate flags a
   heating-up market before it shows up in slower official statistics.
-- **A companion view** ([sectors.html](site/sectors.html)) shows *which
-  industries* each metro over- or under-indexes on, so "hot" can be read as "hot
-  in tech" vs "hot in logistics."
+- **Slicing hiring by sector.** The map has a dropdown to re-shade by any of
+  Adzuna's ~30 categories — "IT jobs per 1,000 workers," "Travel jobs per 1,000,"
+  etc. Each is the metro's total rate multiplied by that sector's share of its
+  postings, so the sectors add up to the total. A **companion view**
+  ([sectors.html](site/sectors.html)) ranks where each metro over- and
+  under-indexes on a sector versus the national mix.
 
 ## What it can't tell you (limits worth knowing)
 

@@ -194,6 +194,15 @@ def build_panel_report(per_metro):
     for code, v in per_metro.items():
         m = by_metro.setdefault(code, {"name": v["name"], "over": [], "under": []})
         m["total"] = sum(v["mix"].values())
+
+    # Per-metro category shares — the front-page map's category filter multiplies
+    # these by each metro's total rate (from national.json) to shade by e.g. IT
+    # jobs per 1,000. Share = category count / metro total (same radius cancels).
+    category_shares = {
+        code: {cat: round(n / tot, 4) for cat, n in v["mix"].items()}
+        for code, v in per_metro.items()
+        if (tot := sum(v["mix"].values()))
+    }
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "metros_sampled": len(per_metro),
@@ -211,6 +220,8 @@ def build_panel_report(per_metro):
         "by_metro": by_metro,
         "over_index": over,
         "under_index": under,
+        "categories": sorted(national),          # for the map's category dropdown
+        "category_shares": category_shares,
     }
 
 
@@ -319,6 +330,12 @@ def _selftest():
     pm2 = dict(per_metro, Z={"name": "Metro Z", "mix": {"IT Jobs": 10}})   # tiny -> no cells
     zb = build_panel_report(pm2)["by_metro"]
     assert zb["Z"] == {"name": "Metro Z", "over": [], "under": [], "total": 10}
+
+    # category_shares: per-metro category counts / total, summing to ~1 (the map's
+    # category filter multiplies these by each metro's total rate)
+    cs = rep["category_shares"]
+    assert abs(sum(cs["A"].values()) - 1.0) < 1e-6
+    assert cs["A"]["IT Jobs"] == round(300 / 500, 4) and rep["categories"]
     print("selftest ok")
 
 

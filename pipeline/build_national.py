@@ -83,20 +83,35 @@ def _wrong_state(js, code):
     return bool(expected) and modal != expected
 
 
+SMALLER_RADII = (25, 15)   # km, tried in turn to shed a big neighbor's radius bleed
+
+
 def _measure(app_id, app_key, code):
-    """One Adzuna call → {count, f_m, dedup_ratio}. If the metro reads f_m≈0
-    despite a real count *and* the sample landed in the wrong state (ambiguous
-    geocode), retry anchored on a Central county and keep it only if f_m rises."""
+    """One Adzuna call → {count, f_m, dedup_ratio}. A metro that would otherwise
+    gray on f_m gets second-chance measurements, tried in order and the best f_m
+    kept (stopping once one clears the floor): first a re-anchor on a Central
+    county (fixes an ambiguous geocode) when the sample landed in the wrong
+    state, then tighter radii (shed a bigger neighbor's bleed). Both are tried —
+    a cross-border-swallowed metro can need the re-anchor to fail and the tighter
+    radius to succeed."""
     d = geo.CBSA_COUNTIES[code]
-    js = _fetch(app_id, app_key, d["adzuna_where"], d["radius_km"])
+    where, radius = d["adzuna_where"], d["radius_km"]
+    js = _fetch(app_id, app_key, where, radius)
     m = _metrics(js, code)
-    if m["count"] >= MIN_COUNT and m["f_m"] < 0.05 and _wrong_state(js, code):
+    if m["count"] < MIN_COUNT or m["f_m"] >= MIN_FM:
+        return m                                        # measured fine, or nothing to recover
+    retries = []
+    if _wrong_state(js, code):                          # ambiguous geocode -> re-anchor on a county
         county, state = d.get("central_county"), d.get("central_state")
         if county and state:
-            alt = f"{county}, {state}"                  # e.g. "Linn County, Oregon"
-            m2 = _metrics(_fetch(app_id, app_key, alt, d["radius_km"]), code)
-            if m2["f_m"] > m["f_m"]:
-                return m2
+            retries.append((f"{county}, {state}", radius))
+    retries += [(where, r) for r in SMALLER_RADII if r < radius]   # tighten to shed a neighbor
+    for alt_where, alt_radius in retries:
+        alt = _metrics(_fetch(app_id, app_key, alt_where, alt_radius), code)
+        if alt["f_m"] > m["f_m"]:
+            m = alt
+        if m["f_m"] >= MIN_FM:
+            break
     return m
 
 
@@ -243,6 +258,38 @@ def _selftest():
     assert by["B"]["below_threshold"] and by["B"]["rate"] is None   # f_m corrects the bleed
     assert by["D"]["effective"] == 200 and by["D"]["below_threshold"]  # MIN_FM floor
     assert rep["metros"][0]["cbsa"] == "A"                       # highest rate first
+
+    # _measure tighter-radius recovery: a same-state metro swamped at the default
+    # radius (low f_m) recovers at a smaller radius. Stub _fetch by radius.
+    global _fetch
+    saved_fetch, saved_r = _fetch, geo.CBSA_COUNTIES["18140"]["radius_km"]
+    inn = {"location": {"area": ["US", "Ohio", "Franklin County", "X"]},
+           "title": "T", "company": {"display_name": "C"}}
+    oh_out = {"location": {"area": ["US", "Ohio", "Knox County", "Y"]}}   # Ohio, no MSA
+    geo.CBSA_COUNTIES["18140"]["radius_km"] = 50
+    _fetch = lambda ai, ak, where, r, tries=4: {          # noqa: E731 (test stub)
+        "count": 5000,
+        "results": ([inn] * 2 + [oh_out] * 48) if r >= 50 else ([inn] * 40 + [oh_out] * 10)}
+    rec = _measure("x", "x", "18140")
+    _fetch, geo.CBSA_COUNTIES["18140"]["radius_km"] = saved_fetch, saved_r
+    assert rec["f_m"] >= MIN_FM and rec["f_m"] == 0.8   # tighter radius (25km) recovered it
+
+    # cross-border recovery: sample lands in the wrong state (wrong_state True) but
+    # the county re-anchor also fails, so it must fall back to a tighter radius.
+    saved2 = _fetch
+    oh = {"location": {"area": ["US", "Ohio", "Franklin County", "X"]},
+          "title": "T", "company": {"display_name": "C"}}
+    ind = {"location": {"area": ["US", "Indiana", "Marion County", "Y"]}}   # wrong state, not 18140
+    def _stub(ai, ak, w, r, tries=4):                    # noqa: E306 (test stub)
+        if r < 50:                                       # tighter radius -> mostly in-CBSA
+            return {"count": 800, "results": [oh] * 40 + [ind] * 10}
+        if "County" in w:                                # county re-anchor at full radius -> fails
+            return {"count": 5000, "results": [oh] * 2 + [ind] * 48}
+        return {"count": 5000, "results": [oh] * 1 + [ind] * 49}   # base -> wrong state, f_m 0.02
+    _fetch = _stub
+    rec2 = _measure("x", "x", "18140")
+    _fetch = saved2
+    assert rec2["f_m"] == 0.8   # re-anchor failed; the tighter-radius fallback recovered it
     print("selftest ok")
 
 
