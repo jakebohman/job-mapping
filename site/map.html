@@ -48,8 +48,9 @@
                  border:1px solid var(--rule);border-radius:8px;background:var(--panel);
                  color:var(--ink);max-width:340px;width:100%;}
 
-  .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;padding:28px 0 20px;
-        align-items:start;}
+  .grid-top,.grid-bottom{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;}
+  .grid-top{padding:28px 0 0;align-items:stretch;}   /* map + rate card share a height */
+  .grid-bottom{padding:16px 0 20px;align-items:start;} /* sector boxes size independently */
   .card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:18px;}
   svg{width:100%;height:auto;display:block;}
   .maparea{fill:var(--under);stroke:var(--paper);stroke-width:1.5;}
@@ -83,7 +84,9 @@
   footer{border-top:2px solid var(--ink);padding:20px 0 56px;
          font-family:var(--mono);font-size:11px;color:var(--faint);
          letter-spacing:.03em;line-height:1.7;}
-  @media (max-width:720px){.shell{padding:0 18px;}.grid{grid-template-columns:1fr;gap:18px;}}
+  @media (max-width:720px){.shell{padding:0 18px;}
+    .grid-top,.grid-bottom{grid-template-columns:1fr;gap:18px;}
+    .grid-top{padding-bottom:0;}.grid-bottom{padding-top:18px;}}
 </style>
 </head>
 <body>
@@ -100,22 +103,20 @@
     <div class="picker"><span class="plabel">Choose a metro</span><select id="picker"></select></div>
   </header>
 
-  <div class="grid">
-    <div>
-      <div class="card"><svg id="map" viewBox="0 0 560 440" role="img"
-           aria-label="Metro boundary"></svg></div>
-      <div class="card" style="margin-top:16px" id="openings"></div>
+  <div class="grid-top">
+    <div class="card"><svg id="map" viewBox="0 0 560 440" role="img"
+         aria-label="Metro boundary"></svg></div>
+    <div class="hero card">
+      <div class="hlabel">Postings per 1,000 workers</div>
+      <div class="hnum" id="rate">—</div>
+      <div class="hunit" id="ratectx"></div>
+      <div class="hunit" id="updated" style="margin-top:6px;color:var(--faint)"></div>
+      <div id="detail" style="margin-top:14px"></div>
     </div>
-    <div>
-      <div class="hero card">
-        <div class="hlabel">Postings per 1,000 workers</div>
-        <div class="hnum" id="rate">—</div>
-        <div class="hunit" id="ratectx"></div>
-        <div class="hunit" id="updated" style="margin-top:6px;color:var(--faint)"></div>
-        <div id="detail" style="margin-top:14px"></div>
-      </div>
-      <div class="card" style="margin-top:16px" id="sectors"></div>
-    </div>
+  </div>
+  <div class="grid-bottom">
+    <div class="card" id="sectors"></div>
+    <div class="card" id="openings"></div>
   </div>
 
   <footer id="foot"></footer>
@@ -221,7 +222,7 @@ Promise.all([
       const orow = r=>`<div class="srow"><span>${sectorName(r.cat)}</span><span class="sv">${fmt(r.n)}</span></div>`;
       const TOPN=8, rest=rows.slice(TOPN);
       openEl.innerHTML =
-        `<div class="sec-h">Job openings by sector</div>`
+        `<div class="sec-h">Job openings by sector (estimated)</div>`
         + rows.slice(0,TOPN).map(orow).join("")
         + (rest.length ? `<div id="openrest" hidden>${rest.map(orow).join("")}</div>`
             + `<button class="seeall" id="seeall">See all ${rows.length} sectors</button>` : "")
@@ -229,7 +230,7 @@ Promise.all([
       const btn=document.getElementById("seeall");
       if(btn) btn.onclick=()=>{ document.getElementById("openrest").hidden=false; btn.remove(); };
     } else {
-      openEl.innerHTML = `<div class="sec-h">Job openings by sector</div><div class="note">`
+      openEl.innerHTML = `<div class="sec-h">Job openings by sector (estimated)</div><div class="note">`
         + `Sector detail is collected on a rolling schedule and hasn't reached this metro yet.</div>`;
     }
 
