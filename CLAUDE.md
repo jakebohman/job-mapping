@@ -36,7 +36,7 @@ pip install -r requirements.txt          # one dependency: requests
 # Keys: put them in a gitignored .env at the repo root (copy .env.example) — it's
 # auto-loaded by pipeline/geo.py, so builds run without passing keys. Or export
 # them. Needed: ADZUNA_APP_ID, ADZUNA_APP_KEY (all builds), BLS_API_KEY (national
-# map), GEMINI_API_KEY (ROADMAP task 5). This repo already has a local .env.
+# map), GEMINI_API_KEY (ROADMAP task 2, not yet built). This repo has a local .env.
 
 # One command (the intended path): checks keys, then geometry -> national ->
 # panel(loop), printing coverage as it fills. Resumable; --loop / --serve flags.
@@ -134,13 +134,17 @@ data from <sampled> of <covered> metros · Updated <date>` — which is why
   huge radius `count` can clear 50 on a ~1-posting f_m (Columbus IN read a rate
   off a single in-sample posting until this floor was added); below 10% the
   measurement is radius bleed, not the metro.
-- **Interim substitutions**, each with an isolated swap-in point:
-  - Outlier sentences are **templated** from the numbers, not LLM-written.
-  - Storage is **JSON**, not the Parquet/DuckDB the long-term design calls for.
-  - Occupation coding (an LLM behind a NIOCCS validator) is **not built** — the
-    interim NIOCCS scaffold (`classify.py`, `metro_map.py`) was removed when the
-    project committed to the counts-based map; recover it from git if ROADMAP
-    task 4 resumes.
+- **Substitutions and settled choices:**
+  - Outlier sentences are **templated** from the numbers, not LLM-written. The one
+    open future idea (ROADMAP task 2) is to replace them with a short Gemini-written
+    analysis per metro — generated from the *computed* stats (rate, rank, sector
+    over/under-index), never from raw postings (that would reintroduce the ranking
+    bias). `GEMINI_API_KEY` is already wired into `.env.example`.
+  - Storage is **JSON** — now the permanent choice (Parquet/DuckDB discarded).
+  - Occupation/skill SOC coding is **discarded**, not parked: it reintroduces
+    Adzuna's ranking bias and needs a hand-labeled error rate. The interim NIOCCS
+    scaffold (`classify.py`, `metro_map.py`) was removed; recoverable from git if
+    ever revisited.
 - **The national rate is repost-calibrated, per metro.** Adzuna is
   repost-saturated (~58% of a raw sample were near-duplicates). The national
   `count` field can't itself be de-duped, so `build_national._measure` derives a
@@ -240,32 +244,29 @@ data from <sampled> of <covered> metros · Updated <date>` — which is why
 | Adzuna API (free) | Posting counts + category counts; sampled details | ~25/min + daily cap. Descriptions hard-truncated at 500 chars. `where` is radius, not CBSA (→ `f_m`). Advertiser-ranked. Don't republish posting text. |
 | BLS LAUS | Labor force per CBSA (view-1 denominator) | Monthly, ~2-month lag. Keyless 25/day → needs `BLS_API_KEY`. |
 | Census TIGERweb | MSA + state polygons (server-simplified) | Esri/RFC-7946 winding → must rewind for d3. |
-| CareerOneStop Jobs API | (intended fuller text) — **not accessible** | Self-serve token is 401 on `jobsearch`; gated. Points to NLx. |
-| NLx Research Hub | Intended real text source for skills | Requires a data-request application; not available day one. |
+| Gemini (future) | ROADMAP task 2: written per-metro analysis from computed stats | `GEMINI_API_KEY`; not yet built. |
 
 ## Status and roadmap
 
-**`ROADMAP.md` has the ordered, one-session-each next steps** — start there.
+**The project is finished and deployed.** `ROADMAP.md` has the two remaining
+optional items.
 
-**Working now:** national intensity map (**387/387 measurable metros shaded** —
-every non-PR metro; calibrated + gray-recovered) **with a category filter**;
-two-chart sector deviation index; generic any-metro Metro Detail (the map clicks
-through to it). Sector data covers 147/387 shaded metros and fills as `panel.py`
-runs. Push only when the user asks (they push themselves).
+**Live and self-updating:** national intensity map (**387/387 measurable metros
+shaded** — every non-PR metro; calibrated + gray-recovered) **with a category
+filter**; two-chart sector deviation index; generic any-metro Metro Detail (the
+map clicks through to it). Deployed at https://jakebohman.github.io/job-mapping/
+via `.github/workflows/pages.yml`; a daily `rebuild.yml` Action re-fetches the data
+(keys as repo secrets), commits it, and redeploys, so coverage fills and then
+re-refreshes on its own. Push only when the user asks (they push themselves).
 
-**Reproducible build (was ROADMAP task 1) is done:** `pipeline/build_all.py` is
-the one-command orchestrator — checks keys, then geometry → national →
-panel(loop), printing coverage so you watch the map fill. Resumable; `--loop`
-(retry across days) and `--serve` flags.
+**Reproducible build:** `pipeline/build_all.py` orchestrates geometry → national →
+panel(loop); resumable, `--loop` / `--serve` flags. The national cache ages out
+(`_work_list`, `measured_at` + `REFRESH_DAYS`) so scheduled runs refresh rather than
+freeze the counts and BLS denominator.
 
-**Not built yet:** GitHub Pages deploy + a scheduled rebuild Action (ROADMAP
-tasks 2–3); LLM occupation/skill classification + the validation harness (parked —
-the user redirected to the counts-based map); three-month trend and remote-share
-views; Parquet/DuckDB storage.
+**Remaining (ROADMAP):** (1) mobile-responsive rendering — the one real quality gap;
+(2) optional Gemini per-metro written analysis, built on the computed stats.
 
-**Original design intent (aspirational, for context):** five views (postings
-per 1,000; occupation-mix deviation; skill premium; remote share; 3-month
-change) over O*NET-SOC classifications, with an LLM-written outliers panel as
-the centerpiece and a disclosed classification error rate as a release gate.
-The current build reaches this via interim substitutions where free data or
-keys fall short; each is labeled on the page and in the module docstrings.
+**Discarded:** LLM occupation/skill SOC classification + validation harness;
+three-month trend and remote-share views; Parquet/DuckDB storage. The map is the
+committed direction; these are not being built.
