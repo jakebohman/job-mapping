@@ -1,20 +1,3 @@
-/* Shared design tokens (light + dark) for all three pages. Page-specific tokens
-   (--over/--under, --base/--metro-line/--nodata, …) stay inline in each page's
-   <style>, which is loaded after this file so those additions/overrides win. */
-:root{
-  --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
-  --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
-  --serif:"Fraunces",Georgia,"Times New Roman",serif;
-  --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
-    --faint:#6d7c91; --rule:#25303d; --hair:#1c2530;
-  }
-}
-
 /* latin */
 @font-face {
   font-family: 'Fraunces';
