@@ -210,12 +210,13 @@ Promise.all([
          collected on a rolling schedule and hasn't reached this metro yet.
          <a href="sectors.html">Browse the sector index →</a></div>`;
 
-    // Job openings by sector: raw Adzuna category counts in the search radius,
-    // descending. Each count is its stored share x the metro's category total.
-    const cs = shares[code], tot = bm && bm.total;
+    // Job openings by sector, descending. Each sector's share of the metro's
+    // postings applied to the distinct in-metro estimate (rec.effective), so the
+    // list sums to that figure — not the inflated in-radius count.
+    const cs = shares[code], est = rec.effective;
     const openEl = document.getElementById("openings");
-    if(cs && tot){
-      const rows = Object.entries(cs).map(([cat,sh])=>({cat, n:Math.round(sh*tot)}))
+    if(cs && est){
+      const rows = Object.entries(cs).map(([cat,sh])=>({cat, n:Math.round(sh*est)}))
         .filter(r=>r.n>0).sort((a,b)=>b.n-a.n);
       const orow = r=>`<div class="srow"><span>${sectorName(r.cat)}</span><span class="sv">${fmt(r.n)}</span></div>`;
       const TOPN=8, rest=rows.slice(TOPN);
@@ -224,7 +225,7 @@ Promise.all([
         + rows.slice(0,TOPN).map(orow).join("")
         + (rest.length ? `<div id="openrest" hidden>${rest.map(orow).join("")}</div>`
             + `<button class="seeall" id="seeall">See all ${rows.length} sectors</button>` : "")
-        + `<div class="note">Raw Adzuna category counts in the search radius.</div>`;
+        + `<div class="note">Each sector's share of the metro's distinct in-metro estimate.</div>`;
       const btn=document.getElementById("seeall");
       if(btn) btn.onclick=()=>{ document.getElementById("openrest").hidden=false; btn.remove(); };
     } else {
