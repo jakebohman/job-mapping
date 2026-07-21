@@ -21,7 +21,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import bls
@@ -36,6 +36,10 @@ MIN_FM = 0.10           # the whole rate rests on f_m; below ~5 of the 50 sample
                         # MIN_COUNT), so gray out — this is radius bleed, not a
                         # measured metro (e.g. Columbus IN measuring Indianapolis)
 CALL_INTERVAL = 2.6     # Adzuna free tier ~25/min
+REFRESH_DAYS = 30       # a cached measurement older than this is re-fetched, so a
+                        # scheduled rebuild keeps the counts current instead of frozen
+REFRESH_PER_RUN = 25    # cap re-measurements per run so the refresh staggers within
+                        # the Adzuna daily budget (never-measured metros are unbounded)
 EXCLUDED_STATES = {"72"}   # Puerto Rico: Adzuna returns unreliable locations for
                            # PR searches (often Florida), so it isn't measurable
 
@@ -145,6 +149,18 @@ def build_report(measures, labor, names):
     return {"metros": metros}
 
 
+def _work_list(measures, codes, cutoff, per_run=REFRESH_PER_RUN):
+    """Codes to (re)measure this run: every never-measured metro first, then up to
+    `per_run` metros whose measurement is stale (`measured_at` missing or < cutoff),
+    oldest first. Metros still fresh are left cached, so `national.json` keeps all
+    entries through a partial refresh — no regression. Mirrors panel.stale_metros."""
+    never = [c for c in codes if "dedup_ratio" not in measures.get(c, {})]
+    have = [c for c in codes if "dedup_ratio" in measures.get(c, {})]
+    stale = sorted((c for c in have if measures[c].get("measured_at", "") < cutoff),
+                   key=lambda c: measures[c].get("measured_at", ""))
+    return never + stale[:per_run]
+
+
 def run():
     app_id, app_key = os.environ.get("ADZUNA_APP_ID"), os.environ.get("ADZUNA_APP_KEY")
     if not (app_id and app_key):
@@ -156,17 +172,20 @@ def run():
     codes = [c for c in sorted(geo.CBSA_COUNTIES)
              if geo.CBSA_COUNTIES[c]["state_fips"] not in EXCLUDED_STATES]
     measures = {c: m for c, m in measures.items() if c in set(codes)}   # drop excluded
-    for n, code in enumerate(codes):
-        if code in measures and "dedup_ratio" in measures[code]:
-            continue      # backfill entries measured before repost calibration
+    today = datetime.now(timezone.utc).date()
+    cutoff = (today - timedelta(days=REFRESH_DAYS)).isoformat()
+    todo = _work_list(measures, codes, cutoff)
+    for n, code in enumerate(todo):
         try:
-            measures[code] = _measure(app_id, app_key, code)
+            m = _measure(app_id, app_key, code)
         except Exception as e:
-            print(f"  stopped at {code} ({e}); have {len(measures)}/{len(codes)} — re-run to resume")
+            print(f"  stopped at {code} ({e}); refreshed {n}/{len(todo)} this run — re-run to resume")
             break
+        m["measured_at"] = today.isoformat()
+        measures[code] = m
         cache_path.write_text(json.dumps(measures))
         if n % 25 == 0:
-            print(f"  {len(measures)}/{len(codes)} metros measured ...")
+            print(f"  {n}/{len(todo)} measured this run ({len(measures)}/{len(codes)} total) ...")
         time.sleep(CALL_INTERVAL)
 
     # Labor force is stable month-to-month and its keyless quota is tiny, so
@@ -277,6 +296,17 @@ def _selftest():
     rec3 = _measure("x", "x", "18140")
     _fetch = saved3
     assert rec3["f_m"] >= MIN_FM   # a failed city geocode is recovered via the county anchor
+
+    # _work_list: never-measured metros first, then stale ones (measured_at < cutoff);
+    # fresh entries are skipped so a scheduled run refreshes without dropping any metro.
+    ms = {"A": {"dedup_ratio": 0.5, "measured_at": "2020-01-01"},   # stale
+          "B": {"dedup_ratio": 0.5, "measured_at": "2999-01-01"},   # fresh -> skip
+          "C": {"count": 1}}                                        # never measured
+    wl = _work_list(ms, ["A", "B", "C"], cutoff="2025-01-01", per_run=25)
+    assert wl[0] == "C" and "A" in wl and "B" not in wl
+    # a metro with no measured_at counts as stale; per_run caps the stale batch
+    stale_many = {c: {"dedup_ratio": 0.5} for c in "DEFGH"}
+    assert len(_work_list(stale_many, list("DEFGH"), cutoff="2025-01-01", per_run=2)) == 2
     print("selftest ok")
 
 

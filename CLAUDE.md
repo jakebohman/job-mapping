@@ -148,6 +148,20 @@ data from <sampled> of <covered> metros · Updated <date>` — which is why
   over the in-CBSA subset) and folds it into `effective = count × f_m ×
   dedup_ratio`. It's a *lower* bound on distinct demand (dedup can merge genuine
   multi-site openings), and disclosed as such.
+  - **Known limitation — the correction under-fires for small metros.** The ~58%
+    figure is from a large raw sample; the *applied* per-metro `dedup_ratio`
+    averages ~0.82 across shaded metros (only ~18% removed) and rises toward 1.0
+    as f_m falls, because the in-CBSA subset then holds too few postings for two
+    to collide on title+employer. So high-rate small metros (The Villages,
+    Lebanon PA) are effectively un-deduplicated and read hotter than they are,
+    but the effect is bounded and small: imputing the well-sampled median dedup
+    (~0.82) to every metro moves the top rates only ~15-20% and leaves the ranking
+    near-identical (top-20 overlap 16/20, The Villages stays #1). The ranked map
+    is unaffected; only the extreme absolute values run modestly high. A future
+    fix would floor `dedup_ratio` at the national median for thin samples, or
+    dedup over a larger sample (needs a keyworded/paged Adzuna pull). Docs
+    (`METHODOLOGY.md`, `methodology.html`) now disclose this rather than claim
+    "roughly half are removed."
 
 ## Gotchas that will bite
 

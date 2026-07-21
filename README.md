@@ -1,127 +1,109 @@
-# Job Maps
+# Job Maps - A US Labor Market Intelligence Tool
 
-An analysis tool for US metro labor markets, built from job postings, **not a
-job board** (you can't click through to apply). Three views:
+Job Maps shows which US metro areas are hiring most and least relative to their size.
+There are additional tools breaking down job openings by sector, as well as in-depth analysis of each metro.
 
-- **US map** (`site/index.html`): an interactive choropleth over ~390 metros. A
-  **toggle** switches between hiring *intensity* (job postings per 1,000 workers,
-  so a small metro can read as hot as a big one; a raw-count map just reproduces
-  the population map and teaches nothing) and *total* postings. A **dropdown**
-  re-shades by any sector (IT, Travel, …); hover for a metro's figures and when it
-  was last updated; click for its detail.
-- **Sector index** (`site/sectors.html`): two rankings of where each metro's
-  *mix* of postings departs from the national mix, **over-** and **under-**
-  represented (SF heavy on tech, Miami on hospitality, Chicago on logistics).
-- **Metro detail** (`site/map.html`): pick any metro for its rate, rank, shape,
-  and over/under-indexed sectors.
+The site is a set of static pages that read pre-built data files. There's no
+server and no database to run, so you can open the finished map straight from a
+fresh clone. The data doesn't update live; instead a scheduled GitHub Action
+rebuilds it, commits the fresh numbers, and redeploys, so a deployed site and any
+new clone stay current on their own.
+
+## What you can look at
+
+- **The US map** (`site/index.html`) shades every metro by hiring intensity. Flip
+  it to a raw-count view, re-color it by any sector (IT, healthcare, hospitality),
+  and hover a metro for its numbers and when it was last updated.
+- **The sector index** (`site/sectors.html`) ranks the metros whose hiring mix
+  leans furthest from the national average, both over and under: San Francisco
+  heavy on tech, Miami on hospitality, Chicago on logistics.
+- **Metro detail** (`site/map.html`) pick one metro to see its rate, national rank,
+  shape on the map, and the sectors it over- and under-indexes on.
+
+## See it running
+
+You only need Python (3.9 or newer). The repo ships with the generated data, so
+the map works immediately, no API keys required:
+
+```sh
+cd site && python -m http.server 8000
+```
+
+Then open http://localhost:8000.
+
+## Rebuild it with fresh data
+
+To regenerate the data yourself you'll need two free API keys: **Adzuna** for the
+job postings and **BLS** for the workforce numbers. Sign-up links are in
+`.env.example`.
+
+```sh
+pip install -r requirements.txt      # the only dependency is `requests`
+cp .env.example .env                 # then paste your keys into .env
+
+python pipeline/build_all.py         # fetches the data and builds every page
+cd site && python -m http.server 8000
+```
+
+`build_all.py` runs the whole pipeline in order and prints its progress so you can
+watch the map fill in. The free API tiers are slow and capped, so a full rebuild
+takes a few days: each run does as much as the daily budget allows, caches what it
+fetched, and stops cleanly. Just run it again to pick up where it left off (or
+pass `--loop` to let it retry on its own). The committed data keeps the site
+working the whole time; only newly collected sector data is pending until the fill
+reaches each metro.
+
+If you'd rather run the steps yourself:
+
+```sh
+python pipeline/build_geometry.py    # one-time: the map shapes
+python pipeline/build_national.py    # the national intensity map
+python pipeline/panel.py             # sector data (run repeatedly to fill it in)
+```
+
+Each module also checks itself with no network or keys, e.g.
+`python pipeline/geo.py --selftest`.
+
+## Automatic updates
+
+Once deployed, the site keeps itself current. A scheduled GitHub Action
+(`.github/workflows/rebuild.yml`) runs the same pipeline on GitHub's servers using
+the API keys stored as repository secrets, commits the regenerated data, and
+redeploys the page. It stays within the free API limits, so the refresh is gradual
+rather than instant: sector coverage advances each day, the national counts cycle
+over roughly a month, and the workforce figures refresh monthly.
+
+To host your own copy, enable Pages (Settings → Pages → Source: **GitHub Actions**)
+and add `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, and `BLS_API_KEY` as repository secrets.
+
+## How it works, briefly
+
+The Python scripts in `pipeline/` pull from three free public sources: job
+postings from Adzuna, the workforce of each metro from the Bureau of Labor
+Statistics, and the map shapes from the US Census Bureau. They do the math and
+write plain JSON and GeoJSON into `site/data/`, which the pages read in the
+browser. Turning a rough count of postings into an honest rate takes a couple of
+corrections along the way; [METHODOLOGY.md](METHODOLOGY.md) explains all of it in
+plain language, including what the map can and can't tell you.
 
 ## Project layout
 
 ```
 job-mapping/
 ├── README.md          you are here
-├── METHODOLOGY.md     plain-language: where the data comes from + how the number is calculated
-├── CLAUDE.md          full design + architecture: decisions, findings, gotchas
-├── ROADMAP.md         ordered next steps, one work-session each
-├── requirements.txt   one dependency (requests)
-├── .env.example       the free API keys you need (Adzuna + BLS)
-│
-├── pipeline/          the Python that fetches data and builds the site's JSON
-│   ├── build_all.py       ★ one command: checks keys, runs the whole pipeline
-│   ├── build_national.py  ★ US map data: postings per 1,000 workers per metro
-│   ├── build_geometry.py  one-time: metro/state map shapes + vendored d3-geo
-│   ├── panel.py           sector data (deviation + per-metro shares; rolling)
-│   ├── ingest.py          Adzuna request + repost-dedup helpers
-│   ├── geo.py             county ↔ metro (CBSA) lookup
-│   ├── bls.py             metro labor-force numbers (BLS)
-│   ├── build_crosswalk.py one-time: builds cbsa_counties.csv
-│   └── cbsa_counties.csv   county→metro reference table (393 metros)
-│
-└── site/              the website (static; deploys to GitHub Pages)
-    ├── index.html       ★ the US hiring-intensity map  ← landing page
-    ├── sectors.html     the sector deviation index
-    ├── map.html         single-metro detail
-    ├── vendor/          d3-geo (local; no CDN)
-    └── data/            JSON + GeoJSON the pages read (generated by pipeline/)
+├── METHODOLOGY.md     where the numbers come from and how they're calculated
+├── ROADMAP.md         what's planned next
+├── pipeline/          the Python that fetches data and builds the site
+│   ├── build_all.py       one command to run everything
+│   ├── build_national.py  the US map
+│   ├── panel.py           the sector data
+│   ├── build_geometry.py  the map shapes (run once)
+│   ├── ingest.py          Adzuna requests and repost handling
+│   ├── geo.py             matches a posting to its metro
+│   └── bls.py             workforce numbers
+└── site/              the website (static; nothing to build)
+    ├── index.html         the US map
+    ├── sectors.html       the sector index
+    ├── map.html           single-metro detail
+    └── data/              the JSON the pages read
 ```
-
-Build scripts write JSON/GeoJSON into `site/data/`, and the pages read it:
-`build_national.py → national.json` (the map), `panel.py → outliers.json`
-(sector index + per-metro shares). `map.html` (Metro Detail) is generic: it
-reads `national.json` + `outliers.json` + `us_metros.geojson` for any metro, so
-it needs no per-metro build.
-
-## Run it
-
-Needs **Python 3.9+** (standard library only; the sole pip dependency is
-`requests`, and only for rebuilding data).
-
-The repo ships with generated data in `site/data/`, so a fresh clone can **see
-the finished map immediately**, without keys or a build step:
-
-```sh
-cd site && python -m http.server 8000     # open http://localhost:8000
-```
-
-To rebuild with **fresh** data, get free API keys (links in `.env.example`:
-Adzuna for postings, BLS for labor force), then run one command:
-
-```sh
-pip install -r requirements.txt
-cp .env.example .env    # then fill in ADZUNA_APP_ID, ADZUNA_APP_KEY, BLS_API_KEY
-                        # geo.py auto-loads .env, no export needed
-
-python pipeline/build_all.py         # checks keys, then: geometry → national → sector (loop)
-cd site && python -m http.server 8000   # (or: build_all.py --serve)
-```
-
-`build_all.py` verifies your keys (naming any that are missing), skips
-`build_geometry` if the map shapes are already present, builds the national map,
-then loops `panel.py` to fill sector data, printing coverage as it goes so you
-**watch the map fill.** The Adzuna builds are throttled to the free-tier rate
-limit (~25/min) and cache each metro as they go, so a blip or a daily cap won't
-lose progress. A fresh clone re-fetches from scratch (the caches are gitignored,
-which is what makes the data *fresh*), and a full populate spans a few days on the
-free tier (national ~387 calls; sector ~387 metros × ~31 ≈ 12,000 calls): **one
-run does a budget's worth and stops gracefully. Re-run to continue** (or use
-`--loop` to retry unattended across days). The committed data renders the whole
-time; only newly-added sector data is pending until the fill reaches each metro.
-
-The underlying scripts also run standalone if you want finer control:
-
-```sh
-python pipeline/build_geometry.py    # one-time: map shapes + d3-geo (no API key)
-python pipeline/build_national.py    # US map data (~387 Adzuna calls, resumable)
-python pipeline/panel.py [N]         # sector data: rolling; re-run until coverage is full
-```
-
-Every module is self-testing (no network, no keys):
-
-```sh
-python pipeline/geo.py --selftest     # likewise: ingest, bls, panel, build_national, build_all
-```
-
-## How the number is built
-
-```
-Adzuna posting COUNTS per sector, per metro   (a census, not a ranked sample)
-        │
-        ├─ sector's share of THIS metro's postings
-        └─ sector's share of ALL metros' postings  (national baseline)
-        │
-        ▼
-   deviation = log2(metro share ÷ national share)   →  ranked, top ones shown
-```
-
-Counts, not sampled-and-classified postings: Adzuna's search is ranked by a few
-high-volume advertisers, so a *sample* is biased (one hospital network made
-Dallas read 94% healthcare), but a *count* is not. This is the core lesson.
-See CLAUDE.md.
-
-## Known limits (deliberate, documented in CLAUDE.md)
-
-- Job-posting demand, not employment; postings over-represent high-churn work.
-- Adzuna's own ~30 sector categories, not O*NET occupations (the occupation
-  path needs a cleaner text source than Adzuna's 500-char snippets, such as NLx).
-- Sector data fills on a rolling schedule, so not every metro has it yet;
-  outlier sentences are templated; storage is JSON, all easy to scale up later.

@@ -1,0 +1,69 @@
+name: Rebuild data
+
+on:
+  schedule:
+    - cron: '17 8 * * *'      # daily ~08:17 UTC; adjust cadence as desired
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install -r requirements.txt
+
+      # Persist the resumable fetch caches across runs (gitignored, so not in the
+      # repo). Rolling key: save a new cache each run, restore the most recent.
+      - uses: actions/cache@v4
+        with:
+          path: |
+            site/data/_national_cache.json
+            site/data/_lf_cache.json
+            site/data/_mix_cache.json
+          key: jobmaps-caches-${{ github.run_id }}
+          restore-keys: jobmaps-caches-
+
+      # Labor force is monthly and cheap to refetch (~8 BLS batch calls, completes
+      # in one run), so drop its cache on the 1st so the denominators track BLS.
+      - name: Monthly labor-force refresh
+        run: '[ "$(date -u +%d)" = "01" ] && rm -f site/data/_lf_cache.json || true'
+
+      - name: Build
+        env:
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+        run: python pipeline/build_all.py
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add site/data/*.json site/data/*.geojson
+          git diff --cached --quiet || git commit -m "data: scheduled refresh $(date -u +%F)"
+          git push
+
+      # A GITHUB_TOKEN push does not re-trigger pages.yml, so deploy inline.
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

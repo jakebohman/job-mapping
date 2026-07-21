@@ -87,12 +87,12 @@
   <ol>
     <li><b>Ask Adzuna how many postings are near the metro.</b> The search returns a total count and a sample of 50 actual postings.</li>
     <li><b>Keep only the ones truly inside the metro.</b> Adzuna searches a circle around a city, but a metro isn't a circle, so the circle spills into neighbors. The fraction of the sample reporting an in-metro county is how much of the count we keep.</li>
-    <li><b>Remove the reposts.</b> Roughly half of aggregator postings are duplicates. Merging postings that share a title and employer in the sample gives the fraction that are distinct.</li>
+    <li><b>Remove the reposts.</b> Aggregators often host duplicate job postings, so we measure the distinct fraction (postings sharing a title and employer) in the sample and apply it.</li>
     <li><b>Collect sector data on a rolling basis.</b> Due to API rate limits, job sector data is collected incrementally, a few metros each day. Therefore, it may take several days to populate every metro area's job sector data. The aggregate number across all job sectors remains unaffected and is most up-to-date.</li>
   </ol>
 
   <div class="gray-note"><b>When a metro is left gray.</b> A metro shows no number
-  when it can't be measured honestly: too few postings actually inside it (fewer
+  when it can't be measured accurately: too few postings actually inside it (fewer
   than ~50 effective), too little of the search sample landing inside it (under
   10%, usually a small metro swamped by a large neighbor), or no official
   workforce figure.</div>
@@ -100,13 +100,13 @@
   <h2>Limitations of our approach</h2>
   <ul>
     <li>We measure active job postings, not employment or hiring figures. A high volume of postings may indicate high turnover or a prevalance of"ghost jobs" rather than actual job growth. Some sectors (healthcare, retail, etc.) may be overrepresented due to higher transience in these industries.</li>
-    <li>Postings over-represent high-churn work (retail, driving, healthcare staffing) that gets re-advertised constantly.</li>
     <li>Official workforce figures are subject to a lag in collection and may not reflect the most current economic conditions.</li>
-    <li>When ranking metros by job sector growth and shrinkage, smaller metro areas and sectors could be overindexed due to their relative volatility.</li>
+    <li>When ranking metros by job sector growth and shrinkage, smaller metro areas and sectors could be overindexed due to the relative volatility of smaller sample sizes.</li>
+    <li>The raw posting count is a full tally, but the two corrections applied to it (the in-metro share and the repost fraction) are both read off the same 50-posting sample. The count is immune to how the results are ranked; the corrections are not, and near the cutoff they rest on as few as five postings. Read the map for relative intensity and rank, not as a precise posting census.</li>
   </ul>
 
   <footer>
-    Every number on the map is reproducible from our scripts found at <a href="https://github.com/jakebohman/job-mapping">github.com/jakebohman/job-mapping</a> and the free APIs above.
+    Every number on the map is reproducible from our scripts found at <a href="https://github.com/jakebohman/job-mapping">github.com/jakebohman/job-mapping</a> and the free APIs listed above.
     <a href="index.html">Back to the map →</a>
   </footer>
 </div>
