@@ -45,14 +45,6 @@ the names.
 
 ---
 
-## Discarded (deliberately not doing)
-- **Occupation / skill SOC classification + validation harness.** Reintroduces
-  Adzuna's ranking bias and needs a hand-labeled error rate; the counts-based map
-  is the committed direction. The interim NIOCCS scaffold (`classify.py`,
-  `metro_map.py`) was removed; recoverable from git history if ever revisited.
-- **Remote-share view**, **three-month trend view**, and **Parquet/DuckDB storage.**
-  Not worth the added surface; static JSON is the permanent storage choice.
-
 ## Done
 - **Deployed to GitHub Pages** with a daily auto-rebuild Action (data refresh +
   redeploy, keys as secrets, caches persisted across runs).

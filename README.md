@@ -23,11 +23,10 @@ site and any new clone stay current on their own.
 
 ## See it
 
-Just open the live site: **https://jakebohman.github.io/job-mapping/**. Nothing to
-install.
+Just open the live site: **https://jakebohman.github.io/job-mapping/**.
 
-To run it locally instead (for development), you need only Python (3.9 or newer).
-The repo ships with the generated data, so it works offline with no API keys:
+To run it locally instead, you need only Python (3.9 or newer).
+The repo ships with the generated data, so it works offline with no API keys if you don't need the data to be refreshed:
 
 ```sh
 cd site && python -m http.server 8000    # then open http://localhost:8000
@@ -65,18 +64,6 @@ python pipeline/panel.py             # sector data (run repeatedly to fill it in
 
 Each module also checks itself with no network or keys, e.g.
 `python pipeline/geo.py --selftest`.
-
-## Automatic updates
-
-Once deployed, the site keeps itself current. A scheduled GitHub Action
-(`.github/workflows/rebuild.yml`) runs the same pipeline on GitHub's servers using
-the API keys stored as repository secrets, commits the regenerated data, and
-redeploys the page. It stays within the free API limits, so the refresh is gradual
-rather than instant: sector coverage advances each day, the national counts cycle
-over roughly a month, and the workforce figures refresh monthly.
-
-To host your own copy, enable Pages (Settings → Pages → Source: **GitHub Actions**)
-and add `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, and `BLS_API_KEY` as repository secrets.
 
 ## How it works, briefly
 
