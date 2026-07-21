@@ -3,11 +3,12 @@
 Job Maps shows which US metro areas are hiring most and least relative to their size.
 There are additional tools breaking down job openings by sector, as well as in-depth analysis of each metro.
 
+**Live site: https://jakebohman.github.io/job-mapping/**
+
 The site is a set of static pages that read pre-built data files. There's no
-server and no database to run, so you can open the finished map straight from a
-fresh clone. The data doesn't update live; instead a scheduled GitHub Action
-rebuilds it, commits the fresh numbers, and redeploys, so a deployed site and any
-new clone stay current on their own.
+server and no database to run. The data doesn't update live; instead a scheduled
+GitHub Action rebuilds it, commits the fresh numbers, and redeploys, so the live
+site and any new clone stay current on their own.
 
 ## What you can look at
 
@@ -20,16 +21,17 @@ new clone stay current on their own.
 - **Metro detail** (`site/map.html`) pick one metro to see its rate, national rank,
   shape on the map, and the sectors it over- and under-indexes on.
 
-## See it running
+## See it
 
-You only need Python (3.9 or newer). The repo ships with the generated data, so
-the map works immediately, no API keys required:
+Just open the live site: **https://jakebohman.github.io/job-mapping/**. Nothing to
+install.
+
+To run it locally instead (for development), you need only Python (3.9 or newer).
+The repo ships with the generated data, so it works offline with no API keys:
 
 ```sh
-cd site && python -m http.server 8000
+cd site && python -m http.server 8000    # then open http://localhost:8000
 ```
-
-Then open http://localhost:8000.
 
 ## Rebuild it with fresh data
 
