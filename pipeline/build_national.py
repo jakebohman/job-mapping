@@ -121,20 +121,13 @@ def _measure(app_id, app_key, code):
     return m
 
 
-def _percentile(sorted_vals, p):
-    if not sorted_vals:
-        return None
-    i = min(len(sorted_vals) - 1, int(round(p / 100 * (len(sorted_vals) - 1))))
-    return sorted_vals[i]
-
-
 def build_report(measures, labor, names):
     """Pure: {code:{count,f_m,dedup_ratio}}, {code:{labor_force}}, {code:name} ->
     report. effective in-CBSA postings = count*f_m*dedup_ratio (dedup_ratio
     corrects for reposts; a pre-calibration entry lacking it is left uncorrected
     at 1.0); rate = 1000*effective/labor_force; below threshold if effective<50
     or no labor force."""
-    metros, rates = [], []
+    metros = []
     for code, mz in measures.items():
         if geo.CBSA_COUNTIES.get(code, {}).get("state_fips") in EXCLUDED_STATES:
             continue                              # excluded (PR): unreliable source
@@ -144,32 +137,12 @@ def build_report(measures, labor, names):
         lf = (labor.get(code) or {}).get("labor_force")
         below = effective < MIN_COUNT or not lf or f_m < MIN_FM
         rate = None if below else round(1000 * effective / lf, 2)
-        if rate is not None:
-            rates.append(rate)
         metros.append({"cbsa": code, "name": names.get(code, code),
                        "count": count, "f_m": f_m, "dedup_ratio": dedup,
                        "effective": effective, "labor_force": lf, "rate": rate,
                        "below_threshold": below})
     metros.sort(key=lambda m: (m["rate"] is None, -(m["rate"] or 0)))
-    rates.sort()
-    return {
-        "metric": "Postings per 1,000 workers",
-        "method": ("Live job postings from Adzuna, corrected to each metro's real "
-                   "boundary and divided by its local workforce — hiring intensity, "
-                   "not raw size; it measures posting demand, not hires. "
-                   "Full method in METHODOLOGY.md."),
-        "caveats": [
-            "Job-posting demand, not employment.",
-            "Repost-corrected via the in-sample distinct fraction; a lower bound "
-            "on distinct demand (multi-site openings can collapse together).",
-            f"{sum(m['below_threshold'] for m in metros)} of {len(metros)} "
-            "measured metros are below threshold (gray).",
-        ],
-        # robust color domain (5th-95th pct) so one extreme metro can't wash it out
-        "domain": [_percentile(rates, 5), _percentile(rates, 95)],
-        "rate_range": [rates[0], rates[-1]] if rates else [None, None],
-        "metros": metros,
-    }
+    return {"metros": metros}
 
 
 def run():
@@ -218,14 +191,12 @@ def run():
 
     shaded = [m for m in report["metros"] if not m["below_threshold"]]
     print(f"\nWrote {OUT/'national.json'} — {len(measures)}/{len(codes)} metros, "
-          f"{len(shaded)} shaded, domain {report['domain']} per 1,000")
+          f"{len(shaded)} shaded")
     for m in shaded[:6]:
         print(f"  {m['rate']:6.1f}  (f_m {m['f_m']})  {m['name']}")
 
 
 def _selftest():
-    assert _percentile([1, 2, 3, 4, 5], 0) == 1 and _percentile([1, 2, 3, 4, 5], 100) == 5
-
     # _metrics: f_m = in-CBSA share; dedup_ratio = distinct share of in-CBSA.
     fr = {"location": {"area": ["US", "Ohio", "Franklin County", "X"]},
           "title": "Nurse", "company": {"display_name": "Acme"}}

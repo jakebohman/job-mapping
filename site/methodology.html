@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="How Job Maps turns raw job postings into an honest hiring-intensity rate: the data sources, the corrections, and the limits.">
+<title>Methodology · Job Maps</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="fonts.css">
+<style>
+  :root{
+    --paper:#f2f5f8; --panel:#ffffff; --ink:#131b26; --muted:#5d6b80;
+    --faint:#8593a6; --rule:#dde3ec; --hair:#e9edf3;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --link:#1f6397;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0d131b; --panel:#141c26; --ink:#e7edf4; --muted:#94a2b6;
+      --faint:#6d7c91; --rule:#25303d; --hair:#1c2530; --link:#7cbde6;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+       font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .shell{max-width:760px;margin:0 auto;padding:0 28px;}
+  nav{display:flex;gap:20px;padding:20px 0 0;font-family:var(--mono);font-size:11.5px;
+      letter-spacing:.12em;text-transform:uppercase;}
+  nav a{color:var(--faint);text-decoration:none;padding-bottom:3px;}
+  nav a:hover{color:var(--ink);}
+  header{padding:20px 0 18px;border-bottom:2px solid var(--ink);}
+  h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,5.2vw,50px);
+     line-height:1.04;letter-spacing:-.015em;margin:8px 0 0;}
+  .standfirst{margin:16px 0 0;max-width:60ch;color:var(--muted);font-size:16px;}
+  h2{font-family:var(--serif);font-weight:500;font-size:clamp(20px,3.2vw,26px);
+     letter-spacing:-.01em;margin:34px 0 0;}
+  p{max-width:64ch;}
+  a{color:var(--link);}
+  .lead{font-family:var(--serif);font-size:clamp(19px,2.6vw,23px);line-height:1.35;
+        margin:22px 0 0;max-width:26ch;}
+  .eq{font-family:var(--mono);font-size:13px;background:var(--panel);
+      border:1px solid var(--rule);border-radius:8px;padding:12px 14px;margin:16px 0 0;
+      overflow-x:auto;color:var(--ink);}
+  table{border-collapse:collapse;width:100%;margin:16px 0 0;font-size:14px;}
+  th,td{text-align:left;vertical-align:top;padding:9px 12px 9px 0;border-bottom:1px solid var(--hair);}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--faint);font-weight:600;}
+  ol,ul{max-width:64ch;padding-left:20px;}
+  li{margin:6px 0;}
+  li b{font-weight:600;}
+  .gray-note{margin:20px 0 0;padding:14px 16px;border:1px solid var(--rule);
+             border-radius:10px;background:var(--panel);color:var(--muted);font-size:14px;}
+  .gray-note b{color:var(--ink);font-weight:500;}
+  footer{border-top:2px solid var(--ink);margin-top:40px;padding:20px 0 56px;
+         font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.03em;line-height:1.7;}
+  footer a{color:var(--link);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav>
+    <a href="index.html">US map</a>
+    <a href="sectors.html">Sector index</a>
+    <a href="map.html">Metro detail</a>
+  </nav>
+  <header>
+    <h1>Methodology</h1>
+    <p class="standfirst">How the map turns raw job postings into a number you
+    can trust: where the data comes from, the corrections that keep it honest,
+    and what it can and can't tell you.</p>
+  </header>
+
+  <p class="lead">Relative to its size, where is a metro hiring hard right now?</p>
+  <p>A raw job count just redraws the population map: New York and Los Angeles on
+  top, always, teaching you nothing. So every shaded metro carries one number
+  instead, <b>job postings per 1,000 workers</b>. A reading of 20 means that for
+  every 1,000 people in the local workforce, about 20 distinct openings are
+  currently advertised. Higher points to a tighter, busier hiring market for the
+  metro's size. It is a rate of <b>advertised demand</b>, not a count of jobs and
+  not a measure of employment.</p>
+
+  <h2>Where the data comes from</h2>
+  <p>Three free, public sources. Nothing is bought, scraped from behind a login,
+  or made up.</p>
+  <table>
+    <tr><th>What</th><th>Source</th><th>Used for</th></tr>
+    <tr><td>Job postings</td><td><a href="https://www.adzuna.com/">Adzuna</a> job-search API</td><td>How many postings exist near each metro, plus a 50-posting sample to check where they really are</td></tr>
+    <tr><td>Workforce size</td><td>US Bureau of Labor Statistics (LAUS)</td><td>The official labor-force count for each metro (the denominator)</td></tr>
+    <tr><td>Map shapes</td><td>US Census Bureau (TIGERweb)</td><td>The metro and state boundaries drawn on screen</td></tr>
+  </table>
+  <p>A "metro" is a <b>Metropolitan Statistical Area</b>, the government's
+  definition of a city plus its commuting region, built from a set of counties.
+  Counties are the glue: a posting reports its county, an MSA is a list of
+  counties, and BLS reports by MSA, so everything lines up.</p>
+
+  <h2>How the number is built</h2>
+  <p>For each metro:</p>
+  <ol>
+    <li><b>Ask Adzuna how many postings are near the metro.</b> The search returns a total count and a sample of 50 actual postings.</li>
+    <li><b>Keep only the ones truly inside the metro.</b> Adzuna searches a circle around a city, but a metro isn't a circle, so the circle spills into neighbors. The fraction of the sample reporting an in-metro county is how much of the count we keep.</li>
+    <li><b>Remove the reposts.</b> Aggregators carry the same opening many times. Collapsing postings that share a title and employer in the sample gives the fraction that are distinct.</li>
+    <li><b>Divide by the workforce, scale to per-1,000.</b></li>
+  </ol>
+  <div class="eq">rate = (raw count &times; share truly in the metro &times; share not a repost) &divide; workforce &times; 1,000</div>
+
+  <h2>The three honesty corrections</h2>
+  <ol>
+    <li><b>Counts, not a sample.</b> Adzuna's results are ranked by a few big advertisers, so analyzing a sample lets one hospital chain make a whole city look 90% healthcare. A total count can't be skewed that way: it's a census, not a poll. This is the single most important design choice.</li>
+    <li><b>Share truly in the metro.</b> Because the search is a circle, a small metro next to a big one can accidentally measure its neighbor. Keeping only the in-metro fraction fixes the geography. Without it, Columbus, Indiana would report Indianapolis's postings.</li>
+    <li><b>The repost correction.</b> Roughly half of aggregator postings are duplicates. Applying the distinct fraction keeps the same job posted ten times from inflating the rate. It's a lower bound, since it can merge genuinely separate openings at one employer.</li>
+  </ol>
+
+  <div class="gray-note"><b>When a metro is left gray.</b> A metro shows no number
+  when it can't be measured honestly: too few postings actually inside it (fewer
+  than ~50 effective), too little of the search sample landing inside it (under
+  10%, usually a small metro swamped by a large neighbor), or no official
+  workforce figure. Graying these is deliberate; the map declines to show a number
+  it can't stand behind. Puerto Rico is excluded because the data provider returns
+  unreliable locations for it.</div>
+
+  <h2>What it can't tell you</h2>
+  <ul>
+    <li>It measures advertised demand, not employment or hires; lots of postings can mean growth or high turnover.</li>
+    <li>Postings over-represent high-churn work (retail, driving, healthcare staffing) that gets re-advertised constantly.</li>
+    <li>It's built on one provider (Adzuna); another would give somewhat different absolute levels. Read the map for relative intensity and rank, not as a precise census.</li>
+    <li>Workforce figures lag by a couple of months, normal for official data.</li>
+    <li>In the sector ranking, healthcare rarely appears even though it's the largest sector in nearly every metro. The ranking surfaces what is distinctive about a metro, not what is merely large.</li>
+  </ul>
+
+  <footer>
+    Every number on the map is reproducible from the scripts in the project's
+    <span>pipeline/</span> and the free APIs above.
+    <a href="index.html">Back to the map →</a>
+  </footer>
+</div>
+</body>
+</html>

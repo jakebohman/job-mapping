@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="An interactive map of US metro hiring intensity — job postings per 1,000 workers across ~390 metro areas.">
-<title>Job Maps — US Hiring Intensity</title>
+<meta name="description" content="An interactive map of US metro hiring intensity: job postings per 1,000 workers across 387 metro areas.">
+<title>Job Maps: US Hiring Intensity</title>
 <link rel="icon" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css">
 <style>
@@ -46,14 +46,15 @@
   .standfirst b{color:var(--ink);font-weight:500;}
 
   .controls{margin:16px 0 0;font-family:var(--mono);font-size:11px;letter-spacing:.08em;
-            text-transform:uppercase;color:var(--faint);}
-  .controls select{margin-left:8px;font-family:var(--sans);font-size:14px;
+            text-transform:uppercase;color:var(--faint);
+            display:grid;grid-template-columns:max-content 1fr;gap:10px 16px;align-items:center;}
+  .controls .clabel{white-space:nowrap;}
+  .controls select{justify-self:start;font-family:var(--sans);font-size:14px;
                    text-transform:none;letter-spacing:0;padding:6px 10px;
                    border:1px solid var(--rule);border-radius:8px;
                    background:var(--panel);color:var(--ink);}
-  .controls .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:6px;}
-  .seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;
-       margin-left:8px;background:var(--panel);}
+  .seg{display:inline-flex;justify-self:start;border:1px solid var(--rule);border-radius:8px;
+       overflow:hidden;background:var(--panel);}
   .seg button{font-family:var(--sans);font-size:14px;text-transform:none;letter-spacing:0;
               padding:6px 12px;border:0;background:transparent;color:var(--muted);cursor:pointer;}
   .seg button + button{border-left:1px solid var(--rule);}
@@ -73,7 +74,7 @@
   .tip .r b{color:#1f6397;} @media (prefers-color-scheme:dark){.tip .r b{color:#7cbde6;}}
   .tip .sub{color:var(--muted);font-size:11.5px;font-family:var(--mono);margin-top:3px;}
 
-  .legend{display:flex;flex-wrap:wrap;align-items:center;gap:20px;margin:6px 0 0;}
+  .legend{display:flex;flex-wrap:wrap;align-items:flex-start;gap:20px;margin:10px 0 0;}
   .legend .label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;
                  text-transform:uppercase;color:var(--faint);}
   .ramp{display:flex;flex-direction:column;gap:4px;}
@@ -100,18 +101,19 @@
   </nav>
   <header>
     <h1>Where the <em>hiring</em> is</h1>
-    <p class="standfirst">Live job postings across ~390 US metro areas. Show
-    hiring <b>intensity</b> (postings per 1,000 workers, so a small metro can run
-    as hot as a big one) or switch to <b>total postings</b>. Darker means more.
-    Hover a metro for its figures; click one to open its full detail.</p>
+    <p class="standfirst">Live job postings across 387 US metro areas. Show
+    hiring <b>intensity</b> (job postings per 1,000 workers) or switch to <b>total postings</b>. Darker means more.
+    Hover over a metro for its figures; click one to see the full details.</p>
   </header>
 
   <div class="controls">
-    <div class="row">Measure <span class="seg" id="mode">
+    <span class="clabel">Measure</span>
+    <span class="seg" id="mode">
         <button data-mode="rate" class="on">Per 1,000 workers</button
-        ><button data-mode="total">Total postings</button>
-      </span></div>
-    <div class="row">Shade the map by <select id="metric"></select></div>
+        ><button data-mode="total">Total Count</button>
+    </span>
+    <span class="clabel">Sector</span>
+    <select id="metric"></select>
   </div>
 
   <div class="maparea">
@@ -122,14 +124,15 @@
   <div class="legend">
     <div class="ramp">
       <div class="bar" id="rampbar"></div>
-      <div class="ticks"><span id="tlo"></span><span class="label" id="metricLabel">postings / 1,000 workers</span><span id="thi"></span></div>
+      <div class="ticks"><span id="tlo"></span><span id="thi"></span></div>
     </div>
     <div class="label"><span class="sw"></span>below 50 postings / no data</div>
   </div>
 
   <footer>
-    <h2>How this is built</h2>
-    <p id="method"></p>
+    <h2>Where the data comes from</h2>
+    <p id="method">Live job postings from Adzuna are assigned to U.S. metro boundaries then compared to the Bureau of Labor Statistics' labor force data. This map measures open job positions, not hires.</p>
+    <p><a href="methodology.html">See our full methodology →</a></p>
     <p><a href="sectors.html">See which sectors each metro over- and under-indexes on →</a></p>
     <div class="stamp" id="stamp"></div>
   </footer>
@@ -266,14 +269,11 @@ Promise.all([
     const ftick = mode==="rate" ? fmtVal : fmtCompact;
     document.getElementById("tlo").textContent = ftick(d0);
     document.getElementById("thi").textContent = ftick(d1) + (hiClip ? "+" : "");
-    document.getElementById("metricLabel").textContent =
-      (metric===null ? "postings" : sectorName(metric)+" jobs")
-      + (mode==="rate" ? " / 1,000 workers" : "");
   }
 
-  // category filter — "Total jobs" (default) plus each Adzuna category
+  // category filter — "All job sectors" (default) plus each Adzuna category
   const sel = document.getElementById("metric");
-  sel.innerHTML = `<option value="">Total jobs</option>` +
+  sel.innerHTML = `<option value="">All job sectors</option>` +
     categories.map(c=>`<option value="${c}">${sectorName(c)} jobs</option>`).join("");
   sel.addEventListener("change", ()=>{ metric = sel.value || null; render(); });
 
@@ -288,10 +288,10 @@ Promise.all([
 
   render();
 
-  document.getElementById("method").textContent = nat.method;
   document.getElementById("stamp").textContent =
-    `${nat.metros_covered}/${nat.metros_total} metros measured · ${shadedN} shaded · `+
-    `updated ${nat.generated_at.slice(0,10)}.`;
+    `Job postings from ${nat.metros_covered} of ${nat.metros_total} metros · `+
+    `Sector data from ${(sect&&sect.metros_sampled)||0} of ${nat.metros_covered} metros · `+
+    `Updated ${nat.generated_at.slice(0,10)}`;
 }).catch(e=>{
   document.getElementById("method").textContent =
     `Couldn't load map data (${e}). Run python pipeline/build_geometry.py and pipeline/build_national.py, then serve this directory.`;

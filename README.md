@@ -1,18 +1,18 @@
 # Job Maps
 
-An analysis tool for US metro labor markets, built from job postings — **not a
+An analysis tool for US metro labor markets, built from job postings, **not a
 job board** (you can't click through to apply). Three views:
 
-- **US map** (`site/index.html`) — an interactive choropleth over ~390 metros. A
+- **US map** (`site/index.html`): an interactive choropleth over ~390 metros. A
   **toggle** switches between hiring *intensity* (job postings per 1,000 workers,
-  so a small metro can read as hot as a big one — a raw-count map just reproduces
+  so a small metro can read as hot as a big one; a raw-count map just reproduces
   the population map and teaches nothing) and *total* postings. A **dropdown**
   re-shades by any sector (IT, Travel, …); hover for a metro's figures and when it
   was last updated; click for its detail.
-- **Sector index** (`site/sectors.html`) — two rankings of where each metro's
-  *mix* of postings departs from the national mix — **over-** and **under-**
+- **Sector index** (`site/sectors.html`): two rankings of where each metro's
+  *mix* of postings departs from the national mix, **over-** and **under-**
   represented (SF heavy on tech, Miami on hospitality, Chicago on logistics).
-- **Metro detail** (`site/map.html`) — pick any metro for its rate, rank, shape,
+- **Metro detail** (`site/map.html`): pick any metro for its rate, rank, shape,
   and over/under-indexed sectors.
 
 ## Project layout
@@ -28,7 +28,7 @@ job-mapping/
 │
 ├── pipeline/          the Python that fetches data and builds the site's JSON
 │   ├── build_all.py       ★ one command: checks keys, runs the whole pipeline
-│   ├── build_national.py  ★ US map data — postings per 1,000 workers per metro
+│   ├── build_national.py  ★ US map data: postings per 1,000 workers per metro
 │   ├── build_geometry.py  one-time: metro/state map shapes + vendored d3-geo
 │   ├── panel.py           sector data (deviation + per-metro shares; rolling)
 │   ├── ingest.py          Adzuna request + repost-dedup helpers
@@ -47,7 +47,7 @@ job-mapping/
 
 Build scripts write JSON/GeoJSON into `site/data/`, and the pages read it:
 `build_national.py → national.json` (the map), `panel.py → outliers.json`
-(sector index + per-metro shares). `map.html` (Metro Detail) is generic — it
+(sector index + per-metro shares). `map.html` (Metro Detail) is generic: it
 reads `national.json` + `outliers.json` + `us_metros.geojson` for any metro, so
 it needs no per-metro build.
 
@@ -57,7 +57,7 @@ Needs **Python 3.9+** (standard library only; the sole pip dependency is
 `requests`, and only for rebuilding data).
 
 The repo ships with generated data in `site/data/`, so a fresh clone can **see
-the finished map immediately** — no keys, no build:
+the finished map immediately**, without keys or a build step:
 
 ```sh
 cd site && python -m http.server 8000     # open http://localhost:8000
@@ -69,7 +69,7 @@ Adzuna for postings, BLS for labor force), then run one command:
 ```sh
 pip install -r requirements.txt
 cp .env.example .env    # then fill in ADZUNA_APP_ID, ADZUNA_APP_KEY, BLS_API_KEY
-                        # geo.py auto-loads .env — no export needed
+                        # geo.py auto-loads .env, no export needed
 
 python pipeline/build_all.py         # checks keys, then: geometry → national → sector (loop)
 cd site && python -m http.server 8000   # (or: build_all.py --serve)
@@ -77,13 +77,13 @@ cd site && python -m http.server 8000   # (or: build_all.py --serve)
 
 `build_all.py` verifies your keys (naming any that are missing), skips
 `build_geometry` if the map shapes are already present, builds the national map,
-then loops `panel.py` to fill sector data — printing coverage as it goes so you
+then loops `panel.py` to fill sector data, printing coverage as it goes so you
 **watch the map fill.** The Adzuna builds are throttled to the free-tier rate
 limit (~25/min) and cache each metro as they go, so a blip or a daily cap won't
-lose progress. A fresh clone re-fetches from scratch (the caches are gitignored —
-that's what makes the data *fresh*), and a full populate spans a few days on the
+lose progress. A fresh clone re-fetches from scratch (the caches are gitignored,
+which is what makes the data *fresh*), and a full populate spans a few days on the
 free tier (national ~387 calls; sector ~387 metros × ~31 ≈ 12,000 calls): **one
-run does a budget's worth and stops gracefully — re-run to continue** (or use
+run does a budget's worth and stops gracefully. Re-run to continue** (or use
 `--loop` to retry unattended across days). The committed data renders the whole
 time; only newly-added sector data is pending until the fill reaches each metro.
 
@@ -92,7 +92,7 @@ The underlying scripts also run standalone if you want finer control:
 ```sh
 python pipeline/build_geometry.py    # one-time: map shapes + d3-geo (no API key)
 python pipeline/build_national.py    # US map data (~387 Adzuna calls, resumable)
-python pipeline/panel.py [N]         # sector data — rolling; re-run until coverage is full
+python pipeline/panel.py [N]         # sector data: rolling; re-run until coverage is full
 ```
 
 Every module is self-testing (no network, no keys):
@@ -104,7 +104,7 @@ python pipeline/geo.py --selftest     # likewise: ingest, bls, panel, build_nati
 ## How the number is built
 
 ```
-Adzuna posting COUNTS per sector, per metro   (a census — not a ranked sample)
+Adzuna posting COUNTS per sector, per metro   (a census, not a ranked sample)
         │
         ├─ sector's share of THIS metro's postings
         └─ sector's share of ALL metros' postings  (national baseline)
@@ -115,13 +115,13 @@ Adzuna posting COUNTS per sector, per metro   (a census — not a ranked sample)
 
 Counts, not sampled-and-classified postings: Adzuna's search is ranked by a few
 high-volume advertisers, so a *sample* is biased (one hospital network made
-Dallas read 94% healthcare), but a *count* is not. This is the core lesson —
-see CLAUDE.md.
+Dallas read 94% healthcare), but a *count* is not. This is the core lesson.
+See CLAUDE.md.
 
 ## Known limits (deliberate, documented in CLAUDE.md)
 
 - Job-posting demand, not employment; postings over-represent high-churn work.
 - Adzuna's own ~30 sector categories, not O*NET occupations (the occupation
-  path needs a cleaner text source than Adzuna's 500-char snippets — NLx).
+  path needs a cleaner text source than Adzuna's 500-char snippets, such as NLx).
 - Sector data fills on a rolling schedule, so not every metro has it yet;
-  outlier sentences are templated; storage is JSON — all easy to scale up later.
+  outlier sentences are templated; storage is JSON, all easy to scale up later.

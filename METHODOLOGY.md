@@ -1,4 +1,4 @@
-# How Job Maps works — the data and the math, in plain language
+# How Job Maps works: the data and the math, in plain language
 
 This is a sanity-check document. It explains, without jargon, exactly where the
 numbers on the map come from and how they're calculated, so you can judge
@@ -10,7 +10,7 @@ whether the map measures something real and useful.
 
 > **Relative to its size, where is a metro area hiring hard right now?**
 
-Not "which city has the most jobs" — that map would just be a population map
+Not "which city has the most jobs": that map would just be a population map
 (New York and LA on top, always, forever; it teaches you nothing). Instead the
 map asks whether a place is posting *more or fewer* jobs than you'd expect for
 the number of people who work there. That's what lets a mid-size metro like
@@ -24,7 +24,7 @@ Every shaded metro has a single number:
 
 If a metro shows **20**, that means that for every 1,000 people in its
 workforce, there were about 20 distinct current job postings. Higher = the
-local labor market is advertising more openings relative to its size — a sign of
+local labor market is advertising more openings relative to its size, a sign of
 tighter hiring, churn, or growth. It is a **rate of advertised demand**, not a
 count of jobs and not a measure of employment.
 
@@ -39,7 +39,7 @@ made up.
 | **The workforce size** | US Bureau of Labor Statistics (BLS), "LAUS" program | The official labor-force count for each metro (the denominator) |
 | **The map shapes** | US Census Bureau (TIGERweb) | The metro and state boundaries drawn on screen |
 
-A "metro" here is a **Metropolitan Statistical Area (MSA)** — the government's
+A "metro" here is a **Metropolitan Statistical Area (MSA)**, the government's
 official definition of a city plus its commuting region, defined as a set of
 counties. There are 393 of them. Counties are the glue: a job posting reports
 its county, an MSA is a list of counties, and BLS reports by MSA, so everything
@@ -54,7 +54,7 @@ For each of the 393 metros we do this:
    postings. → *Columbus, OH: 57,693 postings in range.*
 
 2. **Figure out how many are actually in the metro.** Adzuna searches a *circle*
-   around a city, but a metro isn't a circle — the circle spills into neighbors.
+   around a city, but a metro isn't a circle; the circle spills into neighbors.
    So we look at the 50 sampled postings and see what fraction report a county
    that's really inside the metro. → *86% of Columbus's sample were in the
    Columbus metro, so we keep 86% of the count: 57,693 × 0.86 ≈ 49,600.*
@@ -83,7 +83,7 @@ into an honest one. The next section explains why each matters.
 1. **We count postings; we don't sample-and-classify them.** Adzuna's results
    are ranked by a few big advertisers, so if you take a *sample* and analyze
    it, one hospital chain can make a whole city look 90% healthcare. A *total
-   count* can't be skewed that way — it's a census, not a poll. This is the
+   count* can't be skewed that way; it's a census, not a poll. This is the
    single most important design choice.
 
 2. **The "share truly in the metro" fix (we call it f\_m).** Because Adzuna
@@ -95,7 +95,7 @@ into an honest one. The next section explains why each matters.
 3. **The repost correction.** Roughly half of aggregator postings are
    duplicates. Measuring the distinct fraction in the sample and applying it
    keeps the rate from being inflated by the same job posted ten times. (It's a
-   *lower bound* — it can merge genuinely separate openings at the same employer,
+   *lower bound*: it can merge genuinely separate openings at the same employer,
    so the true number is a little higher.)
 
 ## When a metro is left blank (gray)
@@ -103,30 +103,33 @@ into an honest one. The next section explains why each matters.
 A metro is shown gray, with no number, when we can't measure it honestly. Three
 reasons:
 
-- **Too few postings actually in the metro** (fewer than ~50 effective) — too
+- **Too few postings actually in the metro** (fewer than ~50 effective): too
   small a signal to trust.
 - **Too little of the search sample landed inside the metro** (under 10%). This
-  happens to a *small metro sitting next to a much larger one* — its search
+  happens to a *small metro sitting next to a much larger one*, whose search
   circle is dominated by the big neighbor. We retry these with a tighter search
   circle, which rescues most; the ones that stay gray are wedged between two
-  giants (e.g. Trenton and Allentown, both in the New York–Philadelphia corridor)
+  giants (e.g. Trenton and Allentown, both in the New York-Philadelphia corridor)
   and can't be cleanly separated. Showing a number there would be guessing.
 - **No official workforce figure available** for the metro.
 
-Today **369 of 387 metros are shaded** and 18 are gray. Graying these is a
-feature, not a gap: the map declines to show a number it can't stand behind.
-(Puerto Rico is excluded — the data provider returns unreliable locations for it.)
+As of the latest build **all 387 measurable metros shade** (none currently fall
+below the thresholds, after the gray-recovery step re-anchors or tightens the
+search circle for swamped metros). The gray rules above still apply to any future
+metro that can't be measured honestly: the map declines to show a number it can't
+stand behind. (Puerto Rico's 6 metros are excluded entirely; the data provider
+returns unreliable locations for them.)
 
 ## What this is good for (real-world uses)
 
-- **Spotting where hiring is unusually hot or cold** relative to size — a
+- **Spotting where hiring is unusually hot or cold** relative to size, a
   labor-market tightness signal that a raw job count hides.
 - **Comparing metros fairly** regardless of population (a recruiter, job seeker,
   or economic-development office comparing Boise to Boston).
-- **Tracking change over time** if rebuilt regularly — a rising rate flags a
+- **Tracking change over time** if rebuilt regularly: a rising rate flags a
   heating-up market before it shows up in slower official statistics.
 - **Slicing hiring by sector.** The map has a dropdown to re-shade by any of
-  Adzuna's ~30 categories — "IT jobs per 1,000 workers," "Travel jobs per 1,000,"
+  Adzuna's ~30 categories: "IT jobs per 1,000 workers," "Travel jobs per 1,000,"
   etc. Each is the metro's total rate multiplied by that sector's share of its
   postings, so the sectors add up to the total. A **toggle** also switches the
   whole map between this per-1,000 rate and *total* postings (raw volume, ignoring
@@ -150,7 +153,7 @@ feature, not a gap: the map declines to show a number it can't stand behind.
 ## How to spot-check it yourself
 
 - **Hover any metro** on the map: it shows the rate, its rank, the raw posting
-  count, and the workforce — the ingredients above, so you can see the math.
+  count, and the workforce: the ingredients above, so you can see the math.
 - **Sanity test:** shaded rates should mostly land between about 10 and 50 per
   1,000, big diverse metros should sit mid-pack (New York is 11.4, not the top),
   and no metro should be graded on just one or two sampled postings.

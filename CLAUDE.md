@@ -17,7 +17,8 @@ Three deliverables (a static page ← a Python build script ← generated JSON):
 |---|---|---|
 | `index.html` (landing) | `build_national.py` | US choropleth: postings per 1,000 workers across ~390 metros. **Click a metro → `map.html?metro=<cbsa>`** (Metro Detail). Paths carry `data-cbsa`. |
 | `map.html` (Metro Detail) | `build_national.py` + `panel.py` | **Any** metro (a `<select>` picker + `?metro=<cbsa>`): rate + rank, CBSA shape (from `us_metros.geojson`), and its over/under-indexed sectors (`outliers.json` `by_metro`). Purely client-side over existing data — no per-metro build. |
-| `sectors.html` | `panel.py` | **Two** charts — the sharpest over- and under-represented sector×metro cells (`over_index`/`under_index`); `?metro=<cbsa>` spotlights one metro. |
+| `sectors.html` | `panel.py` (also `fetch()`es `national.json` at runtime for the footer coverage counts) | **Two** charts — the sharpest over- and under-represented sector×metro cells (`over_index`/`under_index`); `?metro=<cbsa>` spotlights one metro. |
+| `methodology.html` | — (static, no build script) | Plain-language method summary; mirrors `METHODOLOGY.md`. Linked from the index and `sectors` footers ("See our full methodology →"). |
 
 `panel.py` collects sector data **rolling**: `stale_metros` picks the `PER_RUN`
 (default 40, override via argv) stalest metros across all *shaded* metros
@@ -111,6 +112,17 @@ custom-property tokens (light/dark); each page's inline `<style>` — loaded aft
 `--base`/`--metro-line`/`--nodata`). `d3-geo` is vendored in `site/vendor/` (not a
 CDN). Pages `fetch(..., {cache:'no-store'})` so a data rebuild is never served stale.
 
+**Prose lives in the HTML, not the JSON.** The builders used to emit display
+strings (`build_national`: `method`/`metric`/`caveats`/`domain`/`rate_range`;
+`panel`: `method`/`basis`) that the pages no longer read — they were dropped from
+the pipeline and the pages now carry their own static method/footer copy. (The
+*committed* `site/data/*.json` still contains these fields until the next rebuild;
+they're ignored.) All public-facing copy is also intentionally em-dash-free (a
+`/humanizer` pass) — keep it that way in the HTML. All three data pages share one
+**unified footer stamp**: `Job postings from <covered> of <total> metros · Sector
+data from <sampled> of <covered> metros · Updated <date>` — which is why
+`sectors.html` now also fetches `national.json`.
+
 ## Non-obvious decisions and invariants
 
 - **CBSA (metro) is the primary key everywhere.** County↔CBSA comes only from
@@ -201,8 +213,7 @@ CDN). Pages `fetch(..., {cache:'no-store'})` so a data rebuild is never served s
   `index.html`'s `computeDomain` sets `[min, 95th-pct]` for the *currently selected
   metric* and shades linearly (lowest rate = lightest; the handful above P95 clamp
   darkest, legend shows a "+"). Palette: pale **blue** low end, kept distinct from
-  the `--nodata` **gray** (a low-rate metro must not read as no-data). `rate_range`
-  and the pipeline's `domain` field are no longer used by the page.
+  the `--nodata` **gray** (a low-rate metro must not read as no-data).
 - **The front-page map has a category filter.** A `<select>` re-shades by any
   Adzuna category's jobs-per-1,000 = `metro rate × category share`, where the
   shares come from `outliers.json`'s `category_shares` (`panel.py`). Metros without

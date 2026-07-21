@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <meta name="description" content="Single-metro detail: hiring intensity (job postings per 1,000 workers) and the sector mix for any U.S. metro.">
-<title>Metro Detail — Job Maps</title>
+<title>Metro Detail · Job Maps</title>
 <link rel="icon" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css">
 <style>
@@ -42,12 +42,14 @@
   .standfirst{margin:14px 0 0;max-width:58ch;color:var(--muted);font-size:16px;}
   .picker{margin:16px 0 0;font-family:var(--mono);font-size:11.5px;
           letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+  .picker .plabel{display:block;padding-left:12px;}
   .picker select{display:block;margin-top:6px;font-family:var(--sans);font-size:15px;
                  text-transform:none;letter-spacing:0;padding:8px 11px;
                  border:1px solid var(--rule);border-radius:8px;background:var(--panel);
                  color:var(--ink);max-width:340px;width:100%;}
 
-  .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;padding:28px 0 20px;}
+  .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;padding:28px 0 20px;
+        align-items:start;}
   .card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:18px;}
   svg{width:100%;height:auto;display:block;}
   .maparea{fill:var(--under);stroke:var(--paper);stroke-width:1.5;}
@@ -88,16 +90,18 @@
     <a class="on" href="map.html">Metro detail</a>
   </nav>
   <header>
-    <div class="eyebrow" id="eyebrow">Metro detail</div>
     <h1 id="title">—</h1>
-    <p class="standfirst">Any metro's hiring intensity — job postings per 1,000
-    workers — and where its mix of open jobs departs from the national pattern.</p>
-    <div class="picker">Choose a metro<select id="picker"></select></div>
+    <p class="standfirst">Any metro's hiring intensity (job postings per 1,000
+    workers) and where its mix of open jobs departs from the national pattern.</p>
+    <div class="picker"><span class="plabel">Choose a metro</span><select id="picker"></select></div>
   </header>
 
   <div class="grid">
-    <div class="card"><svg id="map" viewBox="0 0 560 440" role="img"
-         aria-label="Metro boundary"></svg></div>
+    <div>
+      <div class="card"><svg id="map" viewBox="0 0 560 440" role="img"
+           aria-label="Metro boundary"></svg></div>
+      <div class="card" style="margin-top:16px" id="sectors"></div>
+    </div>
     <div>
       <div class="hero card">
         <div class="hlabel">Postings per 1,000 workers</div>
@@ -106,7 +110,6 @@
         <div class="hunit" id="updated" style="margin-top:6px;color:var(--faint)"></div>
       </div>
       <div class="card" style="margin-top:16px" id="detail"></div>
-      <div class="card" style="margin-top:16px" id="sectors"></div>
     </div>
   </div>
 
@@ -161,7 +164,6 @@ Promise.all([
     const rec = byCbsa[code]; if(!rec) return;
     sel.value = code;
     history.replaceState(null, "", `?metro=${code}`);
-    document.getElementById("eyebrow").textContent = `Metro detail · CBSA ${code}`;
     document.getElementById("title").textContent = rec.name;
 
     const feat = featByCode[code];
@@ -176,7 +178,7 @@ Promise.all([
     rateEl.className = shaded ? "hnum" : "hnum gray";
     document.getElementById("ratectx").textContent = shaded
       ? `#${rank[code]} of ${shadedN} metros by hiring intensity`
-      : "below the measurement threshold — radius-swamped by a larger neighbor, or no labor-force figure";
+      : "below the measurement threshold: radius-swamped by a larger neighbor, or no labor-force figure";
 
     document.getElementById("detail").innerHTML =
       `<div class="rowline"><span>Raw postings in search radius</span><span>${fmt(rec.count)}</span></div>
@@ -194,18 +196,18 @@ Promise.all([
     const srow=(c,cls)=>`<div class="srow ${cls}"><span>${sectorName(c.category)}</span><span class="sv">${c.ratio.toFixed(1)}×</span></div>`;
     document.getElementById("sectors").innerHTML = bm
       ? `<div class="sec-h" style="color:var(--over)">Over-indexed sectors</div>
-         ${(bm.over||[]).map(c=>srow(c,"o")).join("") || '<div class="note">— none above the national mix —</div>'}
+         ${(bm.over||[]).map(c=>srow(c,"o")).join("") || '<div class="note">None above the national mix.</div>'}
          <div class="sec-h later" style="color:var(--under)">Under-indexed sectors</div>
-         ${(bm.under||[]).map(c=>srow(c,"u")).join("") || '<div class="note">— none below —</div>'}
+         ${(bm.under||[]).map(c=>srow(c,"u")).join("") || '<div class="note">None below.</div>'}
          <div class="note"><a href="sectors.html?metro=${code}">See ${metroName(rec.name)} in the sector index →</a></div>`
       : `<div class="sec-h">Sector mix</div><div class="note">Sector detail is
          collected on a rolling schedule and hasn't reached this metro yet.
          <a href="sectors.html">Browse the sector index →</a></div>`;
 
     document.getElementById("foot").textContent =
-      `Live job postings in the metro ÷ its workforce × 1,000. Sector × = a `
-      + `sector's local share of postings vs its national share. `
-      + `Posting demand, not hires.`;
+      `Job postings from ${nat.metros_covered} of ${nat.metros_total} metros · `
+      + `Sector data from ${(sect&&sect.metros_sampled)||0} of ${nat.metros_covered} metros · `
+      + `Updated ${nat.generated_at.slice(0,10)}`;
   }
 
   sel.addEventListener("change", ()=>render(sel.value));

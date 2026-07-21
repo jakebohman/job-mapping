@@ -113,4 +113,16 @@ Each entry: **Goal · Scope · Done when · Depends on**.
   `category_shares`); robust color domain + retuned palette.
 - **Rolling sector collection** (`panel.py` `stale_metros`/`PER_RUN`/`fetched_at`) —
   covers all shaded metros over successive runs (147/387 so far).
+- **`methodology.html`** — a static, on-site plain-language method summary
+  (mirrors `METHODOLOGY.md`), linked from the index and `sectors` footers.
+- **Copy + layout polish** — public-facing text de-em-dashed (`/humanizer`);
+  unified footer stamp across the three data pages (`Job postings from X of Y ·
+  Sector data from Z of Y · Updated …`), which is why `sectors.html` now also
+  fetches `national.json`; index legend/controls tidy-up + default sector "All job
+  sectors"; sectors chart adds a 4× tick, parallel over/under blurbs, `log₂`
+  method line; Metro Detail moves the sector breakdown to the left column.
+- **Pipeline field cleanup** — dropped unused display fields the pages stopped
+  reading (`build_national`: `method`/`metric`/`caveats`/`domain`/`rate_range`
+  + the now-dead `_percentile`; `panel`: `method`/`basis`). Pages carry static
+  copy instead. Selftests pass; committed JSON keeps the old fields until rebuilt.
 - Docs: `METHODOLOGY.md` (plain-language method), `CLAUDE.md` gotchas.

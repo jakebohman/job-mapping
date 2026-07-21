@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Where U.S. metro hiring demand departs from the national pattern — ten major metros ranked by how far each one's mix of open jobs deviates from the national baseline.">
-<title>Metro Labor Demand — Deviation Index</title>
+<meta name="description" content="Where U.S. metro hiring demand departs from the national pattern: metros ranked by how far each one's mix of open jobs deviates from the national baseline.">
+<title>Metro Labor Demand: Deviation Index</title>
 <link rel="icon" href="favicon.svg">
 <link rel="stylesheet" href="fonts.css"><!-- self-hosted, embedded woff2 (no external deps) -->
 <style>
@@ -44,8 +44,8 @@
            font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
            text-transform:uppercase;color:var(--muted);}
   .eyebrow b{color:var(--ink);font-weight:600;}
-  h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,6.2vw,62px);
-     line-height:1.02;letter-spacing:-.015em;margin:22px 0 0;max-width:16ch;}
+  h1{font-family:var(--serif);font-weight:500;font-size:clamp(32px,5.6vw,56px);
+     line-height:1.03;letter-spacing:-.015em;margin:22px 0 0;max-width:22ch;}
   h1 em{font-style:normal;font-weight:600;color:var(--under);}
   .standfirst{margin:20px 0 0;max-width:60ch;font-size:17px;line-height:1.5;
               color:var(--muted);}
@@ -75,7 +75,7 @@
                  letter-spacing:-.01em;margin:0;}
   .chart.over .chart-head h2{color:var(--over);}
   .chart.under .chart-head h2{color:var(--under);}
-  .chart-head p{margin:5px 0 0;font-size:14px;color:var(--muted);max-width:56ch;}
+  .chart-head p{margin:5px 0 0;font-size:14px;color:var(--muted);max-width:none;}
   .chart-head p b{color:var(--ink);font-weight:500;}
 
   /* ---- chart header (labeled scale) ---- */
@@ -84,10 +84,11 @@
              border-bottom:1px solid var(--rule);}
   .axis-head .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
                   text-transform:uppercase;color:var(--faint);}
+  .axis-head .lbl.vs{text-transform:none;}
   .scale{position:relative;height:30px;}
   .scale .dir{position:absolute;top:0;font-family:var(--mono);font-size:9.5px;
               letter-spacing:.1em;text-transform:uppercase;}
-  .scale .dir.u{left:0;color:var(--under);} .scale .dir.o{right:0;color:var(--over);}
+  .scale .dir.u{right:52%;color:var(--under);} .scale .dir.o{left:52%;color:var(--over);}
   .scale .t{position:absolute;bottom:0;transform:translateX(-50%);
             font-family:var(--mono);font-size:10px;color:var(--faint);white-space:nowrap;}
   .scale .t.mid{color:var(--ink);font-weight:500;}
@@ -110,9 +111,10 @@
   .track{position:relative;height:30px;
          background-image:linear-gradient(var(--grid),var(--grid)),
                           linear-gradient(var(--grid),var(--grid)),
+                          linear-gradient(var(--grid),var(--grid)),
                           linear-gradient(var(--grid),var(--grid));
          background-size:1px 62%;background-repeat:no-repeat;
-         background-position:13.2% 50%,31.6% 50%,68.4% 50%;}
+         background-position:13.2% 50%,31.6% 50%,68.4% 50%,86.8% 50%;}
   .track::before{content:"";position:absolute;left:50%;top:-8px;bottom:-8px;
                  width:1.5px;background:var(--spine);transform:translateX(-50%);z-index:1;}
   .fill{position:absolute;top:7px;height:16px;border-radius:2px;z-index:2;
@@ -125,6 +127,7 @@
   .mult{font-size:16px;font-weight:600;letter-spacing:-.01em;}
   .mult.over{color:var(--over);} .mult.under{color:var(--under);}
   .share{font-size:11px;color:var(--faint);margin-top:3px;}
+  .share + .share{margin-top:1px;}
 
   /* ---- footer ---- */
   footer{border-top:2px solid var(--ink);margin-top:14px;padding:26px 0 60px;}
@@ -173,17 +176,13 @@
     <a href="map.html">Metro detail</a>
   </nav>
   <header>
-    <div class="eyebrow">
-      <span>U.S. Metro Labor Demand</span>
-      <span id="stamp-top"></span>
-    </div>
     <h1>Where hiring breaks from the <em>national pattern</em></h1>
-    <p class="standfirst">For each metro we take a job sector's share of local
+    <p class="standfirst">For each metro, we take a job sector's share of local
     postings and compare it to that sector's share of postings <b>nationwide</b>.
     A sector that fills a bigger slice of a metro's board than it does the
     country's is <b>over-represented</b> there; a smaller slice, under. Below,
-    two rankings — the sharpest <b>over-</b> and <b>under-represented</b> sectors
-    across the metros measured so far. The list does the looking.</p>
+    two rankings: the sharpest <b>over-</b> and <b>under-represented</b> sectors
+    across the metros measured so far.</p>
   </header>
 
   <div id="app"><div class="loading">Loading the index…</div></div>
@@ -193,11 +192,10 @@
       <div>
         <h2>Method</h2>
         <p id="method"></p>
-        <p>Bar length is on a log scale, so a bar reaching the ½× and 2× ticks is
-        equally far from the average in each direction. Healthcare is the largest
-        sector in every metro, so it seldom appears here: the index surfaces what
-        is <em>distinctive</em> about a metro, not what is merely large.</p>
-        <p><a href="map.html">View the single-metro choropleth →</a></p>
+        <p>A bar reaching the ½× and 2× ticks sits equally far from the average
+        in each direction.</p>
+        <p><a href="methodology.html">See our full methodology →</a></p>
+        <p><a href="map.html">View a single metro in detail →</a></p>
       </div>
       <div>
         <h2>National mix</h2>
@@ -225,11 +223,10 @@ const metroName = full => {
 };
 const sectorName = s => s.replace(/\s*Jobs$/,"");
 
-fetch("data/outliers.json").then(r=>r.json()).then(d=>{
-  const month = monthOf(d.generated_at);
-  document.getElementById("stamp-top").innerHTML =
-    `<b>${d.metros_sampled}</b> Metros · ${month}`;
-
+Promise.all([
+  fetch("data/outliers.json", {cache:"no-store"}).then(r=>r.json()),
+  fetch("data/national.json", {cache:"no-store"}).then(r=>r.json()),
+]).then(([d, natl])=>{
   // lead — a worked example that defines the metric and points at its row
   const L = d.lead;
   const pct = x => (x*100).toFixed(0)+"%";
@@ -237,17 +234,17 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
   const leadHTML = `<div class="lead">
       <span class="flag">Sharpest signal</span>
       <p>In ${metroName(L.metro)}, <strong>${sectorName(L.category)}</strong> accounts for
-      <strong>${pct(L.share_metro)}</strong> of local job postings — against
+      <strong>${pct(L.share_metro)}</strong> of local job postings, against
       <strong>${pct(L.share_national)}</strong> nationwide. That is
       <strong>${L.ratio.toFixed(1)}× the U.S. average</strong>, the widest
       over-representation in the ranking below (No. ${String(leadRank).padStart(2,"0")}).</p>
     </div>`;
 
   const readkey = `<div class="readkey">Each bar compares a sector's share of a
-    metro's job postings with its share <b>nationwide</b>. Bars to the
-    <span class="o">right</span> are over-represented — a bigger slice locally
-    than the U.S. average; to the <span class="u">left</span>, under-represented.
-    Bar length is how far off; ticks mark <b>¼×, ½×, the U.S. average, and 2×</b>.</div>`;
+    metro's job postings with its share nationwide. Bars to the
+    <span class="o">right</span> are over-represented (a bigger slice locally
+    than the U.S. average); to the <span class="u">left</span>, under-represented.
+    Ticks mark ¼×, ½×, 1×, 2×, and 4× the U.S. average.</div>`;
 
   const head = `<div class="axis-head">
       <div></div><div class="lbl">Metro · sector</div>
@@ -257,8 +254,9 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
         <span class="t" style="left:31.6%">½×</span>
         <span class="t mid" style="left:50%">U.S. avg</span>
         <span class="t" style="left:68.4%">2×</span>
+        <span class="t" style="left:86.8%">4×</span>
       </div>
-      <div class="lbl right">vs U.S. avg</div>
+      <div class="lbl right vs">vs U.S. avg</div>
     </div>`;
 
   const rowHTML = (c,i,spotlight)=>{
@@ -276,7 +274,8 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
         <div class="track">${fill}</div>
         <div class="figures">
           <div class="mult ${over?'over':'under'}">${c.ratio.toFixed(1)}×</div>
-          <div class="share">${pct(c.share_metro)} local · ${pct(c.share_national)} U.S.</div>
+          <div class="share">${pct(c.share_metro)} local</div>
+          <div class="share">${pct(c.share_national)} U.S.</div>
         </div>
       </div>`;
   };
@@ -291,7 +290,7 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
     const sprows = cells.map((c,i)=>rowHTML(c,i,true)).join("");
     spotlightHTML = `<section class="spotlight">
         <a class="sp-eyebrow" href="index.html">◄ Back to the US map</a>
-        <h2 class="sp-title">${metroName(sm.name)} — where its mix departs from the U.S.</h2>
+        <h2 class="sp-title">${metroName(sm.name)}: where its mix departs from the U.S.</h2>
         ${head}<div class="rows">${sprows}</div>
       </section>`;
   }
@@ -302,7 +301,7 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
     </section>`;
   const charts =
     chart("over", "Over-represented", "Sectors that fill a <b>bigger</b> slice of a metro's job board than they do the country's.", d.over_index) +
-    chart("under", "Under-represented", "Sectors that fill a <b>smaller</b> slice locally than nationally.", d.under_index);
+    chart("under", "Under-represented", "Sectors that fill a <b>smaller</b> slice of a metro's job board than they do the country's.", d.under_index);
   document.getElementById("app").innerHTML =
     spotlightHTML + leadHTML + readkey + charts;
 
@@ -311,15 +310,18 @@ fetch("data/outliers.json").then(r=>r.json()).then(d=>{
   rowEls.forEach((el,i)=>setTimeout(()=>el.classList.add("show"), 120 + i*55));
 
   // footer
-  document.getElementById("method").textContent = d.method;
+  document.getElementById("method").innerHTML =
+    "Metro Share = Category Total / Metro Total. Bar length is determined by " +
+    "log<sub>2</sub>(Metro Share / National Share).";
   const nat = d.national_share.slice(0,10);
   document.getElementById("natbar").innerHTML = nat.map((r,i)=>
     `<span style="width:${(r.share*100).toFixed(1)}%;background:${NAT_COLORS[i%NAT_COLORS.length]}" title="${r.category} ${(r.share*100).toFixed(0)}%"></span>`).join("");
   document.getElementById("natlist").innerHTML = nat.slice(0,6).map((r,i)=>
     `<div><b>${(r.share*100).toFixed(0)}%</b> &nbsp;${sectorName(r.category)}</div>`).join("");
   document.getElementById("stamp").textContent =
-    `${d.basis} · national baseline pooled from ${d.national_total.toLocaleString()} postings across ${d.metros_sampled} metros · generated ${d.generated_at.replace("T"," ").replace("+00:00"," UTC")}. ` +
-    `Job-posting demand, not employment. Adzuna sector categories, not O*NET occupations.`;
+    `Job postings from ${natl.metros_covered} of ${natl.metros_total} metros · ` +
+    `Sector data from ${d.metros_sampled} of ${natl.metros_covered} metros · ` +
+    `Updated ${natl.generated_at.slice(0,10)}`;
 }).catch(e=>{
   document.getElementById("app").innerHTML =
     `<div class="loading">Couldn't load the index (${e}). Run <code>python pipeline/panel.py</code>, then serve this directory over HTTP.</div>`;

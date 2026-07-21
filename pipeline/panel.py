@@ -209,12 +209,6 @@ def build_panel_report(per_metro):
         "metros_sampled": len(per_metro),
         "national_total": sum(sum(m["mix"].values()) for m in per_metro.values()),
         "lead": lead,
-        "basis": "Adzuna category posting counts (census per category)",
-        "method": ("Category share = category count / metro total (same radius, "
-                   "so CBSA-radius imprecision cancels). Ranked by "
-                   "log2(metro share / national share) — effect size, since "
-                   "near-census counts make a significance test meaningless. "
-                   "Sentences templated from the numbers."),
         "national_share": [
             {"category": l, "share": round(s, 4)}
             for l, s in sorted(national.items(), key=lambda kv: -kv[1])],
