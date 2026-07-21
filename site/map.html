@@ -76,6 +76,10 @@
   .srow.o .sv{color:var(--over);} .srow.u .sv{color:var(--under);}
   .note{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:12px;}
   .note a{color:var(--under);}
+  .seeall{margin:9px 0 2px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+          text-transform:uppercase;color:var(--under);background:none;border:0;
+          padding:5px 0;cursor:pointer;}
+  .seeall:hover{text-decoration:underline;}
   footer{border-top:2px solid var(--ink);padding:20px 0 56px;
          font-family:var(--mono);font-size:11px;color:var(--faint);
          letter-spacing:.03em;line-height:1.7;}
@@ -100,7 +104,7 @@
     <div>
       <div class="card"><svg id="map" viewBox="0 0 560 440" role="img"
            aria-label="Metro boundary"></svg></div>
-      <div class="card" style="margin-top:16px" id="sectors"></div>
+      <div class="card" style="margin-top:16px" id="openings"></div>
     </div>
     <div>
       <div class="hero card">
@@ -108,8 +112,9 @@
         <div class="hnum" id="rate">—</div>
         <div class="hunit" id="ratectx"></div>
         <div class="hunit" id="updated" style="margin-top:6px;color:var(--faint)"></div>
+        <div id="detail" style="margin-top:14px"></div>
       </div>
-      <div class="card" style="margin-top:16px" id="detail"></div>
+      <div class="card" style="margin-top:16px" id="sectors"></div>
     </div>
   </div>
 
@@ -150,6 +155,7 @@ Promise.all([
   const rank={}; nat.metros.filter(m=>m.rate!=null).forEach((m,i)=>rank[m.cbsa]=i+1);
   const shadedN = nat.metros.filter(m=>!m.below_threshold).length;
   const byMetro = (sect && sect.by_metro) || {};
+  const shares = (sect && sect.category_shares) || {};
   const featByCode={}; metros.features.forEach(f=>featByCode[f.properties.GEOID]=f);
 
   // picker: every metro, alphabetical
@@ -203,6 +209,28 @@ Promise.all([
       : `<div class="sec-h">Sector mix</div><div class="note">Sector detail is
          collected on a rolling schedule and hasn't reached this metro yet.
          <a href="sectors.html">Browse the sector index →</a></div>`;
+
+    // Job openings by sector: raw Adzuna category counts in the search radius,
+    // descending. Each count is its stored share x the metro's category total.
+    const cs = shares[code], tot = bm && bm.total;
+    const openEl = document.getElementById("openings");
+    if(cs && tot){
+      const rows = Object.entries(cs).map(([cat,sh])=>({cat, n:Math.round(sh*tot)}))
+        .filter(r=>r.n>0).sort((a,b)=>b.n-a.n);
+      const orow = r=>`<div class="srow"><span>${sectorName(r.cat)}</span><span class="sv">${fmt(r.n)}</span></div>`;
+      const TOPN=8, rest=rows.slice(TOPN);
+      openEl.innerHTML =
+        `<div class="sec-h">Job openings by sector</div>`
+        + rows.slice(0,TOPN).map(orow).join("")
+        + (rest.length ? `<div id="openrest" hidden>${rest.map(orow).join("")}</div>`
+            + `<button class="seeall" id="seeall">See all ${rows.length} sectors</button>` : "")
+        + `<div class="note">Raw Adzuna category counts in the search radius.</div>`;
+      const btn=document.getElementById("seeall");
+      if(btn) btn.onclick=()=>{ document.getElementById("openrest").hidden=false; btn.remove(); };
+    } else {
+      openEl.innerHTML = `<div class="sec-h">Job openings by sector</div><div class="note">`
+        + `Sector detail is collected on a rolling schedule and hasn't reached this metro yet.</div>`;
+    }
 
     document.getElementById("foot").textContent =
       `Job postings from ${nat.metros_covered} of ${nat.metros_total} metros · `
