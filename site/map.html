@@ -165,7 +165,7 @@ Promise.all([
     .map(m=>`<option value="${m.cbsa}">${m.name}</option>`).join("");
 
   let code = new URLSearchParams(location.search).get("metro");
-  if(!byCbsa[code]) code = byCbsa["18140"] ? "18140" : nat.metros[0].cbsa;
+  if(!byCbsa[code]) code = byCbsa["41860"] ? "41860" : nat.metros[0].cbsa;
 
   function render(code){
     const rec = byCbsa[code]; if(!rec) return;
