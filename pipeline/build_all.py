@@ -8,8 +8,11 @@ to the Adzuna free tier, so this stays thin and every re-run is cheap/idempotent
 it resumes where the last one stopped. On the free tier a full populate spans a
 few days (national ~387 calls; sector ~387 metros x 31 ~= 12,000 calls) — one run
 does a budget's worth and stops gracefully; the committed site/data/*.json renders
-in the meantime. Caches are gitignored, so a fresh clone re-fetches (that is what
-makes the data fresh).
+in the meantime. The caches are committed too — they are accumulated state, not
+derived output, and a run started without them would rewrite national.json /
+outliers.json from scratch and shrink the published data. Freshness comes from
+measured_at / fetched_at aging (build_national.REFRESH_DAYS, panel's rolling
+stale_metros), not from throwing the caches away.
 
     python pipeline/build_all.py           # one budget's worth, then stop
     python pipeline/build_all.py --loop     # unattended: sleep + retry across days

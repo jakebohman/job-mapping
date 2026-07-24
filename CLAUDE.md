@@ -100,10 +100,21 @@ before touching the pipeline:**
    Indianapolis); with it, it correctly grays out (`f_m ≈ 0`).
 
 **Resumable caches.** The Adzuna and BLS builds cache each item as fetched to
-`site/data/_*_cache.json` (gitignored: `_national_cache`, `_lf_cache`,
-`_mix_cache`) and throttle to the free-tier rate. A run that hits a daily cap
-resumes on the next run instead of re-spending calls. Labor force is cached
-separately because it's stable month-to-month and its keyless quota is tiny.
+`site/data/_*_cache.json` (`_national_cache`, `_lf_cache`, `_mix_cache`) and
+throttle to the free-tier rate. A run that hits a daily cap resumes on the next
+run instead of re-spending calls. Labor force is cached separately because it's
+stable month-to-month and its keyless quota is tiny.
+
+**The caches are committed, and that is load-bearing.** `build_national` and
+`panel` rewrite `national.json` / `outliers.json` *wholesale* from their cache —
+the committed JSON is output, never input (the one exception:
+`panel.shaded_universe()` reads `national.json` to pick targets). So a run that
+starts with an empty cache doesn't extend the published data, it **replaces** it
+with whatever that single run could fetch. This is not hypothetical: `rebuild.yml`
+used `actions/cache`, whose `post-if: success()` meant the failing runs saved
+nothing, and the first green run rebuilt `outliers.json` from an empty mix cache —
+sector coverage went 147 metros → 70. The workflow now relies on the checkout and
+commits the caches back; don't re-ignore them and don't reintroduce `actions/cache`.
 
 **Shared frontend.** All three pages use one design system: `site/fonts.css`
 (Fraunces + IBM Plex embedded woff2 — no CDN) also holds the **shared** CSS

@@ -29,16 +29,11 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # Persist the resumable fetch caches across runs (gitignored, so not in the
-      # repo). Rolling key: save a new cache each run, restore the most recent.
-      - uses: actions/cache@v4
-        with:
-          path: |
-            site/data/_national_cache.json
-            site/data/_lf_cache.json
-            site/data/_mix_cache.json
-          key: jobmaps-caches-${{ github.run_id }}
-          restore-keys: jobmaps-caches-
+      # The resumable fetch caches come down with the checkout (tracked, see
+      # .gitignore) and go back up in the commit step below. actions/cache is
+      # deliberately NOT used: it has post-if: success(), so a failed run saves
+      # nothing, and the next run then rebuilds national.json/outliers.json from
+      # an empty cache — replacing the published data instead of extending it.
 
       # Labor force is monthly and cheap to refetch (~8 BLS batch calls, completes
       # in one run), so drop its cache on the 1st so the denominators track BLS.
@@ -56,7 +51,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add site/data/   # directory pathspec: git skips the gitignored caches
+          git add site/data/   # data + the _*_cache.json state the next run resumes from
           git diff --cached --quiet || git commit -m "data: scheduled refresh $(date -u +%F)"
           git push
 
